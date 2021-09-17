@@ -1,0 +1,218 @@
+<resources>
+    <string name="app_name">EastylianTest</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="large_text">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using Content here, content here, making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for lorem ipsum will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).  It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using Content here, content here, making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for lorem ipsum will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).  It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using Content here, content here, making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for lorem ipsum will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).  It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using Content here, content here, making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for lorem ipsum will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).  It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using Content here, content here, making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for lorem ipsum will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).  It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using Content here, content here, making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for lorem ipsum will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).</string>
+    <string name="send_otp_text">Send OTP</string>
+    <string name="verify_text">Verify</string>
+    <string name="no_location_text">Couldn\'t get location.</string>
+    <string name="cart">Cart</string>
+    <string name="cake_desc">Image of the cake</string>
+    <string name="approx_time_text">We\'ll notify you when it\'s done.</string>
+    <string name="update_item_text">Update Item</string>
+    <string name="add_item_text">Add Item</string>
+
+    <string name="fondant">Fondant Cake</string>
+    <string name="sponge">Sponge Cream Cake</string>
+    <string name="black_forest">Black Forest</string>
+    <string name="white_forest">White Forest</string>
+    <string name="vanilla">Vanilla</string>
+    <string name="chocolate_fantasy">Chocolate Fantasy</string>
+    <string name="red_velvet">Red Velvet</string>
+    <string name="hazelnut">Hazelnut</string>
+    <string name="mango">Mango</string>
+    <string name="strawberry">Strawberry</string>
+    <string name="kiwi">Kiwi</string>
+    <string name="orange">Orange</string>
+    <string name="pineapple">Pineapple</string>
+    <string name="butterscotch">Butterscotch</string>
+    <string name="none">None</string>
+    <string name="default_notification_channel_id">default_notification_channel_id</string>
+
+    <!-- <string-array name="cake_names">
+        <item>Fondant Cake</item>
+        <item>Sponge Cream Cake</item>
+        <item>Black Forest</item>
+        <item>White Forest</item>
+        <item>Vanilla</item>
+        <item>Chocolate Fantasy</item>
+        <item>Red Velvet</item>
+        <item>Hazelnut</item>
+        <item>Mango</item>
+        <item>Strawberry</item>
+        <item>Kiwi</item>
+        <item>Orange</item>
+        <item>Pineapple</item>
+        <item>Butterscotch</item>
+        <item>None</item>
+    </string-array>-->
+
+    <string name="birthday">Birthday</string>
+    <string name="wedding">Wedding</string>
+    <string name="anniversary">Anniversary</string>
+    <string name="valentine">Valentine\'s Day</string>
+    <string name="mother">Mother\'s Day</string>
+    <string name="father">Father\'s Day</string>
+    <string name="priority">Priority</string>
+    <string name="delivery_date">Delivery Date</string>
+    <string name="deliver_order">Deliver Order</string>
+    <string name="start_delivering">Start Delivering</string>
+    <string name="title_account">Account</string>
+    <string name="done">Done</string>
+    <string name="checkout">Checkout</string>
+    <string name="confirm_cod_text">Order placed</string>
+    <string name="confirm_payment_text">Payment was successful</string>
+    <string name="failure_payment_text">Uh-Oh! Something went wrong :(</string>
+    <string name="requests">Requests</string>
+    <string name="pending">Pending</string>
+    <string name="deliveries">Deliveries</string>
+    <string name="delivered">Delivered</string>
+    <string name="processed">processed</string>
+    <string name="require_confirmation">Require confirmation</string>
+    <string name="add">Add</string>
+    <string name="cancel">Cancel</string>
+    <string name="add_delivery_executive_msg">Added delivery executive successfully.</string>
+    <string name="add_delivery_executive_title">Add Delivery Executive</string>
+    <string name="phone_number_prefix">+91 </string>
+    <string name="remove_delivery_executive_title">Remove Delivery Executive</string>
+    <string name="remove">Remove</string>
+    <string name="remove_delivery_executive_msg">Removed delivery executive successfully.</string>
+    <string name="add_admin_msg">Added Admin successfully.</string>
+    <string name="remove_moderator">Remove moderator</string>
+    <string name="remove_admin_msg">Removed Moderator successfully.</string>
+    <string name="log_out_title">Logging Out …</string>
+    <string name="log_out_msg">Are you sure you want to log out?</string>
+    <string name="customizable">Customizable</string>
+    <string name="non_customizable">Non Customizable</string>
+    <string name="add_more">Add more</string>
+    <string name="reorder">Reorder</string>
+    <string name="currency_prefix">"₹ "</string>
+    <string name="place_order">Place Order</string>
+    <string name="view_cart">View Cart</string>
+    <string name="large_cart_info_text">By default the delivery time is next day from order day. You can choose custom timing if it needs to be scheduled within 3 days.</string>
+    <string name="normal">Normal</string>
+    <string name="custom">Custom</string>
+    <string name="invoice">Invoice</string>
+    <string name="items_price">Items Price</string>
+    <string name="sgst">SGST</string>
+    <string name="cgst">CGST</string>
+    <string name="subtotal">Subtotal</string>
+    <string name="delivery_charge">Delivery charge</string>
+    <string name="total">Total</string>
+    <string name="delivering_to">Delivering To</string>
+    <string name="cash_on_delivery">Cash-On-Delivery</string>
+    <string name="change">Change</string>
+    <string name="delivery">Delivery</string>
+    <string name="pick_up">Pick Up</string>
+    <string name="no_items_in_the_cart">No items in the Cart</string>
+    <string name="our_address">Our Address</string>
+    <string name="start_navigation">Start navigation</string>
+    <string name="or_meet_us_directly">Or meet us Directly</string>
+    <string name="problem_submitted">Problem Submitted</string>
+    <string name="problem_submit_reply">Thanks for sharing your problem. We\'ll get back to you as soon as possible through call or email.</string>
+    <string name="write_your_problem">Write your problem …</string>
+    <string name="submit">Submit</string>
+    <string name="faq">FAQ</string>
+    <string name="contact_support">Contact Support</string>
+    <string name="update">Update</string>
+    <string name="set_current_location">Set current location</string>
+    <string name="write_your_address">Write your address</string>
+    <string name="update_address">Update Address</string>
+    <string name="email_address">Email address</string>
+    <string name="email_addresses">Email addresses:</string>
+    <string name="phone_number">Phone number</string>
+    <string name="phone_numbers">Phone numbers:</string>
+    <string name="custom_cake_header">Want\nsomething\nentirely\ndifferent?</string>
+    <string name="contact_us">Contact Us</string>
+    <string name="title">Title</string>
+    <string name="write_something_here">Write something here …</string>
+    <string name="create_notification">Create Notification</string>
+    <string name="order_delivery_progress_text">Order delivery in progress. Please be ready to retrieve it.</string>
+    <string name="add_moderator">Add Moderator</string>
+    <string name="phone_no">Phone No</string>
+    <string name="add_moderator_warning">Only add people you can trust. A moderator has the permission to cancel orders and issue refund. A moderator can also add another person as moderator.</string>
+    <string name="logo_of_the_company">Logo of the company</string>
+    <string name="text_logo_of_the_company">Text logo of the company</string>
+    <string name="set_as_current_address">Set as current address</string>
+    <string name="ans">Ans:</string>
+    <string name="answer">Answer</string>
+    <string name="image_of_the_cake">Image of the cake</string>
+    <string name="gradient_for_the_cake_image">Gradient for the cake image</string>
+    <string name="blueberry_cheese_cake">Blueberry Cheese Cake</string>
+    <string name="tick_animation_desc">Tick image for animation while adding cake</string>
+    <string name="call_us">Call us</string>
+    <string name="customize">Customize</string>
+    <string name="our_favorites_this_week">Our favorites this week</string>
+    <string name="menu">Menu</string>
+    <string name="choose_by_base">Choose by Base</string>
+    <string name="choose_by_flavour">Choose By Flavour</string>
+    <string name="delivery_executive">(Delivery Executive)</string>
+    <string name="log_out">Log out</string>
+    <string name="eastylian_test">Eastylian Test</string>
+    <string name="v_1_0_0">v.1.0.0</string>
+    <string name="write_your_feedback">Write your feedback</string>
+    <string name="settings">Settings</string>
+    <string name="change_address">Change Address</string>
+    <string name="manage_favorites">Manage Favorites</string>
+    <string name="refunds">Refunds</string>
+    <string name="help">Help</string>
+    <string name="current_orders">Current Orders</string>
+    <string name="past_orders">Past Orders</string>
+    <string name="see_all">See All</string>
+    <string name="no_orders_made_yet">No orders made yet.</string>
+    <string name="no_deliveries_at_this_moment">No deliveries at this moment.</string>
+    <string name="current_address">Current Address</string>
+    <string name="change_location">Change Location</string>
+    <string name="add_image">Add Image</string>
+    <string name="name_of_the_cake">Name of the Cake</string>
+    <string name="choose_flavors">Choose Flavors</string>
+    <string name="amount">Amount</string>
+    <string name="short_description">Short Description</string>
+    <string name="question">Question</string>
+    <string name="write_your_answer">Write your answer …</string>
+    <string name="add_to_cart">Add to Cart</string>
+    <string name="choose_base">Choose Base</string>
+    <string name="choose_base_description">This is the base of the cake. Must select only one and this is included in the base price.</string>
+    <string name="sponge_cream">Sponge Cream</string>
+    <string name="flavours">Flavours</string>
+    <string name="choose_flavor_desc">One flavor is by default and included in the base price. Different flavor will cost extra money.</string>
+    <string name="size_weight">Size/Weight</string>
+    <string name="weight_description_text">The default size is half. Additional 400 per KG</string>
+    <string name="half_size_value">0.5</string>
+    <string name="kg">KG</string>
+    <string name="occasion_description_text">If the occasion is not available, select other for custom event.</string>
+    <string name="other">Other</string>
+    <string name="occasion">Occasion</string>
+    <string name="addition_custom_text">Additional input from your side as to what should be written on the cake or if there are any specifics.</string>
+    <string name="description_custom">Description (Custom)</string>
+    <string name="rate_this_answer">Rate this answer</string>
+    <string name="order_id">Order Id:</string>
+    <string name="start_order">Start Order</string>
+    <string name="in_stock">In Stock</string>
+    <string name="no_items">No items</string>
+    <string name="out_of_stock">Out of Stock</string>
+    <string name="primary_button_for_creating_cake">Primary button for creating cake</string>
+    <string name="custom_cake">Custom Cake</string>
+    <string name="email_subject_alt">Something about cake ..</string>
+    <string name="restaurant_location_address">40 Milestone, Lumbasuk, Nonschema, Shillong, Meghalaya 793014</string>
+    <string name="cake_name_error">Provide a nice cake name.</string>
+    <string name="cake_description_error">Write a short description for the cake.</string>
+    <string name="amount_error">Must provide an amount.</string>
+    <string name="image_not_uploaded_error">Either an image is not provided or it is not uploaded.</string>
+    <string name="update_cake_details">Update Cake Details</string>
+    <string name="add_cake">Add Cake</string>
+
+    <!-- <string-array name="occasion_names">
+        <item>Birthday</item>
+        <item>Wedding</item>
+        <item>Anniversary</item>
+        <item>Valentine's Day</item>
+        <item>Mother's Day</item>
+        <item>Father's Day</item>
+        <item>Other</item>
+    </string-array>
+-->
+</resources>

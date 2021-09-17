@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cart_navigation"
+    app:startDestination="@id/cartFragment">
+
+    <fragment
+        android:id="@+id/cartFragment"
+        android:name="com.jamid.eastyliantest.ui.CartFragment"
+        tools:layout="@layout/fragment_cart"
+        android:label="CartFragment" >
+        <action
+            android:id="@+id/action_cartFragment_to_customizeFragment2"
+            app:destination="@id/customizeFragment2" />
+        <action
+            android:id="@+id/action_cartFragment_to_locationFragment2"
+            app:destination="@id/locationFragment2" />
+        <action
+            android:id="@+id/action_cartFragment_to_paymentResultFragment"
+            app:destination="@id/paymentResultFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/customizeFragment2"
+        android:name="com.jamid.eastyliantest.ui.CustomizeFragment"
+        tools:layout="@layout/fragment_customize"
+        android:label="CustomizeFragment" />
+    <fragment
+        android:id="@+id/locationFragment2"
+        android:name="com.jamid.eastyliantest.ui.LocationFragment"
+        tools:layout="@layout/fragment_location"
+        android:label="LocationFragment" />
+    <fragment
+        android:id="@+id/paymentResultFragment"
+        android:name="com.jamid.eastyliantest.ui.PaymentResultFragment"
+        android:label="PaymentResultFragment"
+        tools:layout="@layout/fragment_payment_result"/>
+</navigation>

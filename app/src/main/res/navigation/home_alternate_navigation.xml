@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/home_alternate_navigation"
+    app:startDestination="@id/homeAlternate">
+
+    <fragment
+        android:id="@+id/homeAlternate"
+        android:name="com.jamid.eastyliantest.ui.home.HomeAlternate"
+        android:label="fragment_home_alternate"
+        tools:layout="@layout/fragment_home_alternate" >
+        <action
+            android:id="@+id/action_homeAlternate_to_auth_graph"
+            app:destination="@id/auth_graph" />
+    </fragment>
+    <include app:graph="@navigation/auth_graph" />
+</navigation>

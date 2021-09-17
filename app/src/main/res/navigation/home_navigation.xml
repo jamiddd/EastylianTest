@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/home_navigation"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.jamid.eastyliantest.ui.home.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_auth_graph"
+            app:destination="@id/auth_graph" />
+        <action
+            android:id="@+id/action_homeFragment_to_locationFragment"
+            app:destination="@id/locationFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_customizeFragment"
+            app:destination="@id/customizeFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_contactFragment"
+            app:destination="@id/contactFragment" />
+    </fragment>
+    <include app:graph="@navigation/auth_graph" />
+    <fragment
+        android:id="@+id/locationFragment"
+        android:name="com.jamid.eastyliantest.ui.LocationFragment"
+        tools:layout="@layout/fragment_location"
+        android:label="LocationFragment" />
+    <fragment
+        android:id="@+id/customizeFragment"
+        android:name="com.jamid.eastyliantest.ui.CustomizeFragment"
+        tools:layout="@layout/fragment_customize"
+        android:label="CustomizeFragment" />
+    <fragment
+        android:id="@+id/contactFragment"
+        android:name="com.jamid.eastyliantest.ui.ContactFragment"
+        tools:layout="@layout/fragment_contact"
+        android:label="ContactFragment" />
+</navigation>

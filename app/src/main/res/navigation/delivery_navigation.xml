@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/delivery_navigation"
+    app:startDestination="@id/activeDeliveryFragment">
+
+    <fragment
+        android:id="@+id/activeDeliveryFragment"
+        android:name="com.jamid.eastyliantest.ui.home.ActiveDeliveryFragment"
+        android:label="fargment_active_delivery"
+        tools:layout="@layout/fragment_active_delivery" />
+</navigation>

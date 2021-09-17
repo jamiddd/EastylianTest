@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/admin_graph"
+    app:startDestination="@id/adminHomeFragment">
+
+    <fragment
+        android:id="@+id/adminHomeFragment"
+        android:name="com.jamid.eastyliantest.ui.AdminHomeFragment"
+        android:label="AdminHomeFragment"
+        tools:layout="@layout/fragment_admin">
+        <action
+            android:id="@+id/action_adminHomeFragment_to_adminDashFragment"
+            app:destination="@id/adminDashFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/adminDashFragment"
+        android:name="com.jamid.eastyliantest.ui.AdminDashFragment"
+        tools:layout="@layout/fragment_admin_dash"
+        android:label="AdminDashFragment" >
+        <action
+            android:id="@+id/action_adminDashFragment_to_refundFragment2"
+            app:destination="@id/refundFragment2" />
+        <action
+            android:id="@+id/action_adminDashFragment_to_organizeFragment"
+            app:destination="@id/organizeFragment" />
+        <action
+            android:id="@+id/action_adminDashFragment_to_notificationsFragment"
+            app:destination="@id/notificationsFragment" />
+        <action
+            android:id="@+id/action_adminDashFragment_to_answerFragment"
+            app:destination="@id/answerFragment" />
+        <action
+            android:id="@+id/action_adminDashFragment_to_editContactsFragment"
+            app:destination="@id/editContactsFragment" />
+        <action
+            android:id="@+id/action_adminDashFragment_to_feedbackFragment"
+            app:destination="@id/feedbackFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/refundFragment2"
+        android:name="com.jamid.eastyliantest.ui.dashboard.RefundFragment"
+        android:label="RefundFragment"
+        tools:layout="@layout/fragment_refund" />
+    <fragment
+        android:id="@+id/organizeFragment"
+        android:name="com.jamid.eastyliantest.ui.OrganizeFragment"
+        tools:layout="@layout/fragment_organize"
+        android:label="OrganizeFragment" >
+        <action
+            android:id="@+id/action_organizeFragment_to_addCakeFragment"
+            app:destination="@id/addCakeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addCakeFragment"
+        android:name="com.jamid.eastyliantest.ui.BuildCakeFragment"
+        tools:layout="@layout/fragment_build_cake"
+        android:label="AddCakeFragment" />
+    <fragment
+        android:id="@+id/notificationsFragment"
+        android:name="com.jamid.eastyliantest.ui.notifications.NotificationsFragment"
+        android:label="fragment_notifications"
+        tools:layout="@layout/fragment_notifications" >
+        <action
+            android:id="@+id/action_notificationsFragment_to_addNotificationFragment"
+            app:destination="@id/addNotificationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addNotificationFragment"
+        android:name="com.jamid.eastyliantest.ui.notifications.AddNotificationFragment"
+        tools:layout="@layout/fragment_add_notification"
+        android:label="AddNotificationFragment" />
+    <fragment
+        android:id="@+id/answerFragment"
+        android:name="com.jamid.eastyliantest.ui.AnswerFragment"
+        tools:layout="@layout/fragment_answer"
+        android:label="AnswerFragment" />
+    <fragment
+        android:id="@+id/editContactsFragment"
+        android:name="com.jamid.eastyliantest.ui.EditContactsFragment"
+        tools:layout="@layout/fragment_edit_contacts"
+        android:label="EditContactsFragment" />
+    <fragment
+        android:id="@+id/feedbackFragment"
+        tools:layout="@layout/fragment_feedback"
+        android:name="com.jamid.eastyliantest.ui.FeedbackFragment"
+        android:label="FeedbackFragment" />
+</navigation>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/altHomeRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    tools:context=".ui.home.HomeAlternate">
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/alternateHomePager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/altHomeAppBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/white">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/altHomeToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            app:title="Eastylian"
+            app:titleCentered="true"
+            app:titleTextAppearance="@style/TitleText" />
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/alternateHomeTabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:tabMode="auto"
+            app:tabTextAppearance="@style/Theme.TabLayoutText">
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/requests"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Requests" />
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/pendings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pending" />
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/delivered"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Delivered" />
+
+        </com.google.android.material.tabs.TabLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/light_grey_rounded_rect"
+    android:backgroundTint="@color/white"
+    android:orientation="vertical"
+    tools:layout_marginTop="24dp">
+
+    <TextView
+        android:id="@+id/emailHeader"
+        style="@style/ListItem"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-black"
+        android:text="Email us at"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        tools:layout_editor_absoluteX="43dp"
+        tools:layout_editor_absoluteY="16dp" />
+
+    <TextView
+        android:id="@+id/emailOne"
+        style="@style/ListItem"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="?selectableItemBackground"
+        android:clickable="true"
+        android:drawablePadding="16dp"
+        android:focusable="true"
+        android:gravity="center_vertical"
+        android:text="jenjen@gmail.com"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:drawableStartCompat="@drawable/ic_round_email_24"
+        tools:layout_editor_absoluteX="43dp"
+        tools:layout_editor_absoluteY="53dp" />
+
+    <View
+        android:id="@+id/emailDivider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider" />
+
+    <TextView
+        android:id="@+id/emailTwo"
+        style="@style/ListItem"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="?selectableItemBackground"
+        android:clickable="true"
+        android:drawablePadding="16dp"
+        android:focusable="true"
+        android:gravity="center_vertical"
+        android:text="jamiddeka@gmail.com"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:drawableStartCompat="@drawable/ic_round_email_24"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="101dp" />
+
+</LinearLayout>

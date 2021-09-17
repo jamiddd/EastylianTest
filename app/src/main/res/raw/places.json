@@ -1,0 +1,23 @@
+[
+  {
+    "geometry": {
+      "location": {
+        "lat": 25.560272,
+        "lng": 91.904471
+      },
+      "viewport": {
+        "northeast": {
+          "lat": 25.5671005802915,
+          "lng": 91.895916697085
+        },
+        "southwest": {
+          "lat": 25.5571005802915,
+          "lng": 91.885916697085
+        }
+      }
+    },
+    "name": "Eastylian Enterprise",
+    "rating": 4.5,
+    "vicinity": "40 Milestone, Lumbasuk, Nongthymmai, Shillong, Meghalaya 793014"
+  }
+]

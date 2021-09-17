@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/change_image" android:title="Change Image" />
+    <item android:id="@+id/remove_image" android:title="Remove Image" />
+</menu>

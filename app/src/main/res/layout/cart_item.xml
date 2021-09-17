@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/cakeName"
+        style="@style/headerText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:fontFamily="sans-serif-medium"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:layout_constraintBottom_toTopOf="@+id/customizeBtn"
+        app:layout_constraintEnd_toStartOf="@+id/cakePrice"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/cakeImage"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:text="Blueberry Cheesecake with extra large latte and something else" />
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/cakeImage"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="16dp"
+        app:placeholderImage="@color/colorGrey"
+        app:roundedCornerRadius="12dp"
+        app:layout_constraintEnd_toStartOf="@+id/cakeName"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/cakeName" />
+
+    <TextView
+        android:id="@+id/cakePrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:fontFamily="@font/manrope_semi_bold"
+        tools:text="₹ 450"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/cakeName"
+        app:layout_constraintTop_toTopOf="@+id/cakeName" />
+
+    <Button
+        android:id="@+id/customizeBtn"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/manrope_semi_bold"
+        android:text="@string/customize"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        app:icon="@drawable/ic_round_auto_awesome_24"
+        app:iconSize="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/cakeDescription"
+        app:layout_constraintStart_toStartOf="@+id/cakeName"
+        app:layout_constraintTop_toBottomOf="@+id/cakeName" />
+
+    <View
+        android:id="@+id/divider7"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cakeDescription" />
+
+    <TextView
+        android:id="@+id/cakeDescription"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:paddingStart="16dp"
+        android:paddingTop="8dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="8dp"
+        tools:text="Long description of all the customizations that have been done on this cake"
+        app:layout_constraintBottom_toTopOf="@+id/divider7"
+        app:layout_constraintEnd_toEndOf="@+id/cakeName"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/customizeBtn" />
+
+    <LinearLayout
+        style="@style/tableItemBackground"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="@+id/customizeBtn"
+        app:layout_constraintEnd_toEndOf="@+id/cakePrice"
+        app:layout_constraintTop_toTopOf="@+id/customizeBtn">
+
+        <Button
+            android:id="@+id/cartRemoveItem"
+            style="@style/Theme.Button.IconOnly"
+            android:layout_width="36dp"
+            android:layout_height="wrap_content"
+            android:minWidth="36dp"
+            android:minHeight="36dp"
+            android:paddingLeft="10dp"
+            app:icon="@drawable/ic_remove_black_24dp"
+            app:iconSize="18dp"
+            app:iconTint="@color/primaryColor" />
+
+        <TextView
+            android:id="@+id/cartQuantity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/manrope_semi_bold"
+            android:gravity="center"
+            android:minWidth="36dp"
+            android:minHeight="36dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="@color/primaryColor"
+            tools:text="1" />
+
+        <Button
+            android:id="@+id/cartAddItem"
+            style="@style/Theme.Button.IconOnly"
+            android:layout_width="36dp"
+            android:layout_height="wrap_content"
+            android:minWidth="36dp"
+            android:minHeight="36dp"
+            android:paddingLeft="10dp"
+            app:icon="@drawable/ic_round_add_24"
+            app:iconSize="18dp"
+            app:iconTint="@color/primaryColor" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

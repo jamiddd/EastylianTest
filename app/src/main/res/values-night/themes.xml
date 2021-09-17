@@ -1,0 +1,99 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.EastylianTest" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">#F89779</item>
+        <item name="colorPrimaryVariant">#B12B01</item>
+        <item name="colorOnPrimary">@color/black</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/orange_200</item>
+        <item name="colorSecondaryVariant">@color/orange_200</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
+        <!-- Customize your theme here. -->
+    </style>
+
+    <style name="generalDraweeBackground">
+        <item name="placeholderImage">@color/veryDarkGrey</item>
+    </style>
+
+    <style name="customBottomSheetBackground">
+        <item name="android:background">@drawable/bottom_sheet_background</item>
+        <item name="android:backgroundTint">@color/veryDarkGrey</item>
+    </style>
+
+    <style name="miniCakeItem">
+        <item name="android:background">@color/mini_cake_background_color_night</item>
+    </style>
+
+    <style name="generalBackground">
+        <item name="android:background">@color/veryDarkGrey</item>
+    </style>
+
+    <style name="listHeaderItem" parent="ListItem">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="primaryButtonBackgroundTint">
+        <item name="android:backgroundTint">#333</item>
+        <item name="android:textColor">@color/orange_200</item>
+        <item name="iconTint">@color/orange_200</item>
+    </style>
+
+    <style name="textLogoTheme">
+        <item name="srcCompat">@drawable/ic_text_logo_white</item>
+    </style>
+
+    <style name="DeliveryToggle">
+        <item name="android:background">@color/veryDarkGrey</item>
+    </style>
+
+    <style name="baseCake">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:background">@color/veryDarkGrey</item>
+    </style>
+
+    <style name="DeliveryToggleText">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="headerText">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="headerButton" parent="@style/Widget.MaterialComponents.Button.TextButton">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="logOutBtn">
+        <item name="background">@drawable/light_grey_rounded_rect</item>
+        <item name="backgroundTint">#504F4F</item>
+        <item name="android:textColor">@color/darkRedTextColor</item>
+    </style>
+
+    <style name="normalImportantText">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="nonPrimaryFragment">
+        <item name="backgroundColor">@color/colorGrey</item>
+    </style>
+
+    <style name="tableItemBackground">
+        <item name="android:background">@drawable/light_grey_rounded_rect</item>
+        <item name="android:backgroundTint">#504F4F</item>
+    </style>
+
+    <style name="ListItem">
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingEnd">16dp</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+
+</resources>

@@ -1,0 +1,192 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.EastylianTest" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/primaryColor</item>
+        <item name="colorPrimaryVariant">@color/primaryColorVariant</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/primaryColorVariant</item>
+        <item name="colorSecondaryVariant">@color/teal_700</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
+        <!-- Customize your theme here. -->
+    </style>
+
+    <!--<style name="SplashTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="android:windowBackground">@drawable/splash_screen</item>
+        <item name="colorPrimary">@color/primaryColor</item>
+        <item name="colorPrimaryDark">@color/primaryColorVariant</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="colorAccent">@color/white</item>
+        <item name="android:statusBarColor">@color/white</item>
+    </style>-->
+
+    <style name="myTextStyle" parent="TextAppearance.AppCompat.Medium">
+
+    </style>
+
+    <style name="nonPrimaryFragment">
+        <item name="android:background">@color/colorGrey</item>
+    </style>
+
+    <style name="tableItemBackground">
+        <item name="android:background">@drawable/light_grey_rounded_rect</item>
+        <item name="android:backgroundTint">@color/white</item>
+    </style>
+
+    <style name="headerText">
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="normalImportantText">
+        <item name="android:textColor">@color/darkGrey</item>
+    </style>
+
+    <style name="textLogoTheme">
+        <item name="srcCompat">@drawable/ic_text_logo</item>
+    </style>
+
+    <style name="DialogStyle" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowSoftInputMode">adjustResize</item>
+    </style>
+
+    <style name="AppBottomSheetDialogTheme"
+        parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/AppModalStyle</item>
+        <item name="colorPrimary">@color/purple_500</item>
+    </style>
+
+    <style name="AppModalStyle"
+        parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/bottom_sheet_background</item>
+    </style>
+
+    <style name="Theme.TabLayoutText" parent="@style/TextAppearance.AppCompat.Small">
+        <item name="fontFamily">@font/manrope_semi_bold</item>
+        <item name="textAllCaps">false</item>
+    </style>
+
+    <style name="TitleTextExpanded" parent="TextAppearance.MaterialComponents.Headline3">
+        <item name="fontFamily">@font/lobster</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="TitleTextExpandedAccount" parent="TextAppearance.MaterialComponents.Headline3">
+        <item name="fontFamily">sans-serif-black</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="TitleText" parent="TextAppearance.MaterialComponents.Headline5">
+        <item name="fontFamily">@font/lobster</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="TitleTextAccount" parent="TextAppearance.MaterialComponents.Headline6">
+        <item name="fontFamily">sans-serif-medium</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+
+    <style name="ToolbarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:textColorPrimary">@color/white</item>
+    </style>
+
+    <style name="Theme.Button.IconOnly" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="iconPadding">0dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:paddingLeft">12dp</item>
+        <item name="android:paddingRight">12dp</item>
+        <item name="android:minWidth">48dp</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="cornerRadius">24dp</item>
+        <item name="iconTint">#222222</item>
+    </style>
+
+    <style name="Widget.BottomSheet.MaterialCardView" parent="Widget.MaterialComponents.CardView">
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.BottomSheet.MaterialCardView</item>
+    </style>
+
+    <style name="ShapeAppearanceOverlay.BottomSheet.MaterialCardView" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopLeft">12dp</item>
+        <item name="cornerSizeTopRight">12dp</item>
+    </style>
+
+    <style name="generalBackground">
+        <item name="android:background">@color/colorGrey</item>
+    </style>
+
+    <style name="generalDraweeBackground">
+        <item name="placeholderImage">@color/colorGrey</item>
+    </style>
+
+    <style name="customBottomSheetBackground">
+        <item name="android:background">@drawable/bottom_sheet_background</item>
+    </style>
+
+    <style name="miniCakeItem">
+        <item name="android:background">@color/mini_cake_background_color</item>
+    </style>
+
+    <style name="ListItem">
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingEnd">16dp</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="headerButton" parent="@style/Widget.MaterialComponents.Button.TextButton">
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="listHeaderItem" parent="ListItem">
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="logOutBtn" parent="@style/ListItem">
+        <item name="background">@drawable/light_grey_rounded_rect</item>
+        <item name="android:textColor">@color/darkRedTextColor</item>
+    </style>
+
+    <style name="ToggleButtonStyle" parent="Widget.MaterialComponents.MaterialButtonToggleGroup">
+
+    </style>
+
+    <style name="baseCake">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:background">@color/white</item>
+    </style>
+
+    <style name="TabLayoutTheme" parent="Widget.MaterialComponents.TabLayout">
+        <item name="tabMode">auto</item>
+        <item name="tabTextAppearance">@style/Theme.TabLayoutText</item>
+        <item name="tabIndicator">@drawable/tab_indicator</item>
+    </style>
+
+    <style name="AdminDashToolbarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:textColorPrimary">@color/white</item>
+    </style>
+
+    <style name="primaryButtonBackgroundTint">
+        <item name="android:backgroundTint">#DA722C</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="DeliveryToggle">
+        <item name="android:background">@color/blueLightBackground</item>
+    </style>
+
+    <style name="DeliveryToggleText">
+        <item name="android:textColor">@color/blueDarkTextColor</item>
+    </style>
+
+
+</resources>

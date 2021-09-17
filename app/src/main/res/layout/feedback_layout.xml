@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:layout_marginTop="24dp">
+
+    <RatingBar
+        android:id="@+id/orderRatingBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"
+        tools:layout_editor_absoluteX="34dp"
+        tools:layout_editor_absoluteY="44dp" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/orderFeedbackTextLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="24dp"
+        tools:layout_editor_absoluteX="1dp"
+        tools:layout_editor_absoluteY="143dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="start|top"
+            android:hint="@string/write_your_feedback"
+            android:inputType="textMultiLine"
+            android:minHeight="80dp" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+</LinearLayout>

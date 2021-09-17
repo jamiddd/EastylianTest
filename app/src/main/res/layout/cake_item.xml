@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cakeRoot"
+    android:layout_width="270dp"
+    android:layout_height="400dp"
+    android:layout_marginEnd="8dp"
+    android:layout_marginBottom="8dp"
+    android:clickable="true"
+    android:focusable="true"
+    app:cardElevation="12dp"
+    app:checkedIconTint="#E91E63">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/cakeName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="18dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="18dp"
+            android:layout_marginBottom="8dp"
+            android:fontFamily="sans-serif-black"
+            android:text="@string/blueberry_cheese_cake"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            app:layout_constraintBottom_toTopOf="@+id/cakePrice"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cake_image" />
+
+        <TextView
+            android:id="@+id/cakeDesc"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="18dp"
+            android:ellipsize="end"
+            android:maxLines="4"
+            tools:text="Description of this cake that can go on and on but at the same time may also be small and concise."
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/cakeName"
+            app:layout_constraintStart_toStartOf="@+id/cakePrice"
+            app:layout_constraintTop_toBottomOf="@+id/cakePrice" />
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/cake_image"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            app:layout_constraintBottom_toTopOf="@+id/cakeName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:placeholderImage="@color/darkGrey" />
+
+        <TextView
+            android:id="@+id/cakePrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            tools:text="₹ 450"
+            android:textColor="#E91E63"
+            app:layout_constraintBottom_toTopOf="@+id/cakeDesc"
+            app:layout_constraintStart_toStartOf="@+id/cakeName"
+            app:layout_constraintTop_toBottomOf="@+id/cakeName" />
+
+        <TextView
+            android:id="@+id/customizableText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@string/customizable"
+            android:textAllCaps="true"
+            app:layout_constraintBottom_toBottomOf="@+id/cakePrice"
+            app:layout_constraintStart_toEndOf="@+id/cakePrice"
+            app:layout_constraintTop_toTopOf="@+id/cakePrice" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/primaryCakeAction"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:text="@string/add"
+            app:cornerRadius="24dp"
+            app:icon="@drawable/ic_round_add_24"
+            app:layout_constraintBottom_toBottomOf="@+id/cake_image"
+            app:layout_constraintEnd_toStartOf="@+id/favoriteBtn"
+            app:layout_constraintTop_toBottomOf="@+id/cake_image"
+            app:layout_constraintVertical_bias="0.666" />
+
+        <Button
+            android:id="@+id/favoriteBtn"
+            style="@style/Theme.Button.IconOnly"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="8dp"
+            android:backgroundTint="@color/white"
+            android:elevation="8dp"
+            android:paddingLeft="11dp"
+            android:visibility="gone"
+            app:icon="@drawable/favorite_selector"
+            app:iconSize="18dp"
+            app:iconTint="@color/primaryColor"
+            app:layout_constraintBottom_toBottomOf="@+id/cake_image"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cake_image" />
+
+        <ImageView
+            android:id="@+id/animatedTick"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginStart="8dp"
+            android:elevation="5dp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="@+id/primaryCakeAction"
+            app:layout_constraintStart_toStartOf="@+id/primaryCakeAction"
+            app:layout_constraintTop_toTopOf="@+id/primaryCakeAction"
+            app:srcCompat="@drawable/animated_check"
+            android:contentDescription="@string/tick_animation_desc" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

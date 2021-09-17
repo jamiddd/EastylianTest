@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/account_navigation"
+    app:startDestination="@id/dashboardFragment">
+
+    <fragment
+        android:id="@+id/dashboardFragment"
+        android:name="com.jamid.eastyliantest.ui.dashboard.AccountFragment"
+        android:label="DashboardFragment"
+        tools:layout="@layout/fragment_account">
+
+        <action
+            android:id="@+id/action_dashboardFragment_to_addressFragment"
+            app:destination="@id/addressFragment" />
+        <action
+            android:id="@+id/action_dashboardFragment_to_locationFragment3"
+            app:destination="@id/locationFragment3" />
+        <action
+            android:id="@+id/action_dashboardFragment_to_favoritesFragment"
+            app:destination="@id/favoritesFragment" />
+        <action
+            android:id="@+id/action_dashboardFragment_to_refundFragment"
+            app:destination="@id/refundFragment" />
+        <action
+            android:id="@+id/action_dashboardFragment_to_notificationsFragment2"
+            app:destination="@id/notificationsFragment2" />
+        <action
+            android:id="@+id/action_dashboardFragment_to_helpFragment"
+            app:destination="@id/helpFragment" />
+        <action
+            android:id="@+id/action_dashboardFragment_to_pastOrdersFragment"
+            app:destination="@id/pastOrdersFragment" />
+        <deepLink
+            android:id="@+id/deepLink"
+            app:action="ACTION_VIEW"
+            app:uri="eastylian://account" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/addressFragment"
+        android:name="com.jamid.eastyliantest.ui.AddressFragment"
+        tools:layout="@layout/fragment_address"
+        android:label="AddressFragment" />
+    <fragment
+        android:id="@+id/locationFragment3"
+        android:name="com.jamid.eastyliantest.ui.LocationFragment"
+        tools:layout="@layout/fragment_location"
+        android:label="LocationFragment" />
+    <fragment
+        android:id="@+id/favoritesFragment"
+        android:name="com.jamid.eastyliantest.ui.dashboard.FavoritesFragment"
+        tools:layout="@layout/fragment_favorites"
+        android:label="FavoritesFragment" >
+        <action
+            android:id="@+id/action_favoritesFragment_to_customizeFragment3"
+            app:destination="@id/customizeFragment3" />
+    </fragment>
+    <fragment
+        android:id="@+id/customizeFragment3"
+        android:name="com.jamid.eastyliantest.ui.CustomizeFragment"
+        tools:layout="@layout/fragment_customize"
+        android:label="CustomizeFragment" />
+    <fragment
+        android:id="@+id/refundFragment"
+        android:name="com.jamid.eastyliantest.ui.dashboard.RefundFragment"
+        tools:layout="@layout/fragment_refund"
+        android:label="RefundFragment" />
+    <fragment
+        android:id="@+id/notificationsFragment2"
+        android:name="com.jamid.eastyliantest.ui.notifications.NotificationsFragment"
+        android:label="fragment_notifications"
+        tools:layout="@layout/fragment_notifications" />
+    <fragment
+        android:id="@+id/helpFragment"
+        android:name="com.jamid.eastyliantest.ui.dashboard.HelpFragment"
+        tools:layout="@layout/fragment_help"
+        android:label="HelpFragment" >
+        <action
+            android:id="@+id/action_helpFragment_to_contactFragment2"
+            app:destination="@id/contactFragment2" />
+    </fragment>
+    <fragment
+        android:id="@+id/contactFragment2"
+        android:name="com.jamid.eastyliantest.ui.ContactFragment"
+        tools:layout="@layout/fragment_contact"
+        android:label="ContactFragment" />
+    <fragment
+        android:id="@+id/pastOrdersFragment"
+        android:name="com.jamid.eastyliantest.ui.PastOrdersFragment"
+        tools:layout="@layout/fragment_account"
+        android:label="PastOrdersFragment" />
+</navigation>

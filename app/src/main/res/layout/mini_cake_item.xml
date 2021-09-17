@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cakeMiniItemRoot"
+    style="@style/miniCakeItem"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:animateLayoutChanges="true"
+    android:clickable="true"
+    android:focusable="true">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/cakePreview"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/cakeDescText"
+        app:layout_constraintEnd_toStartOf="@+id/cakeNameText"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/cakeNameText"
+        app:layout_constraintVertical_bias="0.32"
+        app:placeholderImage="@color/neutralGrey"
+        app:roundedCornerRadius="12dp" />
+
+    <TextView
+        android:id="@+id/cakeNameText"
+        style="@style/headerText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_weight="1"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:layout_constraintBottom_toTopOf="@+id/cakePriceText"
+        app:layout_constraintEnd_toStartOf="@+id/inStockSwitch"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/cakePreview"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:text="Cake Name" />
+
+    <TextView
+        android:id="@+id/cakePriceText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:textColor="#E91E63"
+        app:layout_constraintBottom_toTopOf="@+id/cakeDescText"
+        app:layout_constraintStart_toStartOf="@+id/cakeNameText"
+        app:layout_constraintTop_toBottomOf="@+id/cakeNameText"
+        tools:text="₹ 450" />
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/inStockSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/cakePriceText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/cakeNameText"
+        app:layout_constraintTop_toTopOf="@+id/cakeNameText" />
+
+    <TextView
+        android:id="@+id/cakeDescText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:maxLines="2"
+        android:text="@string/large_text"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/cakeNameText"
+        app:layout_constraintStart_toStartOf="@+id/cakePriceText"
+        app:layout_constraintTop_toBottomOf="@+id/cakePriceText" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
