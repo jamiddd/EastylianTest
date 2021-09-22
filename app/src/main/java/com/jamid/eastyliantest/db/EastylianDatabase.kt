@@ -13,7 +13,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-@Database(entities = [Restaurant::class, SimpleNotification::class, Refund::class, Feedback::class, Faq::class, Cake::class, User::class, Payment::class, SimpleLocation::class, SimplePlace::class, CartItem::class, Order::class], version = 1, exportSchema = false)
+@Database(entities = [CakeMenuItem::class, Restaurant::class, SimpleNotification::class, Refund::class, Feedback::class, Faq::class, Cake::class, User::class, Payment::class, SimpleLocation::class, SimplePlace::class, CartItem::class, Order::class], version = 1, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class EastylianDatabase: RoomDatabase() {
 
@@ -27,6 +27,7 @@ abstract class EastylianDatabase: RoomDatabase() {
     abstract fun refundDao(): RefundDao
     abstract fun notificationDao(): NotificationDao
     abstract fun restaurantDao(): RestaurantDao
+    abstract fun cakeMenuItemDao(): CakeMenuItemDao
 
     companion object {
 

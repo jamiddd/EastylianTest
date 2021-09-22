@@ -7,8 +7,8 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.view.WindowInsets
-import android.widget.Toast
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -25,14 +25,16 @@ import com.jamid.eastyliantest.adapter.OrderViewHolder
 import com.jamid.eastyliantest.databinding.ActivityDeliveryBinding
 import com.jamid.eastyliantest.db.EastylianDatabase
 import com.jamid.eastyliantest.interfaces.OrderClickListener
+import com.jamid.eastyliantest.interfaces.OrderImageClickListener
 import com.jamid.eastyliantest.model.Order
 import com.jamid.eastyliantest.model.OrderStatus
 import com.jamid.eastyliantest.model.Result
 import com.jamid.eastyliantest.model.User
 import com.jamid.eastyliantest.repo.MainRepository
+import com.jamid.eastyliantest.utility.toast
 import com.jamid.eastyliantest.utility.updateLayout
 
-class DeliveryActivity : LocationAwareActivity(), OrderClickListener {
+class DeliveryActivity : LocationAwareActivity(), OrderClickListener, OrderImageClickListener {
 
 	private lateinit var repository: MainRepository
 	val viewModel: MainViewModel by viewModels { MainViewModelFactory(repository) }
@@ -228,13 +230,37 @@ class DeliveryActivity : LocationAwareActivity(), OrderClickListener {
 				viewModel.insertOrder(order)
 
 				if (order.status[0] == OrderStatus.Delivering) {
-					val latitude = order.place.latitude
-					val longitude = order.place.longitude
+					if (order.delivery) {
+						val latitude = order.place.latitude
+						val longitude = order.place.longitude
 
-					val gmmIntentUri = Uri.parse("google.navigation:q=$latitude,$longitude")
-					val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
-					mapIntent.setPackage("com.google.android.apps.maps")
-					startActivity(mapIntent)
+						val gmmIntentUri = Uri.parse("google.navigation:q=$latitude,$longitude")
+						val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+						mapIntent.setPackage("com.google.android.apps.maps")
+						startActivity(mapIntent)
+					} else {
+						Firebase.firestore.collection(USERS)
+							.document(order.senderId)
+							.get()
+							.addOnSuccessListener { it1 ->
+								if (it1.exists()) {
+
+									vh.resetState()
+
+									val user = it1.toObject(User::class.java)!!
+									val phoneNumber = user.phoneNo.split(" ")
+									if (phoneNumber.size > 1) {
+										val number = phoneNumber[1]
+										val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:$number"))
+										startActivity(intent)
+									} else {
+										toast("Phone number not found")
+									}
+								}
+							}.addOnFailureListener { ex ->
+								viewModel.setCurrentError(ex)
+							}
+					}
 				}
 			} else {
 				it.exception?.let { e ->
@@ -262,8 +288,7 @@ class DeliveryActivity : LocationAwareActivity(), OrderClickListener {
 							val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:$number"))
 							startActivity(intent)
 						} else {
-							Toast.makeText(this, "Phone number not found.", Toast.LENGTH_SHORT)
-								.show()
+							toast("Phone number not found")
 						}
 					}
 				}.addOnFailureListener {
@@ -275,6 +300,13 @@ class DeliveryActivity : LocationAwareActivity(), OrderClickListener {
 
 	override fun onSelectDirection(order: Order) {
 
+	}
+
+	override fun onImageClick(view: View, image: String) {
+		/*val bundle = Bundle().apply {
+			putString(ImageViewFragment.ARG_IMAGE, image)
+		}
+		navController.navigate(R.id.action_adminHomeFragment_to_imageViewFragment, bundle)*/
 	}
 
 }

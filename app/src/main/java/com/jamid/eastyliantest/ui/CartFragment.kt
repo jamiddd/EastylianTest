@@ -315,14 +315,19 @@ class CartFragment: Fragment(R.layout.fragment_cart) {
 
                     currentOrder.status = listOf(OrderStatus.Due)
 
+                    viewModel.setCurrentCartOrder(currentOrder)
+
                     viewModel.uploadOrder(currentOrder) {
                         if (it.isSuccessful) {
 
                             val bundle = Bundle()
                             bundle.putBoolean(COD, true)
 
+                            viewModel.setCurrentPaymentResult(Result.Success(true))
+
                             findNavController().navigate(R.id.action_cartFragment_to_paymentResultFragment, bundle, slideRightNavOptions())
                         } else {
+
                             it.exception?.let { e ->
                                 viewModel.setCurrentError(e)
                             }
@@ -334,7 +339,6 @@ class CartFragment: Fragment(R.layout.fragment_cart) {
 
                 binding.checkOutBtn.setOnClickListener {
 
-//                    dialog = showDialog("Creating order", "Please wait for a while we set up your transaction ..")
                     binding.checkOutProgress.show()
                     binding.checkOutBtn.disable()
 
@@ -367,8 +371,12 @@ class CartFragment: Fragment(R.layout.fragment_cart) {
             val rightNow = Calendar.getInstance()
             val currentHourIn24Format = rightNow.get(Calendar.HOUR_OF_DAY)
 
-            if (currentHourIn24Format > 20 || currentHourIn24Format < 10) {
-//                binding.checkOutBtn.disable()
+            if (currentHourIn24Format > 20 || currentHourIn24Format < 9) {
+                if (currentOrder.delivery) {
+                    binding.checkOutBtn.disable()
+                } else {
+                    binding.checkOutBtn.enable()
+                }
             }
 
         } else {

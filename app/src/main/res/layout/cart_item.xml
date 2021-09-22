@@ -89,50 +89,16 @@
         app:layout_constraintTop_toBottomOf="@+id/customizeBtn" />
 
     <LinearLayout
-        style="@style/tableItemBackground"
+        android:id="@+id/amountCustomizer"
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="@+id/customizeBtn"
         app:layout_constraintEnd_toEndOf="@+id/cakePrice"
         app:layout_constraintTop_toTopOf="@+id/customizeBtn">
 
-        <Button
-            android:id="@+id/cartRemoveItem"
-            style="@style/Theme.Button.IconOnly"
-            android:layout_width="36dp"
-            android:layout_height="wrap_content"
-            android:minWidth="36dp"
-            android:minHeight="36dp"
-            android:paddingLeft="10dp"
-            app:icon="@drawable/ic_remove_black_24dp"
-            app:iconSize="18dp"
-            app:iconTint="@color/primaryColor" />
-
-        <TextView
-            android:id="@+id/cartQuantity"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/manrope_semi_bold"
-            android:gravity="center"
-            android:minWidth="36dp"
-            android:minHeight="36dp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textColor="@color/primaryColor"
-            tools:text="1" />
-
-        <Button
-            android:id="@+id/cartAddItem"
-            style="@style/Theme.Button.IconOnly"
-            android:layout_width="36dp"
-            android:layout_height="wrap_content"
-            android:minWidth="36dp"
-            android:minHeight="36dp"
-            android:paddingLeft="10dp"
-            app:icon="@drawable/ic_round_add_24"
-            app:iconSize="18dp"
-            app:iconTint="@color/primaryColor" />
+        <include
+            android:id="@+id/amountCustomizerContainer"
+            layout="@layout/amount_customize_layout" />
 
     </LinearLayout>
 

@@ -1,17 +1,30 @@
 package com.jamid.eastyliantest.ui
 
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
+import android.view.LayoutInflater
 import android.view.View
-import android.widget.Toast
-import androidx.core.view.isVisible
+import android.view.ViewGroup
+import android.view.ViewStub
+import android.widget.TextView
+import androidx.core.content.ContextCompat
+import androidx.core.view.children
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
 import com.jamid.eastyliantest.R
+import com.jamid.eastyliantest.databinding.ChoiceExtraBinding
 import com.jamid.eastyliantest.databinding.FragmentCustomizeBinding
 import com.jamid.eastyliantest.model.Cake
 import com.jamid.eastyliantest.model.CartItem
-import com.jamid.eastyliantest.model.Flavor
 import com.jamid.eastyliantest.model.Flavor.*
 import com.jamid.eastyliantest.utility.*
 import java.util.*
@@ -21,52 +34,51 @@ class CustomizeFragment: Fragment(R.layout.fragment_customize) {
 	private lateinit var binding: FragmentCustomizeBinding
 	private val viewModel: MainViewModel by activityViewModels()
 	private var editMode = false
-//	private val flavors: Queue<Flavor> = LinkedList(listOf(VANILLA))
 
 	private var flavorPrice: Long = 0
 	private var weightPrice: Long = 0
 	private var basePrice: Long = 55000
 
-	// price list for all items
-	private val priceMap = mapOf<Any, Long>(
-		BLACK_FOREST to 5000,
-		VANILLA to 0,
-		WHITE_FOREST to 5000,
-		CHOCOLATE_FANTASY to 15000,
-		RED_VELVET to 15000,
-		HAZELNUT to 5000,
-		MANGO to 5000,
-		STRAWBERRY to 5000,
-		KIWI to 5000,
-		ORANGE to 5000,
-		PINEAPPLE to 5000,
-		BUTTERSCOTCH to 5000,
-		0.5f to 0,
-		1f to 40000
-	)
+	private lateinit var choicesAdapter: ChoicesAdapter
+	private var ediblePrintImage: String? = null
+	private lateinit var finalCake: Cake
+
+	private fun initiateRecycler() {
+		choicesAdapter = ChoicesAdapter()
+		choicesAdapter.isEditMode = editMode
+
+		val flavorList = viewModel.flavorMenuItems.value?.map {
+			it.title
+		}
+
+		val choice = Choice(0, "Choose Base", "The base of the cake", listOf("Sponge Cream Cake", "Fondant Cake", "Edible Print"))
+		val choice1 = Choice(1, "Choose Flavor", "The flavor of the cake", flavorList ?: emptyList())
+		val choice2 = Choice(2, "Size/Weight", "Additional Rs 400 for every half Kg.")
+		val choice3 = Choice(3, "Occasion", "Getting to know the occasion helps us to better design the cake.", listOf("Birthday", "Wedding", "Anniversary", "Valentine\'s Day", "Mother\'s Day"))
+		val choice4 = Choice(4, "Additional", "Additional info such as name on the cake or any specifics.")
+
+		binding.customFragmentContent.choicesRecycler.apply {
+			adapter = choicesAdapter
+			layoutManager = LinearLayoutManager(requireContext())
+		}
+
+		if (finalCake.isCustomizable) {
+			choicesAdapter.submitList(listOf(choice, choice1, choice2, choice3, choice4))
+		} else {
+			choicesAdapter.submitList(listOf(choice2, choice3, choice4))
+		}
+
+	}
+
+	private fun setImage(image: String?) {
+		binding.cakeImageVIew.setImageURI(image)
+	}
 
 	// main function to update the UI on start
 	private fun presetCake(cake: Cake? = null, cartItem: CartItem? = null) {
 		if (cake != null) {
-
-			// set toolbar
-			if (cake.fancyName.isBlank()) {
-				binding.customizeFragmentToolbar.title = getFlavorName(cake.flavors.last()) + " Cake"
-			} else {
-				binding.customizeFragmentToolbar.title = cake.fancyName
-			}
-
-			// set image
-			if (cake.thumbnail == null) {
-				val flavor = cake.flavors.last()
-				if (flavor == VANILLA) {
-					binding.cakeImageVIew.setActualImageResource(getImageResourceBasedOnBaseName(cake.baseName))
-				} else {
-					binding.cakeImageVIew.setActualImageResource(getImageResourceBasedOnFlavor(flavor))
-				}
-			} else {
-				binding.cakeImageVIew.setImageURI(cake.thumbnail)
-			}
+//			setToolbar(cake)
+			setImage(cake.thumbnail)
 
 			// set short description
 			if (cake.description != null) {
@@ -76,24 +88,11 @@ class CustomizeFragment: Fragment(R.layout.fragment_customize) {
 				binding.customFragmentContent.cakeDescText.hide()
 			}
 
-			// set base
-			binding.customFragmentContent.baseGroup.check(getBaseNameCheckId(cake.baseName))
+			setPrimaryButton()
 
-			// set flavor
-			binding.customFragmentContent.flavorGroup.check(getFlavourCheckId(cake.flavors.last()))
+			finalCake = cake.copy()
 
-			// set weight
-			binding.customFragmentContent.weightText.setText(cake.weightKg.toString())
-
-			// set occasion
-			binding.customFragmentContent.occasionGroup.check(getOccasionCheckId(cake.occasion))
-
-			// set customer description
-			binding.customFragmentContent.customDescriptionInputLayout.editText?.setText(cake.additionalDescription)
-
-			updateUIBasedOnCustomize(cake)
-
-			setPrimaryButton(cake)
+			initiateRecycler()
 		} else {
 			if (cartItem != null) {
 				presetCake(cartItem.cake)
@@ -101,26 +100,8 @@ class CustomizeFragment: Fragment(R.layout.fragment_customize) {
 		}
 	}
 
-	// base on whether the cake can be customized or not
-	private fun updateUIBasedOnCustomize(cake: Cake) {
-		binding.customFragmentContent.apply {
-			if (!cake.isCustomizable) {
-				chooseBaseHeader.hide()
-				baseDescriptionText.hide()
-				flavorDescriptionText.hide()
-				chooseBaseDivider.hide()
-				chooseFlavorDivider.hide()
-				baseGroup.hide()
-				chooseFlavorHeader.hide()
-				flavorGroup.hide()
-				basePrice = cake.price
-			}
-		}
-
-	}
-
 	// set the primary button based on current mode of this fragment
-	private fun setPrimaryButton(cake: Cake) {
+	private fun setPrimaryButton() {
 		binding.addToCartBtn.apply {
 			if (editMode) {
 				binding.addToCartBtn.text = getString(R.string.update_item_text)
@@ -129,32 +110,95 @@ class CustomizeFragment: Fragment(R.layout.fragment_customize) {
 			}
 
 			setOnClickListener {
-				val updatedCake = getFinalCake(cake)
-				viewModel.updateCurrentCartOrder(updatedCake, change = CartItemChange.Update)
+				if (finalCake.isEdiblePrintAttached) {
+					finalCake.thumbnail = finalCake.ediblePrintImage
+				}
+				viewModel.updateCurrentCartOrder(finalCake, change = CartItemChange.Update)
 				findNavController().navigateUp()
 			}
 		}
 	}
 
-	// build the cake based on the previous cake
-	private fun getFinalCake(oldCake: Cake): Cake {
-		binding.customFragmentContent.apply {
-			oldCake.baseName = getBaseName(baseGroup.checkedChipId)
-			oldCake.flavors = listOf(getFlavor(flavorGroup.checkedChipId))
-			oldCake.weightKg = weightText.text.toString().toFloat()
-			oldCake.occasion = if (occasionGroup.checkedChipId == R.id.other) {
-				customOccasionTextLayout.editText?.text.toString()
-			} else {
-				getOccasion(occasionGroup.checkedChipId)
-			}
-			oldCake.price += getCakeAdditionalPrice()
-			oldCake.additionalDescription = customDescriptionInputLayout.editText?.text.toString()
-		}
-		return oldCake
-	}
-
 	private fun getCakeAdditionalPrice(): Long {
 		return flavorPrice + weightPrice
+	}
+
+	private fun onBaseNameChange(newBaseName: String) {
+		finalCake.baseName = newBaseName
+
+		if (newBaseName == "Edible Print") {
+			val currentImage = viewModel.currentImage.value
+			if (currentImage == null) {
+				(activity as MainActivity?)?.selectImage()
+			} else {
+				TODO("When the image is already selected")
+			}
+		} else {
+			viewModel.setCurrentImage(null)
+		}
+
+
+		val existingBaseMenuList = viewModel.baseMenuItems.value
+		if (existingBaseMenuList != null) {
+			val newBaseItem = existingBaseMenuList.find {
+				it.title == newBaseName
+			}
+
+			if (!finalCake.isEdiblePrintAttached) {
+				setImage(newBaseItem?.image)
+			}
+
+		}
+	}
+
+	private fun findFlavorPrice(flavor: String): Long {
+		val flavorItems = viewModel.flavorMenuItems.value
+		return if (!flavorItems.isNullOrEmpty()) {
+			var price: Long = 0
+			for (item in flavorItems) {
+				if (item.title == flavor) {
+					price = item.price
+				}
+			}
+			price
+		} else {
+			0
+		}
+	}
+
+	private fun onFlavorChange(newFlavorName: String) {
+		finalCake.flavors = listOf(getFlavorFromName(newFlavorName))
+		flavorPrice = findFlavorPrice(newFlavorName)
+		setPrice(finalCake)
+
+
+		val existingFlavorMenuList = viewModel.flavorMenuItems.value
+		if (existingFlavorMenuList != null) {
+			val newFlavorItem = existingFlavorMenuList.find {
+				it.title == newFlavorName
+			}
+
+			if (!finalCake.isEdiblePrintAttached) {
+				finalCake.thumbnail = newFlavorItem?.image
+				setImage(newFlavorItem?.image)
+			}
+
+		}
+
+	}
+
+	private fun onSizeChange(newSize: Float) {
+		finalCake.weightKg = newSize
+		weightPrice = (((newSize - 0.5f)/0.5) * 40000).toLong()
+		setPrice(finalCake)
+	}
+
+	private fun onOccasionChange(newOccasion: String) {
+		finalCake.occasion = newOccasion
+	}
+
+	private fun onAdditionalInfoChanged(newAdditionalInfo: String) {
+		finalCake.additionalDescription = newAdditionalInfo
 	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -162,88 +206,54 @@ class CustomizeFragment: Fragment(R.layout.fragment_customize) {
 		binding = FragmentCustomizeBinding.bind(view)
 
 		viewModel.windowInsets.observe(viewLifecycleOwner) { (top, bottom) ->
-			binding.customizeFragmentToolbar.updateLayout(marginTop = top)
+			binding.backBtn.updateLayout(marginTop = top + convertDpToPx(8), marginLeft = convertDpToPx(8))
 			binding.customFragmentContent.customizeScroll.setPadding(0, 0, 0, convertDpToPx(120) + bottom)
 		}
 
-		binding.customizeFragmentToolbar.setNavigationOnClickListener {
+		binding.backBtn.setOnClickListener {
 			findNavController().navigateUp()
 		}
 
 		val cake2 = arguments?.getParcelable<Cake>(ARG_CAKE)
 		val cartItem2 = arguments?.getParcelable<CartItem>(ARG_CART_ITEM)
 		editMode = arguments?.getBoolean(ARG_IS_EDIT_MODE) ?: false
+
 		presetCake(cake2, cartItem2)
 
-		binding.customFragmentContent.apply {
-
-			baseGroup.setOnCheckedChangeListener { _, checkedId ->
-				val base = getBaseName(checkedId)
-				binding.cakeImageVIew.setActualImageResource(getImageResourceBasedOnBaseName(base))
-			}
-
-			flavorGroup.setOnCheckedChangeListener { _, checkedId ->
-				val flavor = getFlavor(checkedId)
-				flavorPrice = priceMap[flavor]!!
-				setPrice(cake2, cartItem2)
-
-				binding.cakeImageVIew.setActualImageResource(getImageResourceBasedOnFlavor(flavor))
-
-			}
-
-			increaseWeightBtn.setOnClickListener {
-				val weightText = binding.customFragmentContent.weightText.text
-				if (weightText.isNullOrBlank()) {
-					toast("Weight must be provided.")
-					return@setOnClickListener
-				} else {
-					var weight = weightText.toString().toFloat()
-
-					// because maximum is 10
-					if (weight == 10f) {
-						// do nothing
-						return@setOnClickListener
+		viewModel.currentImage.observe(viewLifecycleOwner) {
+			binding.imageUploadProgressBar.show()
+			if (it != null) {
+				viewModel.uploadImage(it) { downloadUrl ->
+					binding.imageUploadProgressBar.hide()
+					if (downloadUrl != null) {
+						finalCake.thumbnail = null
+						ediblePrintImage = downloadUrl.toString()
+						finalCake.ediblePrintImage = ediblePrintImage
+						finalCake.isEdiblePrintAttached = true
+						setImage(ediblePrintImage)
 					} else {
-						weight += 0.5f
-						binding.customFragmentContent.weightText.setText(weight.toString())
-						weightPrice = (((weight - 0.5f)/0.5) * 40000).toLong()
-						setPrice(cake2)
+						ediblePrintImage = null
 					}
 				}
-			}
-
-			decreaseWeightBtn.setOnClickListener {
-				val wt = weightText.text
-				if (wt.isNullOrBlank()) {
-					Toast.makeText(requireContext(), "Weight must be provided.", Toast.LENGTH_SHORT)
-						.show()
-					return@setOnClickListener
-				} else {
-					var weight = wt.toString().toFloat()
-					// because maximum is 10
-					if (weight == 0.5f) {
-						// do nothing
-						return@setOnClickListener
-					} else {
-						weight -= 0.5f
-						weightText.setText(weight.toString())
-						weightPrice = ((weight - 0.5f) * 20000).toLong()
-						setPrice(cake2)
+			} else {
+				val vg = binding.customFragmentContent.choicesRecycler.getChildAt(0) as ViewGroup?
+				if (vg != null) {
+					for (ch in vg.children) {
+						if (ch is ViewGroup && ch is ChipGroup) {
+							if ((ch.getChildAt(2) as Chip).isChecked) {
+								ch.check(ch.getChildAt(0).id)
+							}
+						}
 					}
 				}
-			}
 
-			occasionGroup.setOnCheckedChangeListener { _, checkedId ->
-				customOccasionTextLayout.isVisible = checkedId == R.id.other
-				/*if (checkedId == R.id.other) {
-					customOccasionTextLayout.show()
-				} else {
-					customOccasionTextLayout.hide()
-				}*/
-			}
 
+				finalCake.isEdiblePrintAttached = false
+				finalCake.ediblePrintImage = null
+				binding.imageUploadProgressBar.hide()
+				ediblePrintImage = null
+			}
 		}
-
 
 	}
 
@@ -263,166 +273,213 @@ class CustomizeFragment: Fragment(R.layout.fragment_customize) {
 
 	private fun updatePriceUI() {
 		val additionalPrice = getCakeAdditionalPrice()
+		finalCake.price = basePrice + additionalPrice
 		val additionalPriceText = getString(R.string.currency_prefix) + (additionalPrice/100).toString()
-		val priceText = getString(R.string.currency_prefix) + "${basePrice/100} + $additionalPriceText"
-		binding.priceText.text = priceText
-	}
-
-	private fun getOccasionCheckId(occasion: String): Int {
-		return when (occasion) {
-			getString(R.string.birthday) -> R.id.birthday
-			getString(R.string.wedding) -> R.id.wedding
-			getString(R.string.wedding) -> R.id.anniversary
-			getString(R.string.valentine) -> R.id.valentinesDay
-			getString(R.string.mother) -> R.id.mothersDay
-			getString(R.string.father) -> R.id.fathersDay
-			else -> R.id.other
-		}
-	}
-
-	private fun getFlavourCheckId(flavor: Flavor): Int {
-		return when (flavor) {
-			BLACK_FOREST -> R.id.blackForest
-			WHITE_FOREST -> R.id.whiteForest
-			VANILLA -> R.id.vanilla
-			CHOCOLATE_FANTASY -> R.id.chocolateFantasy
-			RED_VELVET -> R.id.redVelvet
-			HAZELNUT -> R.id.hazelnut
-			MANGO -> R.id.mango
-			STRAWBERRY -> R.id.strawberry
-			KIWI -> R.id.kiwi
-			ORANGE -> R.id.orange
-			PINEAPPLE -> R.id.pineapple
-			BUTTERSCOTCH -> R.id.butterscotch
-			NONE -> 0
-		}
-	}
-
-	private fun getBaseNameCheckId(baseName: String): Int {
-		return when (baseName) {
-			getString(R.string.fondant) -> R.id.fondant
-			getString(R.string.sponge) -> R.id.sponge
-			else -> R.id.sponge
-		}
-	}
-
-	private fun getFlavor(id: Int): Flavor {
-		return when (id) {
-			R.id.blackForest -> BLACK_FOREST
-			R.id.whiteForest -> WHITE_FOREST
-			R.id.vanilla -> VANILLA
-			R.id.chocolateFantasy -> CHOCOLATE_FANTASY
-			R.id.redVelvet -> RED_VELVET
-			R.id.hazelnut -> HAZELNUT
-			R.id.mango -> MANGO
-			R.id.strawberry -> STRAWBERRY
-			R.id.kiwi -> KIWI
-			R.id.orange -> ORANGE
-			R.id.pineapple -> PINEAPPLE
-			R.id.butterscotch -> BUTTERSCOTCH
-			else -> NONE
-		}
-	}
-
-	private fun getBaseName(id: Int): String {
-		return when (id) {
-			R.id.sponge -> getString(R.string.sponge)
-			R.id.fondant -> getString(R.string.fondant)
-			else -> getString(R.string.sponge)
-		}
-	}
-
-	private fun getOccasion(id: Int): String {
-		return when (id) {
-			R.id.birthday -> getString(R.string.birthday)
-			R.id.wedding -> getString(R.string.wedding)
-			R.id.anniversary -> getString(R.string.anniversary)
-			R.id.valentinesDay -> getString(R.string.valentine)
-			R.id.mothersDay -> getString(R.string.mother)
-			R.id.fathersDay -> getString(R.string.father)
-			R.id.other -> binding.customFragmentContent.customOccasionTextLayout.editText?.text.toString()
-			else -> binding.customFragmentContent.customOccasionTextLayout.editText?.text.toString()
-		}
+		val basePriceText = getString(R.string.currency_prefix) + "${basePrice/100}"
+		val priceText = "$basePriceText + $additionalPriceText (Additional)"
+		val sp = SpannableString(priceText)
+		sp.setSpan(ForegroundColorSpan(ContextCompat.getColor(requireContext(), R.color.primaryColor)), 0, basePriceText.length, SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE)
+		binding.priceText.text = sp
 	}
 
 	companion object {
-		/*private const val TAG = "CustomizeFragment"*/
+		private const val TAG = "CustomizeFragment"
 		const val ARG_CART_ITEM = "ARG_CART_ITEM"
 		const val ARG_CAKE = "ARG_CAKE"
 		const val ARG_IS_EDIT_MODE = "ARG_IS_EDIT_MODE"
 	}
 
-}
+	data class Choice(val id: Int = 0, val header: String = "", val description: String = "", val choices: List<String> = emptyList())
 
-/*binding.customFragmentContent.flavorGroup.children.forEach { child ->
-			val chip = child as Chip
-			chip.setOnClickListener {
-				if (chip.isChecked) {
-					if (flavors.size == 2) {
-						val firstFlavor = flavors.first()
-						val prevCheckedId = getFlavourCheckId(firstFlavor)
-						val prevChip = binding.customFragmentContent.flavorGroup.findViewById<Chip>(prevCheckedId)
-						prevChip.isChecked = false
-						val p1 = priceMap[firstFlavor]!!
-						flavorPrice -= p1
-						flavors.remove()
-						val newF = getFlavor(child.id)
-						val p2 = priceMap[newF]!!
-						flavorPrice += p2
-						flavors.add(newF)
-					} else {
-						val flavor = getFlavor(child.id)
-						if (!flavors.contains(flavor)) {
-							val p = priceMap[flavor]!!
-							flavorPrice += p
-							flavors.add(flavor)
-						} else {
-							binding.customFragmentContent.flavorGroup.check(R.id.vanilla)
-							flavors.add(VANILLA)
-							val chip1 = binding.customFragmentContent.flavorGroup.findViewById<Chip>(child.id)
-							chip1.isChecked = false
-							flavors.remove()
-							flavorPrice = 0
-						}
-					}
-				} else {
-					val flavor = getFlavor(child.id)
-					val p = priceMap[flavor]!!
-					if (flavors.contains(flavor)) {
-						flavorPrice -= p
-						flavors.remove(flavor)
-					} else {
-						flavorPrice += p
-						flavors.add(flavor)
+	val choicesComparator = object: DiffUtil.ItemCallback<Choice>() {
+		override fun areItemsTheSame(oldItem: Choice, newItem: Choice): Boolean {
+			return oldItem.id == newItem.id
+		}
+
+		override fun areContentsTheSame(oldItem: Choice, newItem: Choice): Boolean {
+			return oldItem == newItem
+		}
+	}
+
+	private inner class ChoicesAdapter: ListAdapter<Choice, ChoicesAdapter.ChoicesViewHolder>(choicesComparator) {
+
+		var isEditMode = false
+
+		inner class ChoicesViewHolder(view: View): RecyclerView.ViewHolder(view) {
+
+			private val heading: TextView = view.findViewById(R.id.choiceHeading)
+			private val description: TextView = view.findViewById(R.id.choiceDescription)
+			private val choicesContainer: ChipGroup = view.findViewById(R.id.choiceGroup)
+			private val stub: ViewStub = view.findViewById(R.id.choiceExtraStub)
+
+			fun selectBase(baseName: String) {
+				for (child in choicesContainer.children) {
+					if ((child as Chip).text == baseName) {
+						choicesContainer.check(child.id)
 					}
 				}
-				setPrice()
 			}
-		}
-*/
 
-/*private fun getFlavorNames(flavors: List<Flavor>): List<String> {
-		val flavorsString = mutableListOf<String>()
-		for (flavor in flavors) {
-			flavorsString.add(getFlavourName(flavor))
-		}
-		return flavorsString
-	}*/
+			fun selectFlavor(flavor: String) {
+				for (child in choicesContainer.children) {
+					val f = (child as Chip).text
+					if (f == flavor) {
+						choicesContainer.check(child.id)
+						// setting initial price
+						if (f != "Vanilla") {
+							onFlavorChange(f.toString())
+						}
+					}
+				}
+			}
 
-/*private fun getFlavourName(flavor: Flavor): String {
-	return when (flavor) {
-		BLACK_FOREST -> getString(R.string.black_forest)
-		WHITE_FOREST -> getString(R.string.white_forest)
-		VANILLA -> getString(R.string.vanilla)
-		CHOCOLATE_FANTASY -> getString(R.string.chocolate_fantasy)
-		RED_VELVET -> getString(R.string.red_velvet)
-		HAZELNUT -> getString(R.string.hazelnut)
-		MANGO -> getString(R.string.mango)
-		STRAWBERRY -> getString(R.string.strawberry)
-		KIWI -> getString(R.string.kiwi)
-		ORANGE -> getString(R.string.orange)
-		PINEAPPLE -> getString(R.string.pineapple)
-		BUTTERSCOTCH -> getString(R.string.butterscotch)
-		NONE -> ""
+			fun setWeight(view: TextView, weight: Float) {
+				view.text = weight.toString()
+				onSizeChange(weight)
+			}
+
+			fun bind(choice: Choice) {
+
+				heading.text = choice.header
+				description.text = choice.description
+
+				for (ch in choice.choices) {
+					addChoice(ch)
+				}
+
+				when (choice.id) {
+					0 -> {
+						// base
+						choicesContainer.setOnCheckedChangeListener { _, _ ->
+							val chip = choicesContainer.findViewById<Chip>(choicesContainer.checkedChipId)
+							val baseName = chip.text.toString()
+							onBaseNameChange(baseName)
+						}
+
+						selectBase(finalCake.baseName)
+
+					}
+					1 -> {
+						// flavor
+						choicesContainer.setOnCheckedChangeListener { _, _ ->
+							val chip = choicesContainer.findViewById<Chip>(choicesContainer.checkedChipId)
+							onFlavorChange(chip.text.toString())
+						}
+
+						selectFlavor(getFlavorName(finalCake.flavors.first()))
+
+					}
+					2 -> {
+						// weight
+						choicesContainer.hide()
+
+						val extraView = stub.inflate()
+						val choiceExtraBinding = ChoiceExtraBinding.bind(extraView)
+
+						choiceExtraBinding.extraTextLayout.hide()
+
+						choiceExtraBinding.extraAmountCustomize.apply {
+
+							increaseAmount.setOnClickListener {
+								var weight: Float
+								val weightText = amountText.text.toString()
+								if (weightText.isBlank()) {
+									toast("Weight must be provided.")
+									return@setOnClickListener
+								} else {
+									weight = weightText.toFloat()
+									// because maximum is 10
+									if (weight == 10f) {
+										// do nothing
+										return@setOnClickListener
+									} else {
+										weight += 0.5f
+										amountText.text = weight.toString()
+									}
+								}
+
+								onSizeChange(weight)
+							}
+
+							decreaseAmount.setOnClickListener {
+								var weight: Float
+								val wt = amountText.text.toString()
+								if (wt.isBlank()) {
+									toast("Weight must be provided")
+									return@setOnClickListener
+								} else {
+									weight = wt.toFloat()
+									// because maximum is 10
+									if (weight == 0.5f) {
+										// do nothing
+										return@setOnClickListener
+									} else {
+										weight -= 0.5f
+										amountText.text = weight.toString()
+										weightPrice = (((weight - 0.5f)/0.5) * 40000).toLong()
+									}
+								}
+
+								onSizeChange(weight)
+							}
+
+							if (isEditMode) {
+								setWeight(amountText, finalCake.weightKg)
+							} else {
+								amountText.text = 0.5f.toString()
+							}
+
+						}
+
+
+					}
+					3 -> {
+						// occasion
+						choicesContainer.setOnCheckedChangeListener { _, _ ->
+							val chip = choicesContainer.findViewById<Chip>(choicesContainer.checkedChipId)
+							onOccasionChange(chip.text.toString())
+						}
+
+						choicesContainer.check(choicesContainer.getChildAt(0).id)
+
+					}
+					4 -> {
+						// Additional
+						choicesContainer.hide()
+
+						val extraView = stub.inflate()
+						val choiceExtraBinding = ChoiceExtraBinding.bind(extraView)
+
+						choiceExtraBinding.extraAmountCustomize.root.hide()
+						choiceExtraBinding.extraTextLayout.hint = "Description (Custom)"
+
+						choiceExtraBinding.extraTextLayout.editText?.doAfterTextChanged {
+							onAdditionalInfoChanged(choiceExtraBinding.extraTextLayout.editText?.text.toString())
+						}
+					}
+				}
+			}
+
+			private fun addChoice(choice: String) {
+				val chip = layoutInflater.inflate(R.layout.custom_chip, choicesContainer, false) as Chip
+				chip.text = choice
+				choicesContainer.addView(chip)
+			}
+
+		}
+
+		override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChoicesViewHolder {
+			return ChoicesViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.choice_layout, parent, false))
+		}
+
+		override fun onBindViewHolder(holder: ChoicesViewHolder, position: Int) {
+			holder.bind(getItem(position))
+		}
 	}
-}*/
+
+
+	override fun onDestroyView() {
+		super.onDestroyView()
+		viewModel.setCurrentImage(null)
+	}
+}

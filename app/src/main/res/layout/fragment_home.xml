@@ -80,6 +80,7 @@
         android:layout_height="match_parent"
         android:clipToPadding="false"
         android:fillViewport="true"
+        android:overScrollMode="never"
         android:paddingTop="8dp"
         android:paddingBottom="64dp"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
@@ -144,12 +145,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clipToPadding="false"
+                android:minHeight="200dp"
                 android:paddingStart="16dp"
                 android:paddingEnd="8dp"
                 android:paddingBottom="24dp"
                 tools:itemCount="1"
-                tools:listitem="@layout/base_cake_item"
-                tools:visibility="gone" />
+                tools:listitem="@layout/base_cake_item" />
 
             <TextView
                 android:id="@+id/textView2"
@@ -168,6 +169,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clipToPadding="false"
+                android:minHeight="200dp"
                 android:paddingStart="16dp"
                 android:paddingEnd="8dp"
                 android:paddingBottom="24dp"

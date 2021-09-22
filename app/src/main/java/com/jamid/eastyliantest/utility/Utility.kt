@@ -3,6 +3,7 @@ package com.jamid.eastyliantest.utility
 import android.animation.ObjectAnimator
 import android.app.Activity
 import android.content.*
+import android.content.res.Resources
 import android.net.Uri
 import android.text.format.DateUtils
 import android.util.Patterns
@@ -384,6 +385,10 @@ fun Context.showDialog(title: String? = null, message: String? = null, positiveB
     return d.show()
 }
 
+fun getWindowHeight() = Resources.getSystem().displayMetrics.heightPixels
+
+fun getWindowWidth() = Resources.getSystem().displayMetrics.widthPixels
+
 fun <T: Activity> Fragment.toActivity(clazz: Class<T>) {
     requireContext().toActivity(clazz)
 }
@@ -422,6 +427,28 @@ fun Context.getFlavorName(flavor: Flavor): String {
         Flavor.PINEAPPLE -> getString(R.string.pineapple)
         Flavor.BUTTERSCOTCH -> getString(R.string.butterscotch)
         Flavor.NONE -> ""
+    }
+}
+
+fun Fragment.getFlavorFromName(flavor: String): Flavor {
+    return requireContext().getFlavorFromName(flavor)
+}
+
+fun Context.getFlavorFromName(flavor: String): Flavor {
+    return when (flavor) {
+        getString(R.string.black_forest) -> Flavor.BLACK_FOREST
+        getString(R.string.white_forest) -> Flavor.WHITE_FOREST
+        getString(R.string.vanilla) -> Flavor.VANILLA
+        getString(R.string.chocolate_fantasy) -> Flavor.CHOCOLATE_FANTASY
+        getString(R.string.red_velvet) -> Flavor.RED_VELVET
+        getString(R.string.hazelnut) -> Flavor.HAZELNUT
+        getString(R.string.mango) -> Flavor.MANGO
+        getString(R.string.strawberry) -> Flavor.STRAWBERRY
+        getString(R.string.kiwi) -> Flavor.KIWI
+        getString(R.string.orange) -> Flavor.ORANGE
+        getString(R.string.pineapple) -> Flavor.PINEAPPLE
+        getString(R.string.butterscotch) -> Flavor.BUTTERSCOTCH
+        else -> Flavor.NONE
     }
 }
 

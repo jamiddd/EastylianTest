@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="16dp">
+
+
+    <TextView
+        android:id="@+id/choiceHeading"
+        style="@style/ListItem"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-medium"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:layout_constraintBottom_toTopOf="@+id/choiceDescription"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:text="Heading for Choice" />
+
+    <TextView
+        android:id="@+id/choiceDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/choiceGroupDivider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/choiceHeading"
+        tools:maxLines="2"
+        tools:text="@string/large_text" />
+
+    <View
+        android:id="@+id/choiceGroupDivider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintBottom_toTopOf="@+id/choiceGroup"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/choiceDescription" />
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/choiceGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        app:checkedChip="@id/vanilla"
+        app:layout_constraintBottom_toTopOf="@id/choiceExtraStub"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_min="50dp"
+        app:layout_constraintStart_toStartOf="@+id/choiceGroupDivider"
+        app:layout_constraintTop_toBottomOf="@+id/choiceGroupDivider"
+        app:selectionRequired="true"
+        app:singleSelection="true" />
+
+    <ViewStub
+        android:id="@+id/choiceExtraStub"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inflatedId="@+id/choiceExtraRoot"
+        android:layout="@layout/choice_extra"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/choiceGroup" />
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -12,7 +12,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.jamid.eastyliantest.COD
 import com.jamid.eastyliantest.R
 import com.jamid.eastyliantest.databinding.FragmentPaymentResultBinding
 import com.jamid.eastyliantest.model.Result
@@ -39,48 +38,48 @@ class PaymentResultFragment: Fragment(R.layout.fragment_payment_result) {
         }
 
         viewModel.currentPaymentResult.observe(viewLifecycleOwner) { result ->
-            binding.paymentAnimationLoading.hide()
-            if (result != null) {
-                when (result) {
-                    is Result.Error -> {
-                        // payment unsuccessful
-                        setAnimation(false)
+            viewLifecycleOwner.lifecycleScope.launch {
+                delay(1000)
+                binding.paymentAnimationLoading.hide()
 
-                        binding.paymentResultMessage.show()
+                if (result != null) {
+                    when (result) {
+                        is Result.Error -> {
+                            // payment unsuccessful
+                            setAnimation(false)
 
-                        val msg = getString(R.string.failure_payment_text)
+                            binding.paymentResultMessage.show()
 
-                        displayMessage(msg, false)
-                    }
-                    is Result.Success -> {
-                        // payment successful
-                        var isCashOnDelivery = false
-                        val currentOrder = viewModel.currentCartOrder.value
-                        if (currentOrder != null) {
-                            isCashOnDelivery = currentOrder.paymentMethod == COD
+                            val msg = getString(R.string.failure_payment_text)
+
+                            displayMessage(msg, false)
                         }
+                        is Result.Success -> {
+                            // payment successful
+                            val isCashOnDelivery = result.data
 
-                        viewModel.setCurrentCartOrder(null)
+                            viewModel.setCurrentCartOrder(null)
 
-                        setAnimation(true)
+                            setAnimation(true)
 
-                        val msg = if (isCashOnDelivery) {
-                            getString(R.string.confirm_cod_text)
-                        } else {
-                            getString(R.string.confirm_payment_text)
+                            val msg = if (isCashOnDelivery) {
+                                getString(R.string.confirm_cod_text)
+                            } else {
+                                getString(R.string.confirm_payment_text)
+                            }
+
+                            displayMessage(msg, true)
+
                         }
-
-                        displayMessage(msg, true)
-
                     }
-                }
 
-                viewLifecycleOwner.lifecycleScope.launch {
+
                     delay(8000)
                     findNavController().navigateUp()
-                }
 
+                }
             }
+
         }
 
         binding.checkOrderBtn.setOnClickListener {

@@ -63,6 +63,7 @@ class OrderViewHolder(val view: View): RecyclerView.ViewHolder(view) {
     private val orderDeliveryText: MaterialButton = view.findViewById(R.id.deliveryStatus)
     private val bottomActionLayout: View = view.findViewById(R.id.actionLayout)
     private val actionDivider: View = view.findViewById(R.id.primaryActionDivider)
+    private val deliveryBoyAnimation: LottieAnimationView = view.findViewById(R.id.deliveryBoyAnimation)
 
     var isAdmin = false
     var isDeliveryExecutive = false
@@ -254,7 +255,11 @@ class OrderViewHolder(val view: View): RecyclerView.ViewHolder(view) {
             }
             Preparing -> {
                 setBottomActionVisibility(true)
-                setUpPrimaryActionButton("Navigate", true)
+                if (order.delivery) {
+                    setUpPrimaryActionButton("Navigate", true)
+                } else {
+                    setUpPrimaryActionButton("Notify Customer", true)
+                }
 
                 val hours = kotlin.math.abs((((System.currentTimeMillis() - order.deliveryAt) / 1000) / 60) / 60)
 
@@ -284,6 +289,9 @@ class OrderViewHolder(val view: View): RecyclerView.ViewHolder(view) {
     }
 
     private fun setUpForCustomer(order: Order) {
+
+
+
         when (order.status[0]) {
             Created -> {
                 // nothing here
@@ -303,12 +311,9 @@ class OrderViewHolder(val view: View): RecyclerView.ViewHolder(view) {
             Delivering -> {
                 setBottomActionVisibility(true)
 
-                view.findViewById<LottieAnimationView>(R.id.deliveryBoyAnimation)?.let {
-                    it.show()
-                    it.playAnimation()
-                }
-
                 if (order.delivery) {
+                    deliveryBoyAnimation.show()
+
                     setUpSecondaryActionButton("Call delivery Executive", true)
                 } else {
                     setUpPrimaryActionButton("Navigate", true)

@@ -204,6 +204,21 @@
     <string name="image_not_uploaded_error">Either an image is not provided or it is not uploaded.</string>
     <string name="update_cake_details">Update Cake Details</string>
     <string name="add_cake">Add Cake</string>
+    <string name="add_delivery_executive">Add delivery executive</string>
+    <string name="remove_delivery_executive">Remove delivery executive</string>
+    <string name="moderators">Moderators</string>
+    <string name="delete_moderator">Delete moderator</string>
+    <string name="cakes_amp_payments">Cakes &amp; Payments</string>
+    <string name="stocks">Stocks</string>
+    <string name="customer_relations">Customer Relations</string>
+    <string name="notifications">Notifications</string>
+    <string name="feedbacks">Feedbacks</string>
+    <string name="edit_contacts">Edit Contacts</string>
+    <string name="order_served">Order Served</string>
+    <string name="net_sale">Net Sale</string>
+    <string name="eastylian_version">Eastylian Test\nv 1.0.0</string>
+    <string name="delivery_executives">Delivery Executives</string>
+    <string name="change_menu">Change Menu</string>
 
     <!-- <string-array name="occasion_names">
         <item>Birthday</item>

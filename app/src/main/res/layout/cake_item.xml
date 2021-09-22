@@ -9,6 +9,7 @@
     android:layout_marginBottom="8dp"
     android:clickable="true"
     android:focusable="true"
+    app:cardCornerRadius="12dp"
     app:cardElevation="12dp"
     app:checkedIconTint="#E91E63">
 
@@ -39,11 +40,11 @@
             android:layout_marginBottom="18dp"
             android:ellipsize="end"
             android:maxLines="4"
-            tools:text="Description of this cake that can go on and on but at the same time may also be small and concise."
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/cakeName"
             app:layout_constraintStart_toStartOf="@+id/cakePrice"
-            app:layout_constraintTop_toBottomOf="@+id/cakePrice" />
+            app:layout_constraintTop_toBottomOf="@+id/cakePrice"
+            tools:text="Description of this cake that can go on and on but at the same time may also be small and concise." />
 
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/cake_image"
@@ -62,11 +63,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            tools:text="₹ 450"
             android:textColor="#E91E63"
             app:layout_constraintBottom_toTopOf="@+id/cakeDesc"
             app:layout_constraintStart_toStartOf="@+id/cakeName"
-            app:layout_constraintTop_toBottomOf="@+id/cakeName" />
+            app:layout_constraintTop_toBottomOf="@+id/cakeName"
+            tools:text="₹ 450" />
 
         <TextView
             android:id="@+id/customizableText"
@@ -114,13 +115,13 @@
             android:layout_width="36dp"
             android:layout_height="36dp"
             android:layout_marginStart="8dp"
+            android:contentDescription="@string/tick_animation_desc"
             android:elevation="5dp"
             android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="@+id/primaryCakeAction"
             app:layout_constraintStart_toStartOf="@+id/primaryCakeAction"
             app:layout_constraintTop_toTopOf="@+id/primaryCakeAction"
-            app:srcCompat="@drawable/animated_check"
-            android:contentDescription="@string/tick_animation_desc" />
+            app:srcCompat="@drawable/animated_check" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

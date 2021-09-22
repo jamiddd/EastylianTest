@@ -7,15 +7,16 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.facebook.drawee.view.SimpleDraweeView
 import com.jamid.eastyliantest.R
+import com.jamid.eastyliantest.interfaces.OrderImageClickListener
 import com.jamid.eastyliantest.model.CartItem
 import com.jamid.eastyliantest.model.Flavor
 import com.jamid.eastyliantest.utility.getFlavorName
-import com.jamid.eastyliantest.utility.getImageResourceBasedOnBaseName
-import com.jamid.eastyliantest.utility.getImageResourceBasedOnFlavor
 
 class OrderItemAdapter(private val cakes: List<CartItem>): RecyclerView.Adapter<OrderItemAdapter.OrderItemViewHolder>(){
 
     inner class OrderItemViewHolder(val view: View): RecyclerView.ViewHolder(view) {
+
+        private val orderImageClickListener = view.context as OrderImageClickListener
 
         fun bind(cartItem: CartItem) {
             val cake = cartItem.cake
@@ -24,15 +25,7 @@ class OrderItemAdapter(private val cakes: List<CartItem>): RecyclerView.Adapter<
             val desc = view.findViewById<TextView>(R.id.orderItemDesc)
             val quantity = view.findViewById<TextView>(R.id.orderItemQuantity)
 
-            if (cake.thumbnail != null) {
-                image.setImageURI(cake.thumbnail)
-            } else {
-                if (cake.flavors.first() != Flavor.VANILLA) {
-                    image.setActualImageResource(view.context.getImageResourceBasedOnFlavor(cake.flavors.first()))
-                } else {
-                    image.setActualImageResource(view.context.getImageResourceBasedOnBaseName(cake.baseName))
-                }
-            }
+            image.setImageURI(cake.thumbnail)
 
             if (cartItem.cake.fancyName.isNotBlank()) {
                 name.text = cartItem.cake.fancyName
@@ -54,6 +47,10 @@ class OrderItemAdapter(private val cakes: List<CartItem>): RecyclerView.Adapter<
 
             val quantityText = "Qty. ${cartItem.quantity}"
             quantity.text = quantityText
+
+            image.setOnClickListener {
+                orderImageClickListener.onImageClick(image, cartItem.cake.thumbnail!!)
+            }
 
         }
     }

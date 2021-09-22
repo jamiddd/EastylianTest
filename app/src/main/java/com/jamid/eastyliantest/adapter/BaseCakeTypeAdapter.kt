@@ -3,115 +3,80 @@ package com.jamid.eastyliantest.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.facebook.drawee.view.SimpleDraweeView
 import com.jamid.eastyliantest.R
 import com.jamid.eastyliantest.interfaces.CakeClickListener
 import com.jamid.eastyliantest.model.Cake
-import com.jamid.eastyliantest.model.Flavor
+import com.jamid.eastyliantest.model.CakeMenuItem
+import com.jamid.eastyliantest.utility.getFlavorFromName
 
-class BaseCakeTypeAdapter(private val cakes: List<Cake>): RecyclerView.Adapter<BaseCakeTypeAdapter.CakeViewHolder>() {
+class BaseCakeTypeAdapter: ListAdapter<CakeMenuItem, BaseCakeTypeAdapter.CakeViewHolder>(
+    cakeMenuItemComparator) {
+
+    var isAdmin = false
+
+    companion object {
+        private val cakeMenuItemComparator = object : DiffUtil.ItemCallback<CakeMenuItem>() {
+            override fun areItemsTheSame(oldItem: CakeMenuItem, newItem: CakeMenuItem): Boolean {
+                return oldItem.id == newItem.id
+            }
+
+            override fun areContentsTheSame(oldItem: CakeMenuItem, newItem: CakeMenuItem): Boolean {
+                return oldItem == newItem
+            }
+        }
+    }
 
     inner class CakeViewHolder(val view: View): RecyclerView.ViewHolder(view) {
 
+        var isAdmin = false
+
         private val cakeClickListener: CakeClickListener = view.context as CakeClickListener
+        private val cakeNameText = view.findViewById<TextView>(R.id.cakeTypeText)
+        private val imageView = view.findViewById<SimpleDraweeView>(R.id.cakeTypeImage)
 
-        fun bind(cake: Cake) {
-            val cakeNameText = view.findViewById<TextView>(R.id.cakeTypeText)
-            val imageView = view.findViewById<ImageView>(R.id.cakeTypeImage)
+        fun bind(cakeMenuItem: CakeMenuItem) {
 
-            if (cake.flavors.size > 1) {
-                imageView.apply {
-                    when (cake.flavors[1]) {
-                        Flavor.BLACK_FOREST -> {
-                            setImageResource(R.drawable.black_forest)
-                            cakeNameText.text = view.context.getString(R.string.black_forest)
-                        }
-                        Flavor.WHITE_FOREST -> {
-                            setImageResource(R.drawable.white_forest)
-                            cakeNameText.text = view.context.getString(R.string.white_forest)
-                        }
-                        Flavor.VANILLA -> {
-                            setImageResource(R.drawable.vanilla)
-                            cakeNameText.text = view.context.getString(R.string.vanilla)
-                        }
-                        Flavor.CHOCOLATE_FANTASY -> {
-                            setImageResource(R.drawable.chocolate_fantasy)
-                            cakeNameText.text = view.context.getString(R.string.chocolate_fantasy)
-                        }
-                        Flavor.RED_VELVET -> {
-                            setImageResource(R.drawable.red_velvet)
-                            cakeNameText.text = view.context.getString(R.string.red_velvet)
-                        }
-                        Flavor.HAZELNUT -> {
-                            setImageResource(R.drawable.hazelnut)
-                            cakeNameText.text = view.context.getString(R.string.hazelnut)
-                        }
-                        Flavor.MANGO -> {
-                            setImageResource(R.drawable.mango)
-                            cakeNameText.text = view.context.getString(R.string.mango)
-                        }
-                        Flavor.STRAWBERRY -> {
-                            setImageResource(R.drawable.strawberry)
-                            cakeNameText.text = view.context.getString(R.string.strawberry)
-                        }
-                        Flavor.KIWI -> {
-                            setImageResource(R.drawable.kiwi)
-                            cakeNameText.text = view.context.getString(R.string.kiwi)
-                        }
-                        Flavor.ORANGE -> {
-                            setImageResource(R.drawable.orange)
-                            cakeNameText.text = view.context.getString(R.string.orange)
-                        }
-                        Flavor.PINEAPPLE -> {
-                            setImageResource(R.drawable.pineapple)
-                            cakeNameText.text = view.context.getString(R.string.pineapple)
-                        }
-                        Flavor.BUTTERSCOTCH -> {
-                            setImageResource(R.drawable.butterscotch)
-                            cakeNameText.text = view.context.getString(R.string.butterscotch)
-                        }
-                        Flavor.NONE -> {
-                            if (cake.baseName.isNotBlank()) {
-                                cakeNameText.text = cake.baseName
-                                val image = if (cake.baseName == view.context.getString(R.string.fondant)) {
-                                    R.drawable.fondant
-                                } else {
-                                    R.drawable.sponge
-                                }
-                                imageView.setImageResource(image)
-                            }
-                        }
-                    }
-                }
-            } else {
-                cakeNameText.text = cake.baseName
-                val image = if (cake.baseName == view.context.getString(R.string.fondant)) {
-                    R.drawable.fondant
-                } else {
-                    R.drawable.sponge
-                }
-                imageView.setImageResource(image)
-            }
+            cakeNameText.text = cakeMenuItem.title
+            imageView.setImageURI(cakeMenuItem.image)
 
             view.setOnClickListener {
-                cakeClickListener.onCakeClick(cake)
+                if (isAdmin) {
+                    cakeClickListener.onBaseCakeClick(cakeMenuItem)
+                } else {
+                    val cake = if (cakeMenuItem.category == "flavor") {
+                        Cake.newFlavorInstance(listOf(view.context.getFlavorFromName(cakeMenuItem.title)))
+                    } else {
+                        Cake.newInstance(cakeMenuItem.title)
+                    }
+                    cake.isCustomizable = true
+                    cake.thumbnail = cakeMenuItem.image
+                    cakeClickListener.onCakeClick(cake)
+                }
+            }
+
+            view.setOnLongClickListener {
+                if (isAdmin) {
+                    cakeClickListener.onBaseCakeLongClick(cakeMenuItem)
+                }
+                true
             }
 
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CakeViewHolder {
-        return CakeViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.base_cake_item, parent, false))
+        val vh = CakeViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.base_cake_item, parent, false))
+        vh.isAdmin = isAdmin
+        return vh
     }
 
     override fun onBindViewHolder(holder: CakeViewHolder, position: Int) {
-        holder.bind(cakes[position])
-    }
-
-    override fun getItemCount(): Int {
-        return cakes.size
+        holder.bind(getItem(position))
     }
 
 }

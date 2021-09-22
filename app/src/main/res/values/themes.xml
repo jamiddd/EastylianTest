@@ -30,7 +30,7 @@
     </style>
 
     <style name="nonPrimaryFragment">
-        <item name="android:background">@color/colorGrey</item>
+        <item name="android:background">#FAFAFA</item>
     </style>
 
     <style name="tableItemBackground">
@@ -152,8 +152,9 @@
     </style>
 
     <style name="logOutBtn" parent="@style/ListItem">
-        <item name="background">@drawable/light_grey_rounded_rect</item>
-        <item name="android:textColor">@color/darkRedTextColor</item>
+        <item name="android:background">@drawable/light_grey_rounded_rect</item>
+        <item name="android:backgroundTint">@color/white</item>
+        <item name="android:textColor">@color/primaryColor</item>
     </style>
 
     <style name="ToggleButtonStyle" parent="Widget.MaterialComponents.MaterialButtonToggleGroup">
@@ -188,5 +189,18 @@
         <item name="android:textColor">@color/blueDarkTextColor</item>
     </style>
 
+    <style name="SettingsMenuItem" parent="@style/ListItem">
+        <item name="android:minHeight">56dp</item>
+        <item name="android:background">?selectableItemBackground</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Medium</item>
+        <item name="drawableEndCompat">@drawable/ic_round_keyboard_arrow_right_24</item>
+    </style>
+
+    <style name="CustomChipChoice" parent="Widget.MaterialComponents.Chip.Choice">
+
+    </style>
 
 </resources>

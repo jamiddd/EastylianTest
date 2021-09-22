@@ -7,7 +7,10 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import com.jamid.eastyliantest.*
+import com.jamid.eastyliantest.IS_ADMIN
+import com.jamid.eastyliantest.PHONE
+import com.jamid.eastyliantest.R
+import com.jamid.eastyliantest.STATE
 import com.jamid.eastyliantest.databinding.AddModeratorLayoutBinding
 import com.jamid.eastyliantest.databinding.DeliveryExecutiveLayoutBinding
 import com.jamid.eastyliantest.databinding.FragmentAdminDashBinding
@@ -37,7 +40,7 @@ class AdminDashFragment: Fragment(R.layout.fragment_admin_dash) {
 			// each section separated into their own functions
 			setDeliveryExecutiveSection(addDeliveryExecutiveBtn, removeDeliveryExecutiveBtn)
 			setModeratorSection(addModeratorBtn, deleteModeratorBtn)
-			setCakeAndPayments(allRefundsBtn, stocksBtn)
+			setCakeAndPayments(allRefundsBtn, stocksBtn, changeMenuBtn)
 			setCustomerRelationsSections(faqBtn, notificationsBtn, feedbacksBtn, editContacts)
 			setAccountSection(logOutBtn)
 
@@ -89,7 +92,7 @@ class AdminDashFragment: Fragment(R.layout.fragment_admin_dash) {
 		}
 	}
 
-	private fun setCakeAndPayments(allRefundsBtn: View, stocksBtn: View) {
+	private fun setCakeAndPayments(allRefundsBtn: View, stocksBtn: View, changeMenuBtn: View) {
 		allRefundsBtn.setOnClickListener {
 			findNavController().navigate(R.id.action_adminDashFragment_to_refundFragment2, Bundle().apply { putBoolean(
 				IS_ADMIN, true) }, slideRightNavOptions())
@@ -98,6 +101,11 @@ class AdminDashFragment: Fragment(R.layout.fragment_admin_dash) {
 		stocksBtn.setOnClickListener {
 			findNavController().navigate(R.id.action_adminDashFragment_to_organizeFragment, null, slideRightNavOptions())
 		}
+
+		changeMenuBtn.setOnClickListener {
+			findNavController().navigate(R.id.action_adminDashFragment_to_changeMenuFragment, null, slideRightNavOptions())
+		}
+
 	}
 
 	@SuppressLint("InflateParams")

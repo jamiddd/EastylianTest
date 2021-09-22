@@ -42,8 +42,8 @@
             android:layout_gravity="center_vertical"
             android:layout_marginStart="16dp"
             android:fontFamily="@font/manrope_semi_bold"
-            tools:text="₹ 550"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            tools:text="₹ 550" />
     </androidx.cardview.widget.CardView>
 
     <com.google.android.material.appbar.AppBarLayout
@@ -63,25 +63,32 @@
                 android:id="@+id/cakeImageVIew"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:contentDescription="@string/cake_desc"
                 app:actualImageScaleType="focusCrop"
-                app:placeholderImage="@color/darkGrey"
-                android:contentDescription="@string/cake_desc" />
+                app:placeholderImage="@color/darkGrey" />
 
-            <com.google.android.material.appbar.MaterialToolbar
-                android:id="@+id/customize_fragment_toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?actionBarSize"
-                android:background="#33000000"
-                app:layout_collapseMode="pin"
-                app:navigationIcon="@drawable/ic_round_close_24"
-                app:navigationIconTint="@color/white"
-                app:title=""
-                app:titleTextColor="@color/white"
-                tools:layout_marginTop="24dp" />
+            <ProgressBar
+                android:id="@+id/imageUploadProgressBar"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
 
     </com.google.android.material.appbar.AppBarLayout>
+
+    <Button
+        android:id="@+id/backBtn"
+        style="@style/Theme.Button.IconOnly"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="32dp"
+        android:backgroundTint="@color/white"
+        android:elevation="8dp"
+        app:icon="@drawable/ic_round_arrow_back_24" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

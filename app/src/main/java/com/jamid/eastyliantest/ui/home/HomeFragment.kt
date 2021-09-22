@@ -13,8 +13,6 @@ import com.jamid.eastyliantest.R
 import com.jamid.eastyliantest.adapter.BaseCakeTypeAdapter
 import com.jamid.eastyliantest.adapter.CakeAdapter
 import com.jamid.eastyliantest.databinding.FragmentHomeBinding
-import com.jamid.eastyliantest.model.Cake
-import com.jamid.eastyliantest.model.Flavor
 import com.jamid.eastyliantest.ui.MainViewModel
 import com.jamid.eastyliantest.utility.convertDpToPx
 import com.jamid.eastyliantest.utility.slideRightNavOptions
@@ -56,7 +54,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
 
         val snapHelper1 = LinearSnapHelper()
-        val flavors = Flavor.values()
 
         val cakeAdapter = CakeAdapter()
         cakeAdapter.addedCakeList = viewModel.addedCakeList
@@ -70,43 +67,36 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         viewModel.repo.customCakes.observe(viewLifecycleOwner) {
             if (it.isNotEmpty()) {
-                Log.d(TAG, "${it.size} Cakes")
                 cakeAdapter.submitList(it)
-            } else {
-                Log.d(TAG, "No cakes")
             }
         }
 
-        val c1 = Cake.newInstance(getString(R.string.fondant))
-        val c2 = Cake.newInstance(getString(R.string.sponge))
-        c1.isCustomizable = true
-        c2.isCustomizable = true
-
-        val cakes1 = listOf(c1, c2)
-
-        val baseCakeTypeAdapter = BaseCakeTypeAdapter(cakes1)
+        val baseCakeTypeAdapter = BaseCakeTypeAdapter()
         binding.mainCategoryRecycler.apply {
             adapter = baseCakeTypeAdapter
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         }
 
-        val cakes2 = mutableListOf<Cake>()
-        for (flavor in flavors) {
-            if (flavor != Flavor.NONE && flavor != Flavor.VANILLA) {
-                val cake = Cake.newFlavorInstance(listOf(Flavor.VANILLA, flavor))
-                cake.isCustomizable = true
-                cakes2.add(cake)
-            }
-        }
-
         val snapHelper = LinearSnapHelper()
-        val baseCakeTypeAdapter1 = BaseCakeTypeAdapter(cakes2)
+        val baseCakeTypeAdapter1 = BaseCakeTypeAdapter()
 
         binding.flavoursRecycler.apply {
             adapter = baseCakeTypeAdapter1
             onFlingListener = null
             snapHelper.attachToRecyclerView(this)
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        }
+
+        viewModel.baseMenuItems.observe(viewLifecycleOwner) {
+            if (it.isNotEmpty()) {
+                baseCakeTypeAdapter.submitList(it)
+            }
+        }
+
+        viewModel.flavorMenuItems.observe(viewLifecycleOwner) {
+            if (it.isNotEmpty()) {
+                baseCakeTypeAdapter1.submitList(it)
+            }
         }
 
         viewModel.windowInsets.observe(viewLifecycleOwner) { (top, bottom) ->

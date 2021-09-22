@@ -1,0 +1,103 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/amountCustomizerRoot"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/outline_background"
+    android:minHeight="48dp">
+
+    <!-- <Button
+        android:id="@+id/decreaseWeightBtn"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="48dp"
+        android:layout_height="wrap_content"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:paddingLeft="12dp"
+        app:icon="@drawable/ic_remove_black_24dp"
+        app:strokeColor="@color/transparent"
+        app:strokeWidth="0dp" />
+
+      <EditText
+        android:id="@+id/weightText"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:autofillHints=""
+        android:background="@null"
+        android:ems="10"
+        android:gravity="center_horizontal"
+        android:inputType="number|text"
+        android:minWidth="80dp"
+        android:paddingStart="16dp"
+        android:paddingTop="8dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="8dp"
+        android:text="@string/half_size_value" />
+
+    <Button
+        android:id="@+id/increaseWeightBtn"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="48dp"
+        android:layout_height="wrap_content"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:paddingLeft="12dp"
+        app:icon="@drawable/ic_round_add_24"
+        app:strokeColor="@color/transparent"
+        app:strokeWidth="0dp" />
+
+    <TextView
+        android:id="@+id/textView36"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_weight="1"
+        android:fontFamily="sans-serif-medium"
+        android:text="@string/kg"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+-->
+    <Button
+        android:id="@+id/decreaseAmount"
+        style="@style/Theme.Button.IconOnly"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:icon="@drawable/ic_remove_black_24dp"
+        app:iconTint="@color/primaryColor"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/amountText"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="SpeakableTextPresentCheck" />
+
+    <Button
+        android:id="@+id/increaseAmount"
+        style="@style/Theme.Button.IconOnly"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:icon="@drawable/ic_round_add_24"
+        app:iconTint="@color/primaryColor"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/amountText"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="SpeakableTextPresentCheck" />
+
+    <TextView
+        android:id="@+id/amountText"
+        style="@style/headerText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/button5"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/decreaseAmount"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="123" />
+</androidx.constraintlayout.widget.ConstraintLayout>

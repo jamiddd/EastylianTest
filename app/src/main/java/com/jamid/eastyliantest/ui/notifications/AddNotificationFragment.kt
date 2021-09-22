@@ -10,12 +10,12 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.jamid.eastyliantest.ui.MainViewModel
 import com.jamid.eastyliantest.NOTIFICATIONS
 import com.jamid.eastyliantest.R
 import com.jamid.eastyliantest.databinding.FragmentAddNotificationBinding
 import com.jamid.eastyliantest.model.SimpleNotification
 import com.jamid.eastyliantest.ui.AdminActivity
+import com.jamid.eastyliantest.ui.MainViewModel
 import com.jamid.eastyliantest.utility.*
 
 class AddNotificationFragment: Fragment(R.layout.fragment_add_notification) {

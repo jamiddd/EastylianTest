@@ -361,8 +361,33 @@ class FirebaseUtility {
             }
     }
 
+    suspend fun getMenuItems(): Result<QuerySnapshot> {
+        return try {
+            val task = db.collection(RESTAURANT).document(EASTYLIAN).collection("menuItems")
+                .get()
 
-	companion object {
+            Result.Success(task.await())
+        } catch (e: Exception) {
+            Result.Error(e)
+        }
+    }
+
+    fun removeCakeMenuItem(cakeMenuItem: CakeMenuItem) {
+        db.collection(RESTAURANT)
+            .document(EASTYLIAN)
+            .collection("menuItems")
+            .document(cakeMenuItem.id)
+            .delete()
+            .addOnSuccessListener {
+                Log.d(TAG, "Cake menu item deleted.")
+            }.addOnFailureListener {
+                networkErrors.postValue(it)
+            }
+
+    }
+
+
+    companion object {
         private const val TAG = "FirebaseUtility"
     }
 

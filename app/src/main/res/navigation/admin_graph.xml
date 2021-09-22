@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_adminHomeFragment_to_adminDashFragment"
             app:destination="@id/adminDashFragment" />
+        <action
+            android:id="@+id/action_adminHomeFragment_to_imageViewFragment"
+            app:destination="@id/imageViewFragment" />
     </fragment>
     <fragment
         android:id="@+id/adminDashFragment"
@@ -37,6 +40,9 @@
         <action
             android:id="@+id/action_adminDashFragment_to_feedbackFragment"
             app:destination="@id/feedbackFragment" />
+        <action
+            android:id="@+id/action_adminDashFragment_to_changeMenuFragment"
+            app:destination="@id/changeMenuFragment" />
     </fragment>
     <fragment
         android:id="@+id/refundFragment2"
@@ -86,4 +92,23 @@
         tools:layout="@layout/fragment_feedback"
         android:name="com.jamid.eastyliantest.ui.FeedbackFragment"
         android:label="FeedbackFragment" />
+    <fragment
+        android:id="@+id/changeMenuFragment"
+        android:name="com.jamid.eastyliantest.ui.ChangeMenuFragment"
+        tools:layout="@layout/fragment_change_menu"
+        android:label="ChangeMenuFragment" >
+        <action
+            android:id="@+id/action_changeMenuFragment_to_addMenuItemFragment"
+            app:destination="@id/addMenuItemFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addMenuItemFragment"
+        android:name="com.jamid.eastyliantest.ui.AddMenuItemFragment"
+        tools:layout="@layout/fragment_add_menu_item"
+        android:label="AddMenuItemFragment" />
+    <fragment
+        android:id="@+id/imageViewFragment"
+        android:name="com.jamid.eastyliantest.views.zoomable.ImageViewFragment"
+        tools:layout="@layout/fragment_image_view"
+        android:label="ImageViewFragment" />
 </navigation>

@@ -29,4 +29,5 @@
 
 
     <color name="veryDarkGrey">#504F4F</color>
+    <color name="semi_transparent_dark">#A6585858</color>
 </resources>

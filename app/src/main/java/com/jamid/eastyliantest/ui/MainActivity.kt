@@ -1,6 +1,7 @@
 package com.jamid.eastyliantest.ui
 
 import android.Manifest
+import android.app.Activity
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.*
@@ -10,6 +11,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.view.WindowInsets
 import android.view.animation.AnimationUtils
 import android.widget.Button
@@ -17,6 +19,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.IntentSenderRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
@@ -47,6 +50,7 @@ import com.jamid.eastyliantest.model.*
 import com.jamid.eastyliantest.model.OrderStatus.*
 import com.jamid.eastyliantest.repo.MainRepository
 import com.jamid.eastyliantest.utility.*
+import com.jamid.eastyliantest.views.zoomable.ImageViewFragment
 import com.razorpay.Checkout
 import com.razorpay.PaymentData
 import com.razorpay.PaymentResultWithDataListener
@@ -56,7 +60,7 @@ import java.io.IOException
 import java.net.URL
 
 
-class MainActivity : LocationAwareActivity(), CakeClickListener, PaymentResultWithDataListener, CartItemClickListener, OrderClickListener, FaqListener {
+class MainActivity : LocationAwareActivity(), CakeClickListener, OrderImageClickListener, PaymentResultWithDataListener, CartItemClickListener, OrderClickListener, FaqListener {
 
     val viewModel: MainViewModel by viewModels { MainViewModelFactory(repository) }
 
@@ -64,6 +68,16 @@ class MainActivity : LocationAwareActivity(), CakeClickListener, PaymentResultWi
     private lateinit var navController: NavController
     private lateinit var repository: MainRepository
     private lateinit var notificationManager: NotificationManager
+
+
+    private val selectImageLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        if (it.resultCode == Activity.RESULT_OK) {
+            val image = it.data?.data
+            viewModel.setCurrentImage(image)
+        } else {
+            viewModel.setCurrentImage(null)
+        }
+    }
 
     private val orderFeedbacksTemp = mutableMapOf<String, Feedback>()
 
@@ -89,6 +103,11 @@ class MainActivity : LocationAwareActivity(), CakeClickListener, PaymentResultWi
 
             if (orderId != null && status != null) {
                 viewModel.updateOrderFromNotification(orderId, status.toOrderStatus())
+
+                if (status == DELIVERED) {
+                    openFeedbackDialog(orderId)
+                }
+
             }
 
             notificationManager.notify(NOTIFICATION_ID, notifyBuilder.build())
@@ -283,8 +302,6 @@ class MainActivity : LocationAwareActivity(), CakeClickListener, PaymentResultWi
                     statusBarSize to navBarSize
                 }
             }
-
-            binding.statusOverlay.updateLayout(top)
 
             viewModel.windowInsets.postValue(Pair(top, bottom))
             insets
@@ -552,6 +569,25 @@ class MainActivity : LocationAwareActivity(), CakeClickListener, PaymentResultWi
         }
     }
 
+
+    fun selectImage() {
+        val intent = Intent().apply {
+            type = "image/*"
+            action = Intent.ACTION_GET_CONTENT
+        }
+        selectImageLauncher.launch(intent)
+    }
+
+
+
+    override fun onBaseCakeClick(cakeMenuItem: CakeMenuItem) {
+        //
+    }
+
+    override fun onBaseCakeLongClick(cakeMenuItem: CakeMenuItem) {
+        //
+    }
+
     override fun onPaymentSuccess(razorpayPaymentId: String?, paymentData: PaymentData) {
         val currentOrder = viewModel.currentCartOrder.value
         if (currentOrder != null) {
@@ -562,7 +598,7 @@ class MainActivity : LocationAwareActivity(), CakeClickListener, PaymentResultWi
                     Signature.generateHashWithHmac256(data, getString(R.string.razorpay_secret_key))
                 if (paymentData.signature == generatedSignature) {
 
-                    viewModel.setCurrentPaymentResult(Result.Success(paymentData))
+                    viewModel.setCurrentPaymentResult(Result.Success(false))
 
                     currentOrder.status = listOf(Paid)
                     viewModel.setCurrentCartOrder(currentOrder)
@@ -706,55 +742,57 @@ class MainActivity : LocationAwareActivity(), CakeClickListener, PaymentResultWi
                 vh.resetState()
             }
         } else {
-
-            val feedbackView = layoutInflater.inflate(R.layout.feedback_layout, null, false)
-            val feedbackLayoutBinding = FeedbackLayoutBinding.bind(feedbackView)
-
-            if (orderFeedbacksTemp.containsKey(order.orderId)) {
-                val oldFeedback = orderFeedbacksTemp[order.orderId]!!
-
-                feedbackLayoutBinding.orderFeedbackTextLayout.editText?.setText(oldFeedback.content)
-                feedbackLayoutBinding.orderRatingBar.rating = oldFeedback.rating
-            }
-
-            showDialog("Feedback", "Write your views on this order ... ", extraView = feedbackView, positiveBtn = "Submit", onPositiveBtnClick = {
-                val rating = feedbackLayoutBinding.orderRatingBar.rating
-                val feedbackContent = feedbackLayoutBinding.orderFeedbackTextLayout.editText?.text
-
-                if (feedbackContent.isNullOrBlank() || feedbackContent.length < 10) {
-                    it.dismiss()
-                    Toast.makeText(
-                        this@MainActivity,
-                        "The feedback cannot be empty or too small.",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    return@showDialog
-                }
-
-                val feedbackDocRef = Firebase.firestore
-                    .collection("feedbacks")
-                    .document(order.orderId)
-
-                val feedback = Feedback(order.orderId, rating, feedbackContent.toString(), viewModel.repo.firebaseUtility.uid, System.currentTimeMillis())
-
-                feedbackDocRef.set(feedback)
-                    .addOnSuccessListener {
-                        orderFeedbacksTemp[order.orderId] = feedback
-                        if (feedbackLayoutBinding.orderRatingBar.rating < 3f) {
-                            Toast.makeText(this, "Sorry for the inconvenience! We will try to make our services better.", Toast.LENGTH_SHORT).show()
-                        } else {
-                            Toast.makeText(this, "Thank you for submitting your valuable feedback.", Toast.LENGTH_SHORT).show()
-                        }
-                    }.addOnFailureListener { e ->
-                        Log.e(TAG, e.localizedMessage!!)
-                    }
-            }, negativeBtn = "Cancel", onNegativeBtnClick = {
-                it.dismiss()
-            })
-
+            openFeedbackDialog(order.orderId)
             vh.resetState()
 
         }
+    }
+
+    private fun openFeedbackDialog(orderId: String) {
+        val feedbackView = layoutInflater.inflate(R.layout.feedback_layout, null, false)
+        val feedbackLayoutBinding = FeedbackLayoutBinding.bind(feedbackView)
+
+        if (orderFeedbacksTemp.containsKey(orderId)) {
+            val oldFeedback = orderFeedbacksTemp[orderId]!!
+
+            feedbackLayoutBinding.orderFeedbackTextLayout.editText?.setText(oldFeedback.content)
+            feedbackLayoutBinding.orderRatingBar.rating = oldFeedback.rating
+        }
+
+        showDialog("Feedback", "Write your views on this order ... ", extraView = feedbackView, positiveBtn = "Submit", onPositiveBtnClick = {
+            val rating = feedbackLayoutBinding.orderRatingBar.rating
+            val feedbackContent = feedbackLayoutBinding.orderFeedbackTextLayout.editText?.text
+
+            if (feedbackContent.isNullOrBlank() || feedbackContent.length < 10) {
+                it.dismiss()
+                Toast.makeText(
+                    this@MainActivity,
+                    "The feedback cannot be empty or too small.",
+                    Toast.LENGTH_SHORT
+                ).show()
+                return@showDialog
+            }
+
+            val feedbackDocRef = Firebase.firestore
+                .collection("feedbacks")
+                .document(orderId)
+
+            val feedback = Feedback(orderId, rating, feedbackContent.toString(), viewModel.repo.firebaseUtility.uid, System.currentTimeMillis())
+
+            feedbackDocRef.set(feedback)
+                .addOnSuccessListener {
+                    orderFeedbacksTemp[orderId] = feedback
+                    if (feedbackLayoutBinding.orderRatingBar.rating < 3f) {
+                        Toast.makeText(this, "Sorry for the inconvenience! We will try to make our services better.", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(this, "Thank you for submitting your valuable feedback.", Toast.LENGTH_SHORT).show()
+                    }
+                }.addOnFailureListener { e ->
+                    Log.e(TAG, e.localizedMessage!!)
+                }
+        }, negativeBtn = "Cancel", onNegativeBtnClick = {
+            it.dismiss()
+        })
     }
 
     override fun onSelectDirection(order: Order) {
@@ -785,6 +823,13 @@ class MainActivity : LocationAwareActivity(), CakeClickListener, PaymentResultWi
             it.dismiss()
         })
 
+    }
+
+    override fun onImageClick(view: View, image: String) {
+        val bundle = Bundle().apply {
+            putString(ImageViewFragment.ARG_IMAGE, image)
+        }
+        navController.navigate(R.id.action_adminHomeFragment_to_imageViewFragment, bundle)
     }
 
     companion object {

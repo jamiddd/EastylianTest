@@ -58,7 +58,9 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
 
 
 				val pastOrders = orders.filter { it1 ->
-					it1.status[0] == OrderStatus.Delivered || it1.status[0] == OrderStatus.Cancelled
+					it1.status.first() == OrderStatus.Delivered || it1.status.first() == OrderStatus.Cancelled
+				}.sortedByDescending { it1 ->
+					it1.deliveryAt
 				}
 
 				val currentOrders = orders.filter { it1 ->

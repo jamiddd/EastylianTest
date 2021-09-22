@@ -6,17 +6,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.facebook.drawee.view.SimpleDraweeView
 import com.jamid.eastyliantest.R
+import com.jamid.eastyliantest.databinding.AmountCustomizeLayoutBinding
 import com.jamid.eastyliantest.interfaces.CartItemClickListener
 import com.jamid.eastyliantest.model.CartItem
 import com.jamid.eastyliantest.model.Flavor
 import com.jamid.eastyliantest.model.Flavor.*
-import com.jamid.eastyliantest.utility.getImageResourceBasedOnBaseName
-import com.jamid.eastyliantest.utility.getImageResourceBasedOnFlavor
 
 class CartItemAdapter: ListAdapter<CartItem, CartItemAdapter.CartItemViewHolder>(object : DiffUtil.ItemCallback<CartItem>() {
     override fun areItemsTheSame(oldItem: CartItem, newItem: CartItem): Boolean {
@@ -36,39 +36,49 @@ class CartItemAdapter: ListAdapter<CartItem, CartItemAdapter.CartItemViewHolder>
             val cakeImage: SimpleDraweeView = view.findViewById(R.id.cakeImage)
             val cakeName: TextView = view.findViewById(R.id.cakeName)
             val cakeDesc: TextView = view.findViewById(R.id.cakeDescription)
-            val removeItemBtn: Button = view.findViewById(R.id.cartRemoveItem)
-            val addItemBtn: Button = view.findViewById(R.id.cartAddItem)
+            val customizerView = view.findViewById<View>(R.id.amountCustomizerContainer)
+
+            val amountCustomizerBinding = AmountCustomizeLayoutBinding.bind(customizerView)
 
             val customizeBtn: Button = view.findViewById(R.id.customizeBtn)
 
-            if (cartItem.cake.thumbnail != null) {
-                cakeImage.setImageURI(cartItem.cake.thumbnail)
+            /*if (cartItem.cake.thumbnail != null) {
+
             } else {
                 if (cartItem.cake.flavors.first() != VANILLA) {
                     cakeImage.setActualImageResource(view.context.getImageResourceBasedOnFlavor(cartItem.cake.flavors.first()))
                 } else {
                     cakeImage.setActualImageResource(view.context.getImageResourceBasedOnBaseName(cartItem.cake.baseName))
                 }
-            }
+            }*/
+            cakeImage.setImageURI(cartItem.cake.thumbnail)
 
             if (cartItem.cake.fancyName.isNotBlank()) {
                 cakeName.text = cartItem.cake.fancyName
             } else {
-                cakeName.text = cartItem.cake.baseName
+                val newName = if (cartItem.cake.flavors.first() != VANILLA) {
+                    cartItem.cake.baseName + " with " + view.context.getFlavorName(cartItem.cake.flavors.first()) + " flavor"
+                } else {
+                    cartItem.cake.baseName + " with Vanilla flavor"
+                }
+                cakeName.text = newName
             }
+
 
             cakeDesc.text = getFullDescriptionText(cartItem)
 
-            updatePriceAndQuantity(cartItem)
+            updatePriceAndQuantity(cartItem, amountCustomizerBinding)
 
-            addItemBtn.setOnClickListener {
+            amountCustomizerBinding.amountText.setTextColor(ContextCompat.getColor(view.context, R.color.primaryColor))
+
+            amountCustomizerBinding.increaseAmount.setOnClickListener {
                 cartItemClickListener.onAddItemClick(cartItem)
-                updatePriceAndQuantity(cartItem)
+                updatePriceAndQuantity(cartItem, amountCustomizerBinding)
             }
 
-            removeItemBtn.setOnClickListener {
+            amountCustomizerBinding.decreaseAmount.setOnClickListener {
                 cartItemClickListener.onRemoveItemClick(cartItem)
-                updatePriceAndQuantity(cartItem)
+                updatePriceAndQuantity(cartItem, amountCustomizerBinding)
             }
 
             customizeBtn.setOnClickListener {
@@ -114,13 +124,12 @@ class CartItemAdapter: ListAdapter<CartItem, CartItemAdapter.CartItemViewHolder>
             }
         }
 
-        private fun updatePriceAndQuantity(cartItem: CartItem) {
+        private fun updatePriceAndQuantity(cartItem: CartItem, customizeLayoutBinding: AmountCustomizeLayoutBinding) {
             val cakePrice: TextView = view.findViewById(R.id.cakePrice)
-            val itemQuantity: TextView = view.findViewById(R.id.cartQuantity)
             cartItem.totalPrice = cartItem.cake.price * cartItem.quantity
             val priceString = "₹ " + (cartItem.totalPrice/100).toString()
             cakePrice.text = priceString
-            itemQuantity.text = cartItem.quantity.toString()
+            customizeLayoutBinding.amountText.text = cartItem.quantity.toString()
         }
 
         private fun getFullDescriptionText(cartItem: CartItem): String {

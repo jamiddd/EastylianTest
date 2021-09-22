@@ -24,12 +24,16 @@ class MainRepository(db: EastylianDatabase) {
     private val cartItemDao = db.cartDao()
     private val cakeDao = db.cakeDao()
     private val restaurantDao = db.restaurantDao()
+    private val cakeMenuItemDao = db.cakeMenuItemDao()
 
     val firebaseUtility = FirebaseUtility()
     val currentUser: LiveData<User> = userDao.currentUser()
     val currentPlace: LiveData<SimplePlace> = placeDao.getCurrentPlace()
 
     val allOrders: LiveData<List<OrderAndCartItems>> = orderDao.getAllOrders()
+
+    val allCakeMenuItems: LiveData<List<CakeMenuItem>> = cakeMenuItemDao.allMenuItems()
+
     val pastPlaces = placeDao.getPastLocations()
     val favoriteCakes = cakeDao.favoriteCakes()
 
@@ -262,6 +266,18 @@ class MainRepository(db: EastylianDatabase) {
             }
         }
     }
+
+	suspend fun getMenuItems() {
+        when (val querySnapshotResult = firebaseUtility.getMenuItems()) {
+		    is Result.Success -> {
+		        val querySnapshot = querySnapshotResult.data
+                cakeMenuItemDao.insertItems(querySnapshot.toObjects(CakeMenuItem::class.java))
+		    }
+            is Result.Error -> {
+                querySnapshotResult.exception.localizedMessage?.toString()?.let { Log.e(TAG, it) }
+            }
+		}
+	}
 
 	companion object {
 

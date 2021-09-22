@@ -28,17 +28,16 @@ import com.jamid.eastyliantest.adapter.CakeMiniAdapter
 import com.jamid.eastyliantest.adapter.OrderViewHolder
 import com.jamid.eastyliantest.databinding.ActivityAdminBinding
 import com.jamid.eastyliantest.db.EastylianDatabase
-import com.jamid.eastyliantest.interfaces.CakeMiniListener
-import com.jamid.eastyliantest.interfaces.FaqListener
-import com.jamid.eastyliantest.interfaces.OrderClickListener
+import com.jamid.eastyliantest.interfaces.*
 import com.jamid.eastyliantest.model.*
 import com.jamid.eastyliantest.model.OrderStatus.*
 import com.jamid.eastyliantest.repo.MainRepository
 import com.jamid.eastyliantest.utility.*
+import com.jamid.eastyliantest.views.zoomable.ImageViewFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class AdminActivity : LocationAwareActivity(), OrderClickListener, CakeMiniListener, FaqListener {
+class AdminActivity : LocationAwareActivity(), OrderClickListener, CakeMiniListener, FaqListener, CakeClickListener, OrderImageClickListener {
 
     private lateinit var binding: ActivityAdminBinding
     private lateinit var navController: NavController
@@ -243,6 +242,30 @@ class AdminActivity : LocationAwareActivity(), OrderClickListener, CakeMiniListe
                             order.status = listOf(Delivering)
                         }
                         viewModel.insertOrder(order)
+
+                        if (!order.delivery) {
+                            Firebase.firestore.collection(USERS)
+                                .document(order.senderId)
+                                .get()
+                                .addOnSuccessListener { it1 ->
+                                    if (it1.exists()) {
+
+                                        vh.resetState()
+
+                                        val user = it1.toObject(User::class.java)!!
+                                        val phoneNumber = user.phoneNo.split(" ")
+                                        if (phoneNumber.size > 1) {
+                                            val number = phoneNumber[1]
+                                            val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:$number"))
+                                            startActivity(intent)
+                                        } else {
+                                            toast("Phone number not found")
+                                        }
+                                    }
+                                }.addOnFailureListener { ex ->
+                                    viewModel.setCurrentError(ex)
+                                }
+                        }
                     } else {
                         it.exception?.let { e ->
                             viewModel.setCurrentError(e)
@@ -297,7 +320,7 @@ class AdminActivity : LocationAwareActivity(), OrderClickListener, CakeMiniListe
     }
 
     override fun onSecondaryActionClick(vh: OrderViewHolder, order: Order) {
-        if (order.status[0] == Paid || order.status[0] == Due) {
+        if (order.status.first() == Paid) {
             lifecycleScope.launch (Dispatchers.IO) {
                 RazorpayUtility.initiateRefund(order) {
                     vh.resetState()
@@ -311,7 +334,12 @@ class AdminActivity : LocationAwareActivity(), OrderClickListener, CakeMiniListe
                     }
                 }
             }
-        } else throw IllegalStateException("Order status is in a state which is not allowed for an Admin.")
+        } else {
+            order.status = listOf(Cancelled)
+            viewModel.updateOrder(order.orderId, order.senderId, mapOf("status" to listOf(CANCELLED))) {
+                viewModel.insertOrder(order)
+            }
+        }
     }
 
     override fun onSelectDirection(order: Order) {
@@ -475,6 +503,40 @@ class AdminActivity : LocationAwareActivity(), OrderClickListener, CakeMiniListe
 
     override fun onReviewClick(faq: Faq) {
 
+    }
+
+    override fun onCakeClick(cake: Cake) {
+
+    }
+
+    override fun onCakeAddClick(cake: Cake) {
+
+    }
+
+    override fun onCakeSetFavorite(cake: Cake) {
+
+    }
+
+    override fun onBaseCakeClick(cakeMenuItem: CakeMenuItem) {
+        val bundle = Bundle().apply {
+            putParcelable("cakeMenuItem", cakeMenuItem)
+        }
+        navController.navigate(R.id.action_changeMenuFragment_to_addMenuItemFragment, bundle, slideRightNavOptions())
+    }
+
+    override fun onBaseCakeLongClick(cakeMenuItem: CakeMenuItem) {
+        showDialog("Remove item", "Are you sure you want to delete this menu item?", "Delete", "Cancel", {
+            viewModel.removeCakeMenuItem(cakeMenuItem)
+        }, {
+            it.dismiss()
+        })
+    }
+
+    override fun onImageClick(view: View, image: String) {
+        val bundle = Bundle().apply {
+            putString(ImageViewFragment.ARG_IMAGE, image)
+        }
+        navController.navigate(R.id.action_adminHomeFragment_to_imageViewFragment, bundle)
     }
 
 }

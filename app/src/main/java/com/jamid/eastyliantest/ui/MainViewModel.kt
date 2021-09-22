@@ -16,7 +16,6 @@ import com.jamid.eastyliantest.*
 import com.jamid.eastyliantest.db.*
 import com.jamid.eastyliantest.model.*
 import com.jamid.eastyliantest.repo.MainRepository
-import com.razorpay.PaymentData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -34,6 +33,7 @@ class MainViewModel(val repo: MainRepository): ViewModel() {
         viewModelScope.launch (Dispatchers.IO) {
             repo.clearCartItems()
             repo.clearOrders()
+            repo.getMenuItems()
         }
 
         FirebaseMessaging.getInstance().token.addOnCompleteListener {
@@ -47,6 +47,32 @@ class MainViewModel(val repo: MainRepository): ViewModel() {
 
     }
 
+    private val allCakeMenuItems = repo.allCakeMenuItems
+
+    val flavorMenuItems = Transformations.map(allCakeMenuItems) {
+        it.filter { it1 ->
+            it1.category == "flavor"
+        }
+    }
+
+    val baseMenuItems = Transformations.map(allCakeMenuItems) {
+        it.filter { it1 ->
+            it1.category != "flavor"
+        }
+    }
+
+   /* val flavorList = Transformations.map(flavorMenuItems) {
+        it.map { it1 ->
+            it1.title
+        }
+    }
+
+    val priceList = Transformations.map(flavorMenuItems) {
+        it.map { it1 ->
+            it1.title to it1.price
+        }
+    }*/
+
 
     private val _currentCartOrder = MutableLiveData<Order>().apply { value = null }
     val currentCartOrder: LiveData<Order> = _currentCartOrder
@@ -55,10 +81,10 @@ class MainViewModel(val repo: MainRepository): ViewModel() {
         _currentCartOrder.postValue(order)
     }
 
-    private val _currentPaymentResult = MutableLiveData<Result<PaymentData>?>()
-    val currentPaymentResult: LiveData<Result<PaymentData>?> = _currentPaymentResult
+    private val _currentPaymentResult = MutableLiveData<Result<Boolean>?>()
+    val currentPaymentResult: LiveData<Result<Boolean>?> = _currentPaymentResult
 
-    fun setCurrentPaymentResult(result: Result<PaymentData>? = null) {
+    fun setCurrentPaymentResult(result: Result<Boolean>? = null) {
         _currentPaymentResult.postValue(result)
     }
 
@@ -604,6 +630,10 @@ class MainViewModel(val repo: MainRepository): ViewModel() {
                 onComplete(it)
             }
         }
+    }
+
+    fun removeCakeMenuItem(cakeMenuItem: CakeMenuItem) {
+        repo.firebaseUtility.removeCakeMenuItem(cakeMenuItem)
     }
 
     companion object {
