@@ -373,7 +373,7 @@ class CartFragment: Fragment(R.layout.fragment_cart) {
 
             if (currentHourIn24Format > 20 || currentHourIn24Format < 9) {
                 if (currentOrder.delivery) {
-                    binding.checkOutBtn.disable()
+//                    binding.checkOutBtn.disable()
                 } else {
                     binding.checkOutBtn.enable()
                 }

@@ -298,9 +298,10 @@ class DeliveryActivity : LocationAwareActivity(), OrderClickListener, OrderImage
 			throw IllegalStateException("Order status is in a state which is not allowed for a delivery executive.")
 	}
 
-	override fun onSelectDirection(order: Order) {
-
+	override fun onCustomerClick(vh: OrderViewHolder, user: User) {
+		TODO("Not yet implemented")
 	}
+
 
 	override fun onImageClick(view: View, image: String) {
 		/*val bundle = Bundle().apply {

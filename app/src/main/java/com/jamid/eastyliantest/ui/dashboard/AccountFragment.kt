@@ -4,16 +4,21 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.isVisible
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.jamid.eastyliantest.R
 import com.jamid.eastyliantest.adapter.OrderAdapter
 import com.jamid.eastyliantest.databinding.FragmentAccountBinding
 import com.jamid.eastyliantest.model.OrderStatus
+import com.jamid.eastyliantest.ui.MainActivity
 import com.jamid.eastyliantest.ui.MainViewModel
 import com.jamid.eastyliantest.ui.auth.AuthActivity
 import com.jamid.eastyliantest.utility.*
@@ -22,6 +27,7 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
 
 	private lateinit var binding: FragmentAccountBinding
 	private val viewModel: MainViewModel by activityViewModels()
+	private var currentImage: String? = null
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
@@ -38,6 +44,101 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
 		binding.currentOrdersRecycler.apply {
 			adapter = orderAdapter1
 			layoutManager = LinearLayoutManager(requireContext())
+		}
+
+		viewModel.repo.currentUser.observe(viewLifecycleOwner) {
+			if (it != null) {
+				binding.customerImage.setImageURI(it.photoUrl)
+				binding.customerNameText.setText(it.name)
+				binding.customerNameTextView.text = it.name
+
+				binding.accountToolbar.title = it.name
+				binding.accountToolbar.subtitle = "${it.phoneNo} • ${it.email}"
+			}
+		}
+
+		binding.customerNameText.doAfterTextChanged {
+			binding.editBtn.isEnabled = !it.isNullOrBlank() && it.length > 3
+		}
+
+		binding.editBtn.setOnClickListener {
+
+			if (binding.editBtn.text == "Edit") {
+
+				binding.customerNameText.show()
+				binding.customerNameTextView.hide()
+
+				binding.editBtn.text = "Done"
+
+			} else {
+				binding.customerNameText.hide()
+				binding.customerNameTextView.show()
+
+				val name = binding.customerNameText.text.toString()
+				val changes = mapOf("fullName" to name)
+
+				viewModel.updateFirebaseUser(changes) {
+					val currentUser = Firebase.auth.currentUser!!
+					val photo = if (currentUser.photoUrl == null) {
+						null
+					} else {
+						currentUser.photoUrl.toString()
+					}
+					val changes1 = mapOf("name" to name, "photoUrl" to photo)
+					viewModel.updateUser(changes1)
+				}
+
+				binding.editBtn.text = "Edit"
+				binding.editBtn.enable()
+
+			}
+
+		}
+
+		var justStarted = true
+
+		binding.customerImage.setOnClickListener {
+			val popupMenu = PopupMenu(requireContext(), it)
+
+			popupMenu.inflate(R.menu.image_menu)
+
+			popupMenu.setOnMenuItemClickListener { it1 ->
+				justStarted = false
+				when (it1.itemId) {
+					R.id.change_image -> {
+						(activity as MainActivity?)?.selectImage()
+					}
+					R.id.remove_image -> {
+						viewModel.setCurrentImage(null)
+					}
+				}
+				return@setOnMenuItemClickListener true
+			}
+
+			popupMenu.show()
+		}
+
+
+
+		viewModel.currentImage.observe(viewLifecycleOwner) {
+			if (it != null) {
+				viewModel.uploadImage(it) { downloadUri ->
+					if (downloadUri != null) {
+						viewModel.updateFirebaseUser(mapOf("photoUrl" to downloadUri.toString())) {
+							val changes1 = mapOf("photoUrl" to downloadUri.toString())
+							viewModel.updateUser(changes1)
+						}
+					}
+				}
+			} else {
+				currentImage = null
+				if (!justStarted) {
+					viewModel.updateFirebaseUser(mapOf("photoUrl" to null)) {
+						val changes1 = mapOf("photoUrl" to null)
+						viewModel.updateUser(changes1)
+					}
+				}
+			}
 		}
 
 		viewModel.repo.allOrders.observe(viewLifecycleOwner) {
@@ -119,13 +220,6 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
 				null,
 				slideRightNavOptions()
 			)
-		}
-
-		viewModel.repo.currentUser.observe(viewLifecycleOwner) {
-			if (it != null) {
-				binding.accountToolbar.title = it.name
-				binding.accountToolbar.subtitle = "${it.phoneNo} • ${it.email}"
-			}
 		}
 
 		viewModel.windowInsets.observe(viewLifecycleOwner) { (top, bottom) ->

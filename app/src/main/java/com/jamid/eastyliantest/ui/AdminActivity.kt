@@ -342,15 +342,15 @@ class AdminActivity : LocationAwareActivity(), OrderClickListener, CakeMiniListe
         }
     }
 
-    override fun onSelectDirection(order: Order) {
-        val latitude = order.place.latitude
-        val longitude = order.place.longitude
-
-        val gmmIntentUri =
-            Uri.parse("google.navigation:q=$latitude,$longitude")
-        val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
-        mapIntent.setPackage("com.google.android.apps.maps")
-        startActivity(mapIntent)
+    override fun onCustomerClick(vh: OrderViewHolder, user: User) {
+        val phoneNumber = user.phoneNo.split(" ")
+        if (phoneNumber.size > 1) {
+            val number = phoneNumber[1]
+            val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:$number"))
+            startActivity(intent)
+        } else {
+            toast("Phone number not found")
+        }
     }
 
 	fun selectImage() {

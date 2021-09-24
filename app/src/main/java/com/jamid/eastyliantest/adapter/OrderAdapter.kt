@@ -5,21 +5,28 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewStub
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.lottie.LottieAnimationView
 import com.google.android.material.button.MaterialButton
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.jamid.eastyliantest.R
+import com.jamid.eastyliantest.USERS
+import com.jamid.eastyliantest.databinding.OrderItemCustomerLayoutBinding
 import com.jamid.eastyliantest.interfaces.OrderClickListener
 import com.jamid.eastyliantest.model.Order
 import com.jamid.eastyliantest.model.OrderStatus.*
+import com.jamid.eastyliantest.model.User
 import com.jamid.eastyliantest.utility.disable
 import com.jamid.eastyliantest.utility.enable
 import com.jamid.eastyliantest.utility.hide
@@ -64,6 +71,7 @@ class OrderViewHolder(val view: View): RecyclerView.ViewHolder(view) {
     private val bottomActionLayout: View = view.findViewById(R.id.actionLayout)
     private val actionDivider: View = view.findViewById(R.id.primaryActionDivider)
     private val deliveryBoyAnimation: LottieAnimationView = view.findViewById(R.id.deliveryBoyAnimation)
+    private val orderCustomerDivider = view.findViewById<View>(R.id.divider14)
 
     var isAdmin = false
     var isDeliveryExecutive = false
@@ -214,6 +222,51 @@ class OrderViewHolder(val view: View): RecyclerView.ViewHolder(view) {
                 // not implemented yet
             }
         }
+
+        view.setOnClickListener {
+            displayCustomer(order)
+        }
+
+    }
+
+    private fun displayCustomer(order: Order) {
+
+        val inflatedView = view.findViewById<View>(R.id.customer)
+
+        if (inflatedView == null) {
+            orderCustomerDivider.show()
+            val st = view.findViewById<ViewStub>(R.id.customerLayoutStub)
+            val v = st.inflate()
+
+            val binding = OrderItemCustomerLayoutBinding.bind(v)
+
+            Firebase.firestore.collection(USERS).document(order.senderId).get()
+                .addOnSuccessListener {
+                    if (it.exists()) {
+                        val customer = it.toObject(User::class.java)!!
+                        binding.customerName.text = customer.name
+                        binding.customerImage.setImageURI(customer.photoUrl)
+                        binding.callCustomerBtn.setOnClickListener {
+                            orderClickListener.onCustomerClick(this, customer)
+                        }
+                        binding.customerName.setOnClickListener {
+                            orderClickListener.onCustomerClick(this, customer)
+                        }
+                    }
+                }.addOnFailureListener {
+                    Log.d(TAG, it.localizedMessage!!)
+                }
+        } else {
+            // Don't do anything, or maybe hide it temporarily
+            if (inflatedView.isVisible) {
+                orderCustomerDivider.hide()
+                inflatedView.hide()
+            } else {
+                orderCustomerDivider.show()
+                inflatedView.show()
+            }
+        }
+
     }
 
     private fun setBottomActionVisibility(state: Boolean) {
@@ -286,11 +339,13 @@ class OrderViewHolder(val view: View): RecyclerView.ViewHolder(view) {
                 // not implemented yet
             }
         }
+
+        view.setOnClickListener {
+            displayCustomer(order)
+        }
     }
 
     private fun setUpForCustomer(order: Order) {
-
-
 
         when (order.status[0]) {
             Created -> {

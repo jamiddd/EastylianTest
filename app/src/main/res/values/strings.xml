@@ -104,7 +104,6 @@
     <string name="total">Total</string>
     <string name="delivering_to">Delivering To</string>
     <string name="cash_on_delivery">Cash-On-Delivery</string>
-    <string name="change">Change</string>
     <string name="delivery">Delivery</string>
     <string name="pick_up">Pick Up</string>
     <string name="no_items_in_the_cart">No items in the Cart</string>
@@ -219,6 +218,7 @@
     <string name="eastylian_version">Eastylian Test\nv 1.0.0</string>
     <string name="delivery_executives">Delivery Executives</string>
     <string name="change_menu">Change Menu</string>
+    <string name="change">Change</string>
 
     <!-- <string-array name="occasion_names">
         <item>Birthday</item>

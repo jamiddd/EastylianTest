@@ -47,15 +47,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="64dp"
+        android:layout_marginBottom="56dp"
         android:clickable="true"
         android:focusable="true"
         android:minHeight="48dp"
         android:translationY="150dp"
         app:cardBackgroundColor="@color/primaryColor"
+        app:cardCornerRadius="0dp"
         tools:visibility="visible">
 
         <TextView

@@ -50,8 +50,8 @@ class MainRepository(db: EastylianDatabase) {
         }
     }
 
-    fun updateFirebaseUser(name: String, email: String) {
-        firebaseUtility.updateFirebaseUser(name, email)
+    fun updateFirebaseUser(changes: Map<String, String?>) {
+        firebaseUtility.updateFirebaseUser(changes)
     }
 
     suspend fun checkIfUserRegistered(uid: String): Boolean? {
@@ -279,7 +279,11 @@ class MainRepository(db: EastylianDatabase) {
 		}
 	}
 
-	companion object {
+    suspend fun insertUser(user: User) {
+        userDao.insert(user)
+    }
+
+    companion object {
 
         private const val TAG = "MainRepository"
 

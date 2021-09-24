@@ -46,7 +46,7 @@ fun getTextForTime(time: Long): String {
     return DateUtils.getRelativeTimeSpanString(time, Calendar.getInstance().timeInMillis, DateUtils.MINUTE_IN_MILLIS).toString()
 }
 
-fun Fragment.getImageResourceBasedOnFlavor(flavor: Flavor, name: String = ""): Int {
+/*fun Fragment.getImageResourceBasedOnFlavor(flavor: Flavor, name: String = ""): Int {
     return requireContext().getImageResourceBasedOnFlavor(flavor, name)
 }
 
@@ -67,11 +67,11 @@ fun Context.getImageResourceBasedOnFlavor(flavor: Flavor, name: String = getStri
         Flavor.BUTTERSCOTCH -> R.drawable.butterscotch
         Flavor.NONE -> getImageResourceBasedOnBaseName(name)
     }
-}
+}*/
 
 fun CharSequence?.isValidEmail() = !isNullOrEmpty() && Patterns.EMAIL_ADDRESS.matcher(this).matches()
 
-fun Fragment.getImageResourceBasedOnBaseName(name: String): Int {
+/*fun Fragment.getImageResourceBasedOnBaseName(name: String): Int {
     return requireContext().getImageResourceBasedOnBaseName(name)
 }
 
@@ -81,7 +81,7 @@ fun Context.getImageResourceBasedOnBaseName(name: String): Int {
     } else {
         R.drawable.sponge
     }
-}
+}*/
 
 fun Context.composeEmail(subject: String, vararg addresses: String) {
     val intent = Intent(Intent.ACTION_SENDTO).apply {

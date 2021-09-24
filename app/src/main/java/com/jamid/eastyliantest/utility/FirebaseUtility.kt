@@ -2,6 +2,7 @@ package com.jamid.eastyliantest.utility
 
 import android.net.Uri
 import android.util.Log
+import androidx.core.net.toUri
 import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseUser
@@ -55,16 +56,30 @@ class FirebaseUtility {
         }
     }
 
-    fun updateFirebaseUser(fullName: String, userEmail: String) {
+    fun updateFirebaseUser(changes: Map<String, String?>, onComplete: ((result: Task<Void>) -> Unit)? = null) {
+
+        val userEmail = changes["email"]
+        val fullName = changes["fullName"]
+        val photoUrl = changes["photoUrl"]
+
         val currentUser = auth.currentUser
         if (currentUser != null) {
-            currentUser.updateEmail(userEmail)
-                .addOnFailureListener {
-                    networkErrors.postValue(it)
-                }
+            if (userEmail != null) {
+                currentUser.updateEmail(userEmail)
+                    .addOnFailureListener {
+                        networkErrors.postValue(it)
+                    }
+            }
 
             val profileUpdates = userProfileChangeRequest {
                 displayName = fullName
+                photoUri = photoUrl?.toUri()
+            }
+
+            val task = currentUser.updateProfile(profileUpdates)
+
+            if (onComplete != null) {
+                onComplete(task)
             }
 
             currentUser.updateProfile(profileUpdates)
@@ -384,6 +399,17 @@ class FirebaseUtility {
                 networkErrors.postValue(it)
             }
 
+    }
+
+    fun updateUser(changes: Map<String, String?>) {
+        db.collection(USERS)
+            .document(uid)
+            .update(changes)
+            .addOnSuccessListener {
+                Log.d(TAG, "User updated")
+            }.addOnFailureListener {
+                Log.e(TAG, it.localizedMessage!!)
+            }
     }
 
 

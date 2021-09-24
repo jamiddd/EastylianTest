@@ -7,6 +7,7 @@ import androidx.lifecycle.*
 import androidx.paging.*
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.functions.HttpsCallableResult
@@ -44,6 +45,30 @@ class MainViewModel(val repo: MainRepository): ViewModel() {
                 Log.e(TAG, it.exception?.localizedMessage.orEmpty())
             }
         }
+
+        Firebase.firestore.collection(USERS).document(Firebase.auth.currentUser?.uid.orEmpty())
+            .addSnapshotListener { value, error ->
+                if (error != null) {
+                    Log.e(TAG, error.localizedMessage!!)
+                    return@addSnapshotListener
+                }
+
+                if (value != null && value.exists()) {
+                    try {
+                        val user = value.toObject(User::class.java)
+                        viewModelScope.launch (Dispatchers.IO) {
+                            if (user != null) {
+                                repo.insertUser(user)
+                            } else {
+                                Log.d(TAG, "User is null")
+                            }
+                        }
+                    } catch (e: Exception) {
+                        Log.e(TAG, e.localizedMessage!!)
+                    }
+                    Log.d(TAG, value.toString())
+                }
+            }
 
     }
 
@@ -634,6 +659,18 @@ class MainViewModel(val repo: MainRepository): ViewModel() {
 
     fun removeCakeMenuItem(cakeMenuItem: CakeMenuItem) {
         repo.firebaseUtility.removeCakeMenuItem(cakeMenuItem)
+    }
+
+    fun updateFirebaseUser(changes: Map<String, String?>, onComplete: ((result: Task<Void>) -> Unit)? = null) {
+        repo.firebaseUtility.updateFirebaseUser(changes) {
+            if (onComplete != null) {
+                onComplete(it)
+            }
+        }
+    }
+
+    fun updateUser(changes: Map<String, String?>) {
+        repo.firebaseUtility.updateUser(changes)
     }
 
     companion object {

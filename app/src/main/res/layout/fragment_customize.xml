@@ -89,6 +89,7 @@
         android:layout_marginTop="32dp"
         android:backgroundTint="@color/white"
         android:elevation="8dp"
-        app:icon="@drawable/ic_round_arrow_back_24" />
+        app:icon="@drawable/ic_round_arrow_back_24"
+        tools:ignore="SpeakableTextPresentCheck" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

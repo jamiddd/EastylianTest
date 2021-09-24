@@ -18,8 +18,8 @@ class AuthViewModel(val repository: MainRepository): ViewModel() {
         repository.uploadNewUser(name, phoneNumber, email)
     }
 
-    fun updateFirebaseUser(name: String, email: String) {
-        repository.updateFirebaseUser(name, email)
+    fun updateFirebaseUser(changes: Map<String, String>) {
+        repository.updateFirebaseUser(changes)
     }
 
 }

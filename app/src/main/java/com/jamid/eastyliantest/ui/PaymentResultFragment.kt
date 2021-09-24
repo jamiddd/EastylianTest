@@ -39,7 +39,7 @@ class PaymentResultFragment: Fragment(R.layout.fragment_payment_result) {
 
         viewModel.currentPaymentResult.observe(viewLifecycleOwner) { result ->
             viewLifecycleOwner.lifecycleScope.launch {
-                delay(1000)
+                delay(2000)
                 binding.paymentAnimationLoading.hide()
 
                 if (result != null) {

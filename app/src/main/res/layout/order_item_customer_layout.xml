@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="wrap_content">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/customerImage"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/ic_round_account_circle_24"
+        app:roundAsCircle="true" />
+
+    <TextView
+        android:id="@+id/customerName"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="16dp"
+        android:textAppearance="@style/headerText"
+        android:textSize="16sp"
+        tools:text="Jamid Deka" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/callCustomerBtn"
+        style="@style/Theme.Button.IconOnly"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        app:icon="@drawable/ic_round_call_24"
+        app:iconTint="@color/primaryColor" />
+
+</LinearLayout>

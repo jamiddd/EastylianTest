@@ -63,13 +63,12 @@
             android:paddingStart="56dp"
             android:paddingEnd="56dp" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/mapFragmentBackBtn"
             style="@style/Theme.Button.IconOnly"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:icon="@drawable/ic_round_arrow_back_24"
-            tools:ignore="SpeakableTextPresentCheck" />
+            app:icon="@drawable/ic_round_arrow_back_24" />
 
         <Button
             android:id="@+id/currentLocationBtn"

@@ -463,6 +463,20 @@ class MainActivity : LocationAwareActivity(), CakeClickListener, OrderImageClick
                     Log.e(TAG, msg)
                 }
             }
+
+
+        /*viewModel.repo.firebaseUtility.currentFirebaseUserLive.observe(this) {
+            if (it != null) {
+                val photo = if (it.photoUrl == null) {
+                    null
+                } else {
+                    it.photoUrl.toString()
+                }
+                val changes = mapOf("name" to it.displayName, "photoUrl" to photo)
+                viewModel.updateUser(changes)
+            }
+        }*/
+
     }
 
     // add listener for all current orders
@@ -748,6 +762,10 @@ class MainActivity : LocationAwareActivity(), CakeClickListener, OrderImageClick
         }
     }
 
+    override fun onCustomerClick(vh: OrderViewHolder, user: User) {
+
+    }
+
     private fun openFeedbackDialog(orderId: String) {
         val feedbackView = layoutInflater.inflate(R.layout.feedback_layout, null, false)
         val feedbackLayoutBinding = FeedbackLayoutBinding.bind(feedbackView)
@@ -793,10 +811,6 @@ class MainActivity : LocationAwareActivity(), CakeClickListener, OrderImageClick
         }, negativeBtn = "Cancel", onNegativeBtnClick = {
             it.dismiss()
         })
-    }
-
-    override fun onSelectDirection(order: Order) {
-
     }
 
     override fun onAnswerClick(faq: Faq) {

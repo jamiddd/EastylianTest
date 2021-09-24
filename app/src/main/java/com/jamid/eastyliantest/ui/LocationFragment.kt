@@ -2,6 +2,8 @@ package com.jamid.eastyliantest.ui
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.res.ColorStateList
+import android.content.res.Configuration
 import android.location.Geocoder
 import android.os.Bundle
 import android.util.Log
@@ -10,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.cardview.widget.CardView
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
@@ -102,6 +105,21 @@ class LocationFragment: Fragment(R.layout.fragment_location), OnMapReadyCallback
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             }
         }
+
+        val nightModeFlags = requireActivity().resources.configuration.uiMode and
+                Configuration.UI_MODE_NIGHT_MASK
+        when (nightModeFlags) {
+            Configuration.UI_MODE_NIGHT_YES -> {
+                binding.mapFragmentBackBtn.iconTint = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.white))
+            }
+            Configuration.UI_MODE_NIGHT_NO -> {
+                binding.mapFragmentBackBtn.iconTint = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.black))
+            }
+            Configuration.UI_MODE_NIGHT_UNDEFINED -> {
+
+            }
+        }
+
     }
 
     private fun getSearchPredictions(query: String) {

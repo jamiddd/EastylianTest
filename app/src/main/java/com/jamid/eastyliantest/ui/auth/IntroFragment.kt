@@ -54,7 +54,7 @@ class IntroFragment: Fragment(R.layout.fragment_intro) {
             binding.introFragmentProgress.visibility = View.VISIBLE
             val emailText = binding.emailInputLayout.editText!!.text.toString()
             val name = binding.userNameLayout.editText!!.text.toString()
-            viewModel.updateFirebaseUser(name, emailText)
+            viewModel.updateFirebaseUser(mapOf("email" to emailText, "fullName" to name))
         }
 
         viewModel.repository.firebaseUtility.currentFirebaseUserLive.observe(viewLifecycleOwner) {

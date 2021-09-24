@@ -12,157 +12,178 @@
     android:focusable="true"
     app:cardElevation="12dp">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/orderItemContainer"
+    <LinearLayout
+        android:id="@+id/orderLinearRoot"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/deliveryBoyAnimation"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:visibility="gone"
-            app:layout_constraintBottom_toTopOf="@id/orderId"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0"
-            app:lottie_autoPlay="true"
-            app:lottie_loop="true"
-            app:lottie_rawRes="@raw/delivery_boy" />
-
-        <TextView
-            android:id="@+id/orderId"
-            style="@style/normalImportantText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingStart="12dp"
-            android:paddingTop="8dp"
-            android:paddingEnd="12dp"
-            android:paddingBottom="8dp"
-            android:textSize="12sp"
-            app:layout_constraintBottom_toTopOf="@+id/orderItemsRecycler"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/deliveryBoyAnimation"
-            app:layout_constraintVertical_bias="0.0"
-            app:layout_constraintVertical_chainStyle="packed"
-            tools:text="Order Id #4238423975" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/orderItemsRecycler"
+        <ProgressBar
+            android:id="@+id/orderProgress"
+            style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toTopOf="@+id/deliveryStatus"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/orderId"
-            tools:itemCount="2"
-            tools:listitem="@layout/order_item_cake" />
+            android:indeterminate="true"
+            android:translationY="-6dp"
+            android:visibility="gone" />
 
-        <TextView
-            android:id="@+id/orderTotalPrice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="24dp"
-            android:fontFamily="@font/manrope_semi_bold"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textColor="@color/primaryColor"
-            app:layout_constraintBottom_toBottomOf="@+id/orderId"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/orderId"
-            tools:text="₹ 450" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/deliveryStatus"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:clickable="false"
-            android:focusable="false"
-            android:gravity="center_vertical"
-            android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            app:icon="@drawable/ic_verified_black_24dp"
-            app:layout_constraintBottom_toTopOf="@+id/primaryActionDivider"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/orderItemsRecycler"
-            app:rippleColor="@color/transparent"
-            tools:text="Delivered on - 12 Jun, Thursday" />
-
-        <View
-            android:id="@+id/primaryActionDivider"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/orderItemContainer"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="?android:attr/listDivider"
-            android:visibility="gone"
-            app:layout_constraintBottom_toTopOf="@+id/actionLayout"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/deliveryStatus"
-            tools:visibility="visible" />
+            android:layout_height="match_parent">
 
-        <LinearLayout
-            android:id="@+id/actionLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/primaryActionDivider"
-            tools:visibility="visible">
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/deliveryBoyAnimation"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toTopOf="@id/orderId"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true"
+                app:lottie_rawRes="@raw/delivery_boy" />
+
+            <TextView
+                android:id="@+id/orderId"
+                style="@style/normalImportantText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="12dp"
+                android:paddingTop="8dp"
+                android:paddingEnd="12dp"
+                android:paddingBottom="8dp"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toTopOf="@+id/orderItemsRecycler"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/deliveryBoyAnimation"
+                app:layout_constraintVertical_bias="0.0"
+                app:layout_constraintVertical_chainStyle="packed"
+                tools:text="Order Id #4238423975" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/orderItemsRecycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@+id/deliveryStatus"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/orderId"
+                tools:itemCount="2"
+                tools:listitem="@layout/order_item_cake" />
+
+            <TextView
+                android:id="@+id/orderTotalPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="24dp"
+                android:fontFamily="@font/manrope_semi_bold"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@color/primaryColor"
+                app:layout_constraintBottom_toBottomOf="@+id/orderId"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/orderId"
+                tools:text="₹ 450" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/secondaryOrderAction"
+                android:id="@+id/deliveryStatus"
                 style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:fontFamily="@font/manrope_semi_bold"
-                android:insetTop="0dp"
-                android:insetBottom="0dp"
-                android:paddingLeft="12dp"
-                android:text="@string/cancel"
+                android:clickable="false"
+                android:focusable="false"
+                android:gravity="center_vertical"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                app:icon="@drawable/ic_verified_black_24dp"
+                app:layout_constraintBottom_toTopOf="@+id/primaryActionDivider"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/orderItemsRecycler"
+                app:rippleColor="@color/transparent"
+                tools:text="Delivered on - 12 Jun, Thursday" />
+
+            <View
+                android:id="@+id/primaryActionDivider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?android:attr/listDivider"
                 android:visibility="gone"
-                app:cornerRadius="0dp"
-                app:iconGravity="end"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/actionLayout"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/primaryActionDivider" />
+                app:layout_constraintTop_toBottomOf="@+id/deliveryStatus"
+                tools:visibility="visible" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/primaryOrderAction"
-                android:layout_width="0dp"
+            <LinearLayout
+                android:id="@+id/actionLayout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:fontFamily="@font/manrope_semi_bold"
-                android:insetTop="0dp"
-                android:insetBottom="0dp"
-                android:paddingLeft="12dp"
-                android:text="@string/start_order"
+                android:orientation="horizontal"
                 android:visibility="gone"
-                app:cornerRadius="0dp"
-                app:iconGravity="end"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/primaryActionDivider" />
+                app:layout_constraintTop_toBottomOf="@+id/primaryActionDivider"
+                tools:visibility="visible">
 
-        </LinearLayout>
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/secondaryOrderAction"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/manrope_semi_bold"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:paddingLeft="12dp"
+                    android:text="@string/cancel"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:visibility="gone"
+                    app:cornerRadius="0dp"
+                    app:iconGravity="end"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/primaryActionDivider" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/primaryOrderAction"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/manrope_semi_bold"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:paddingLeft="12dp"
+                    android:text="@string/start_order"
+                    android:visibility="gone"
+                    app:cornerRadius="0dp"
+                    app:iconGravity="end"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/primaryActionDivider" />
 
-    <ProgressBar
-        android:id="@+id/orderProgress"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:indeterminate="true"
-        android:translationY="-6dp"
-        android:visibility="gone" />
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <View
+            android:id="@+id/divider14"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider"
+            android:visibility="gone" />
+
+        <ViewStub
+            android:id="@+id/customerLayoutStub"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inflatedId="@+id/customer"
+            android:layout="@layout/order_item_customer_layout" />
+    </LinearLayout>
 
 </com.google.android.material.card.MaterialCardView>
