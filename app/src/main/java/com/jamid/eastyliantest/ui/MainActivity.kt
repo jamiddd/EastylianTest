@@ -224,6 +224,11 @@ class MainActivity : LocationAwareActivity(), CakeClickListener, OrderImageClick
         locationUtility.getNearbyPlaces()
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
+
+            // Doing this because current image is set in
+            viewModel.setCurrentImage(null)
+
+
             when (destination.id) {
                 R.id.homeFragment, R.id.dashboardFragment, R.id.cartFragment -> {
                     val badge = binding.navView.getOrCreateBadge(R.id.cart_navigation)

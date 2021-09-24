@@ -2,7 +2,6 @@ package com.jamid.eastyliantest.ui.notifications
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
@@ -28,6 +27,13 @@ class AddNotificationFragment: Fragment(R.layout.fragment_add_notification) {
 		super.onViewCreated(view, savedInstanceState)
 		binding = FragmentAddNotificationBinding.bind(view)
 
+		val existingNotification = arguments?.getParcelable<SimpleNotification>("notification")
+		if (existingNotification != null) {
+			binding.notificationTitleLayout.editText?.setText(existingNotification.title)
+			binding.notificationContentLayout.editText?.setText(existingNotification.content)
+			binding.createNotificationBtn.enable()
+		}
+
 		binding.fragmentAddNotificationToolbar.setNavigationOnClickListener {
 			findNavController().navigateUp()
 		}
@@ -36,36 +42,20 @@ class AddNotificationFragment: Fragment(R.layout.fragment_add_notification) {
 			binding.fragmentAddNotificationToolbar.updateLayout(marginTop = top)
 		}
 
+		var justStarted = true
+
 		viewModel.currentImage.observe(viewLifecycleOwner) { currentImageUri ->
+			binding.notificationImageProgress.show()
 			if (currentImageUri != null) {
 				viewModel.uploadImage(currentImageUri) { downloadUrl ->
-					binding.notificationImageProgress.show()
-					notificationImage = downloadUrl?.toString()
-					binding.notificationImg.setImageURI(notificationImage)
-					binding.notificationImg.show()
-					binding.notificationImageProgress.hide()
-				}
-
-				binding.addNotificationImageBtn.icon = ContextCompat.getDrawable(view.context, R.drawable.ic_round_close_24)
-				binding.addNotificationImageBtn.text = "Remove image"
-				binding.addNotificationImageBtn.setOnClickListener {
-					notificationImage = null
-					viewModel.setCurrentImage(null)
+					onImageChanged(downloadUrl?.toString())
 				}
 			} else {
-
-				binding.addNotificationImageBtn.icon = ContextCompat.getDrawable(view.context, R.drawable.ic_round_add_photo_alternate_24)
-				binding.addNotificationImageBtn.text = "Add image"
-				binding.notificationImageProgress.hide()
-				binding.notificationImg.hide()
-				notificationImage = null
-				binding.notificationImg.hide()
-				binding.notificationImg.setImageURI(notificationImage)
-
-				binding.addNotificationImageBtn.setOnClickListener {
-					(activity as AdminActivity?)?.selectImage()
+				onImageChanged(null)
+				if (existingNotification != null && justStarted) {
+					onImageChanged(existingNotification.image)
+					justStarted = false
 				}
-
 			}
 		}
 
@@ -100,19 +90,42 @@ class AddNotificationFragment: Fragment(R.layout.fragment_add_notification) {
 
 			val notification = SimpleNotification(newNotificationRef.id, contentText.toString(), titleText.toString(), notificationImage, System.currentTimeMillis())
 
-			newNotificationRef.set(notification)
-				.addOnSuccessListener {
-					Toast.makeText(
-						requireContext(),
-						"Sent notification to Topic: General.",
-						Toast.LENGTH_SHORT
-					).show()
-					findNavController().navigateUp()
-				}.addOnFailureListener {
-					viewModel.setCurrentError(it)
+			viewModel.uploadNotification(notification) {
+				if (it.isSuccessful) {
+					toast("Sent notification to Topic: General.")
+				} else {
+					it.exception?.let {it1 ->
+						viewModel.setCurrentError(it1)
+					}
 				}
+			}
 		}
 
+	}
+
+	private fun onImageChanged(image: String?) {
+		notificationImage = image
+		binding.notificationImageProgress.hide()
+		binding.notificationImg.setImageURI(notificationImage)
+		if (image != null) {
+			binding.addNotificationImageBtn.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_close_24)
+			binding.addNotificationImageBtn.text = "Remove image"
+			binding.notificationImg.show()
+
+			binding.addNotificationImageBtn.setOnClickListener {
+				notificationImage = null
+				viewModel.setCurrentImage(null)
+			}
+
+		} else {
+			binding.addNotificationImageBtn.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_add_photo_alternate_24)
+			binding.addNotificationImageBtn.text = "Add image"
+			binding.notificationImg.hide()
+
+			binding.addNotificationImageBtn.setOnClickListener {
+				(activity as AdminActivity?)?.selectImage()
+			}
+		}
 	}
 
 	override fun onDestroyView() {

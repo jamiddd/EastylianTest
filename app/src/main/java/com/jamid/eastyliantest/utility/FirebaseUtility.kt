@@ -412,6 +412,12 @@ class FirebaseUtility {
             }
     }
 
+    fun uploadNotification(notification: SimpleNotification, onComplete: ((result: Task<Void>) -> Unit)? = null) {
+        val newNotificationRef = Firebase.firestore.collection(NOTIFICATIONS).document()
+        val task = newNotificationRef.set(notification)
+        task.addOnCompleteListener(onComplete)
+    }
+
 
     companion object {
         private const val TAG = "FirebaseUtility"

@@ -179,7 +179,7 @@
         <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/fragment_home.xml" value="0.264" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/fragment_image_view.xml" value="0.4" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/fragment_intro.xml" value="0.264" />
-        <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/fragment_location.xml" value="0.2222222222222222" />
+        <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/fragment_location.xml" value="0.4" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/fragment_notifications.xml" value="0.319634703196347" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/fragment_order.xml" value="0.536" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/fragment_organize.xml" value="0.264" />
@@ -194,7 +194,7 @@
         <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/location_bottom_sheet.xml" value="0.22407407407407406" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/marker_info_contents.xml" value="0.22407407407407406" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/mini_cake_item.xml" value="0.4" />
-        <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/notification_item.xml" value="0.264" />
+        <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/notification_item.xml" value="0.6" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/order_item.xml" value="0.45143884892086333" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/order_item_cake.xml" value="0.536" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/order_item_customer_layout.xml" value="0.536" />
@@ -207,6 +207,7 @@
         <entry key="..\:/xx/EastylianTest/app/src/main/res/menu/bottom_nav_menu.xml" value="0.2222222222222222" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/menu/context_menu.xml" value="0.32407407407407407" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/menu/image_menu.xml" value="0.4" />
+        <entry key="..\:/xx/EastylianTest/app/src/main/res/menu/notification_menu.xml" value="0.22407407407407406" />
       </map>
     </option>
   </component>

@@ -673,6 +673,14 @@ class MainViewModel(val repo: MainRepository): ViewModel() {
         repo.firebaseUtility.updateUser(changes)
     }
 
+    fun uploadNotification(notification: SimpleNotification, onComplete: ((result: Task<Void>) -> Unit)? = null) {
+        repo.firebaseUtility.uploadNotification(notification, onComplete)
+    }
+
+    fun resendNotification(notification: SimpleNotification, onComplete: ((result: Task<Void>) -> Unit)? = null) {
+        uploadNotification(notification, onComplete)
+    }
+
     companion object {
         private const val TAG = "MainViewModel"
         private const val one: Long = 1

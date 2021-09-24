@@ -8,8 +8,6 @@ import javax.crypto.spec.SecretKeySpec
 
 object Signature {
 
-//	private const val HMAC_SHA256_ALGORITHM = "HmacSHA256"
-
 	@Throws(NoSuchAlgorithmException::class, InvalidKeyException::class)
 	fun hmac(algorithm: String?, key: ByteArray?, message: ByteArray?): ByteArray {
 		val mac = Mac.getInstance(algorithm)

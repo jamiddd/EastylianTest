@@ -3,7 +3,6 @@
     package="com.jamid.eastyliantest">
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -30,6 +29,7 @@
         android:roundIcon="@mipmap/ic_round_launcher"
         android:supportsRtl="true"
         android:theme="@style/Theme.EastylianTest">
+
         <activity
             android:name=".ui.DeliveryActivity"
             android:exported="true" />
@@ -57,10 +57,10 @@
         <activity
             android:name=".ui.AdminActivity"
             android:windowSoftInputMode="adjustPan"
-            android:exported="true" />
+            android:exported="false" />
         <activity
             android:name=".ui.auth.AuthActivity"
-            android:exported="true" />
+            android:exported="false" />
         <activity
             android:name=".ui.SplashActivity"
             android:exported="true"
@@ -70,6 +70,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".ui.MainActivity"
             android:exported="true"
@@ -90,9 +91,11 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="${GOOGLE_MAPS_API_KEY}" />
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
+
     </application>
 
 </manifest>

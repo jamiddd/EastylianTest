@@ -65,7 +65,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/mapFragmentBackBtn"
-            style="@style/Theme.Button.IconOnly"
+            style="@style/GenericBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:icon="@drawable/ic_round_arrow_back_24" />

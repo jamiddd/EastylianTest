@@ -203,4 +203,8 @@
 
     </style>
 
+    <style name="GenericBtn" parent="Theme.Button.IconOnly">
+        <item name="iconTint">@color/primaryColor</item>
+    </style>
+
 </resources>

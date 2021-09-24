@@ -12,6 +12,7 @@ import android.view.*
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.core.os.bundleOf
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -37,7 +38,7 @@ import com.jamid.eastyliantest.views.zoomable.ImageViewFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class AdminActivity : LocationAwareActivity(), OrderClickListener, CakeMiniListener, FaqListener, CakeClickListener, OrderImageClickListener {
+class AdminActivity : LocationAwareActivity(), OrderClickListener, CakeMiniListener, FaqListener, CakeClickListener, OrderImageClickListener, NotificationClickListener {
 
     private lateinit var binding: ActivityAdminBinding
     private lateinit var navController: NavController
@@ -537,6 +538,15 @@ class AdminActivity : LocationAwareActivity(), OrderClickListener, CakeMiniListe
             putString(ImageViewFragment.ARG_IMAGE, image)
         }
         navController.navigate(R.id.action_adminHomeFragment_to_imageViewFragment, bundle)
+    }
+
+    override fun onNotificationResend(notification: SimpleNotification) {
+        viewModel.resendNotification(notification)
+    }
+
+    override fun onNotificationClick(notification: SimpleNotification) {
+        val bundle = bundleOf("notification" to notification)
+        navController.navigate(R.id.action_notificationsFragment_to_addNotificationFragment, bundle, slideRightNavOptions())
     }
 
 }

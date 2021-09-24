@@ -105,6 +105,10 @@
         <item name="drawableEndCompat">@drawable/ic_round_keyboard_arrow_right_24</item>
     </style>
 
+    <style name="GenericBtn" parent="Theme.Button.IconOnly">
+        <item name="iconTint">@color/primaryColor</item>
+    </style>
+
 
 
 </resources>
