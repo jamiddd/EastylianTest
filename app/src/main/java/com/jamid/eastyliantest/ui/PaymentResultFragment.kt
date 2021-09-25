@@ -53,6 +53,8 @@ class PaymentResultFragment: Fragment(R.layout.fragment_payment_result) {
                             val msg = getString(R.string.failure_payment_text)
 
                             displayMessage(msg, false)
+
+                            viewModel.deleteOrderFromFirebase()
                         }
                         is Result.Success -> {
                             // payment successful

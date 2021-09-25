@@ -205,11 +205,11 @@ class MainActivity : LocationAwareActivity(), CakeClickListener, OrderImageClick
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-//        updateValuesFromBundle(savedInstanceState)
-
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        window.statusBarColor = ContextCompat.getColor(this, R.color.black)
+
         initiate(binding.root, binding.navView)
         Checkout.preload(applicationContext)
         createNotificationChannel()
@@ -650,20 +650,6 @@ class MainActivity : LocationAwareActivity(), CakeClickListener, OrderImageClick
 
         findViewById<Button>(R.id.checkOutBtn)?.enable()
         findViewById<ProgressBar>(R.id.checkOutProgress)?.hide()
-
-//        deleteCurrentOrderFromFirebase()
-
-        /*val bundle = Bundle().apply {
-            putBoolean(IS_PAYMENT_SUCCESSFUL, false)
-        }
-
-        lifecycleScope.launch {
-            delay(500)
-            if (navController.currentDestination?.id == R.id.cartFragment) {
-                navController.navigate(R.id.paymentResultFragment, bundle)
-            }
-        }*/
-
     }
 
     override fun onAddItemClick(cartItem: CartItem) {

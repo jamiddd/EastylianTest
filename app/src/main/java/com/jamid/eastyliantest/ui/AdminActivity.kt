@@ -12,6 +12,7 @@ import android.view.*
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.appcompat.widget.PopupMenu
 import androidx.core.os.bundleOf
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
@@ -398,16 +399,49 @@ class AdminActivity : LocationAwareActivity(), OrderClickListener, CakeMiniListe
     }
 
     override fun onContextActionMode(vh:CakeMiniAdapter.CakeMiniViewHolder, cake: Cake) {
-
         previousVH?.inactiveBackground()
         vh.activeBackground()
-        if (actionModeCallback.actionMode == null) {
-            startActionMode(actionModeCallback)
+
+        val popupMenu = PopupMenu(this, vh.view)
+        popupMenu.inflate(R.menu.cake_item_menu)
+
+        popupMenu.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.change -> {
+                    val bundle = Bundle().apply {
+                        putParcelable(CAKE, cake)
+                        putBoolean(IS_EDIT_MODE, true)
+                    }
+                    navController.navigate(R.id.addCakeFragment, bundle, slideRightNavOptions())
+                }
+                R.id.delete -> {
+                    showDialog(
+                        title = "Deleting cake ..",
+                        message ="Are you sure you want to delete this item?",
+                        positiveBtn = "Delete",
+                        negativeBtn = "Cancel", {
+                            viewModel.deleteCake(cake.id) { it1 ->
+                                if (it1.isSuccessful) {
+                                    toast("Cake removed")
+                                    Log.d(TAG, "Deleted cake with cake id : ${cake.id}")
+                                } else {
+                                    it1.exception?.let { e ->
+                                        viewModel.setCurrentError(e)
+                                    }
+                                }
+                            }
+                        }, { it1 ->
+                            it1.dismiss()
+                        })
+                }
+            }
+            true
         }
 
+        popupMenu.show()
         previousVH = vh
 
-        viewModel.contextModeState.postValue(ContextObject(true, cake))
+//        viewModel.contextModeState.postValue(ContextObject(true, cake))
     }
 
     override fun onClick(vh: CakeMiniAdapter.CakeMiniViewHolder, cake: Cake) {

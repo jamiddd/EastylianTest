@@ -65,12 +65,10 @@ class CakeMiniAdapter: ListAdapter<Cake, CakeMiniAdapter.CakeMiniViewHolder>(cak
 
 		fun activeBackground() {
 			view.isSelected = true
-//			view.setBackgroundColor(ContextCompat.getColor(view.context, R.color.blueLightBackground))
 		}
 
 		fun inactiveBackground() {
 			view.isSelected = false
-//			view.setBackgroundColor(Color.parseColor("#F1F1F1"))
 		}
 	}
 

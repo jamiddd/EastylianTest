@@ -35,15 +35,15 @@ class FirebaseUtility {
         auth.currentUser?.uid ?: throw NullPointerException("User Id is null. User not signed in.")
     }
 
-    suspend fun uploadNewUser(name: String, phone: String?, email: String?): User? {
+    suspend fun uploadNewUser(name: String, phone: String, email: String, photo: String? = null): User? {
         return try {
             val user = User(
                 uid,
                 name,
-                phone.orEmpty(),
+                phone,
                 0,
-                email.orEmpty(),
-                auth.currentUser!!.photoUrl?.toString(),
+                email,
+                photo,
                 "",
                 false
             )
@@ -77,34 +77,14 @@ class FirebaseUtility {
             }
 
             val task = currentUser.updateProfile(profileUpdates)
+            task.addOnCompleteListener(onComplete)
 
-            if (onComplete != null) {
-                onComplete(task)
-            }
-
-            currentUser.updateProfile(profileUpdates)
-                .addOnSuccessListener {
-                    currentFirebaseUserLive.postValue(auth.currentUser)
-                }.addOnFailureListener {
-                    networkErrors.postValue(it)
-                }
         }
     }
 
-    suspend fun checkIfUserRegistered(uid: String): Pair<User?, Boolean?> {
-        return try {
-            val task = db.collection(USERS).document(uid).get()
-            val documentSnapshot = task.await()
-            return if (documentSnapshot != null && documentSnapshot.exists()) {
-                val user = documentSnapshot.toObject(User::class.java)
-                user to true
-            } else {
-                null to false
-            }
-        } catch (e: Exception) {
-            networkErrors.postValue(e)
-            null to null
-        }
+    fun checkIfUserExists(userId: String, onComplete: ((result: Task<DocumentSnapshot>) -> Unit)? = null) {
+        val task = db.collection(USERS).document(userId).get()
+        task.addOnCompleteListener(onComplete)
     }
 
     suspend fun getPastOrders(): Result<QuerySnapshot> {
@@ -158,20 +138,16 @@ class FirebaseUtility {
     }
 
     fun deleteOrder(order: Order) {
-        db.runBatch {
-            it.delete(db.collection(USERS)
-                .document(uid)
-                .collection(ORDERS)
-                .document(order.orderId))
-            it.delete(db.collection(USERS)
-                .document(uid)
-                .collection("razorpay_orders")
-                .document(order.razorpayOrderId))
-        }.addOnSuccessListener {
-            Log.d(TAG, "Order with ${order.orderId} was deleted.")
-        }.addOnFailureListener {
-            networkErrors.postValue(it)
-        }
+        db.collection(USERS)
+            .document(uid)
+            .collection(ORDERS)
+            .document(order.orderId)
+            .delete()
+            .addOnSuccessListener {
+                Log.d(TAG, "Order with ${order.orderId} was deleted.")
+            }.addOnFailureListener {
+                networkErrors.postValue(it)
+            }
     }
 
     /*suspend fun getCurrentOrders(): Result<QuerySnapshot> {
@@ -347,33 +323,22 @@ class FirebaseUtility {
     private fun call(funcName: String, data: Map<String, Any>, onComplete: ((result: Task<HttpsCallableResult>) -> Unit)? = null) {
         Firebase.functions.getHttpsCallable(funcName)
             .call(data)
-            .addOnCompleteListener {
-                onComplete?.let { it1 -> it1(it) }
-            }
+            .addOnCompleteListener(onComplete)
     }
 
     fun createOrDeleteModerator(changes: Map<String, Any>, onComplete: ((result: Task<HttpsCallableResult>) -> Unit)? = null) {
-        call("createOrDeleteModerator", changes) {
-            onComplete?.let { it1 -> it1(it) }
-        }
-
+        call("createOrDeleteModerator", changes, onComplete)
     }
 
     fun createOrDeleteDeliveryExecutive(changes: Map<String, Any>, onComplete: ((result: Task<HttpsCallableResult>) -> Unit)? = null) {
-        call("createOrDeleteDeliveryExecutive", changes) {
-            onComplete?.let { it1 -> it1(it) }
-        }
+        call("createOrDeleteDeliveryExecutive", changes, onComplete)
     }
 
     fun deleteCake(id: String, onComplete: ((task: Task<Void>) -> Unit)? = null) {
         Firebase.firestore.collection(CAKES)
             .document(id)
             .delete()
-            .addOnCompleteListener {
-                if (onComplete != null) {
-                    onComplete(it)
-                }
-            }
+            .addOnCompleteListener(onComplete)
     }
 
     suspend fun getMenuItems(): Result<QuerySnapshot> {

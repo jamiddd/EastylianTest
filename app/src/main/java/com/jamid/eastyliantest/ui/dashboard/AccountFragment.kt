@@ -12,8 +12,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import com.jamid.eastyliantest.R
 import com.jamid.eastyliantest.adapter.OrderAdapter
 import com.jamid.eastyliantest.databinding.FragmentAccountBinding
@@ -78,13 +76,7 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
 				val changes = mapOf("fullName" to name)
 
 				viewModel.updateFirebaseUser(changes) {
-					val currentUser = Firebase.auth.currentUser!!
-					val photo = if (currentUser.photoUrl == null) {
-						null
-					} else {
-						currentUser.photoUrl.toString()
-					}
-					val changes1 = mapOf("name" to name, "photoUrl" to photo)
+					val changes1 = mapOf("name" to name)
 					viewModel.updateUser(changes1)
 				}
 
@@ -121,16 +113,23 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
 
 
 		viewModel.currentImage.observe(viewLifecycleOwner) {
+			binding.profilePhotoUploadProgress.show()
 			if (it != null) {
 				viewModel.uploadImage(it) { downloadUri ->
 					if (downloadUri != null) {
-						viewModel.updateFirebaseUser(mapOf("photoUrl" to downloadUri.toString())) {
-							val changes1 = mapOf("photoUrl" to downloadUri.toString())
-							viewModel.updateUser(changes1)
+						viewModel.updateFirebaseUser(mapOf("photoUrl" to downloadUri.toString())) { it1 ->
+							if (it1.isSuccessful) {
+								binding.profilePhotoUploadProgress.hide()
+								val changes1 = mapOf("photoUrl" to downloadUri.toString())
+								viewModel.updateUser(changes1)
+							} else {
+								toast("Something went wrong while updating user data.")
+							}
 						}
 					}
 				}
 			} else {
+				binding.profilePhotoUploadProgress.hide()
 				currentImage = null
 				if (!justStarted) {
 					viewModel.updateFirebaseUser(mapOf("photoUrl" to null)) {

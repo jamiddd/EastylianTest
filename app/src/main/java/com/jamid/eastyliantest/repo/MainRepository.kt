@@ -4,6 +4,7 @@ import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.LiveData
 import com.google.android.gms.tasks.Task
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.functions.HttpsCallableResult
 import com.jamid.eastyliantest.COD
 import com.jamid.eastyliantest.STATUS
@@ -41,8 +42,8 @@ class MainRepository(db: EastylianDatabase) {
     val allFaqs = faqDao.allFaqs()
     val restaurant = restaurantDao.restaurant()
 
-    suspend fun uploadNewUser(name: String, phoneNumber: String?, email: String?) {
-        val user = firebaseUtility.uploadNewUser(name, phoneNumber, email)
+    suspend fun uploadNewUser(name: String, phoneNumber: String, email: String, photo: String? = null) {
+        val user = firebaseUtility.uploadNewUser(name, phoneNumber, email, photo)
         if (user != null) {
             userDao.insert(user)
         } else {
@@ -50,17 +51,12 @@ class MainRepository(db: EastylianDatabase) {
         }
     }
 
-    fun updateFirebaseUser(changes: Map<String, String?>) {
-        firebaseUtility.updateFirebaseUser(changes)
+    fun updateFirebaseUser(changes: Map<String, String?>, onComplete: ((result: Task<Void>) -> Unit)? = null) {
+        firebaseUtility.updateFirebaseUser(changes, onComplete)
     }
 
-    suspend fun checkIfUserRegistered(uid: String): Boolean? {
-        val result = firebaseUtility.checkIfUserRegistered(uid)
-        val currentUser = result.first
-        if (currentUser != null) {
-            userDao.insert(currentUser)
-        }
-        return result.second
+    fun checkIfUserExists(userId: String, onComplete: ((result: Task<DocumentSnapshot>) -> Unit)? = null) {
+        firebaseUtility.checkIfUserExists(userId, onComplete)
     }
 
     suspend fun insertNearbyPlaces(nearbyPlaces: List<SimplePlace>) {
@@ -91,7 +87,6 @@ class MainRepository(db: EastylianDatabase) {
             }
             is Result.Success -> {
                 val querySnapshot = queryResult.data
-                Log.d(TAG, "Got past orders from firebase.")
                 val orders = querySnapshot.toObjects(Order::class.java)
                 insertOrders(orders)
             }
@@ -101,21 +96,6 @@ class MainRepository(db: EastylianDatabase) {
     suspend fun insertCake(cake: Cake) {
         cakeDao.insert(cake)
     }
-
-    /*fun updateOrder(orderId: String, orderSenderId: String, changes: Map<String, Any>, onComplete: ((result: Task<Void>) -> Unit)? = null) {
-        firebaseUtility.updateOrder(orderId, orderSenderId, changes) {
-            onComplete?.let { it1 -> it1(it) }
-        }
-    }*/
-
-    fun deleteCurrentOrderFromFirebase(currentOrder: Order) {
-        firebaseUtility.deleteOrder(currentOrder)
-    }
-
-    /*suspend fun deleteCurrentOrderLocally(currentOrder: Order) {
-        cartItemDao.deletePreviousItems(currentOrder.orderId)
-        orderDao.deleteOrder(currentOrder)
-    }*/
 
 	suspend fun clearOrders() {
 		orderDao.clearTable()
@@ -133,14 +113,8 @@ class MainRepository(db: EastylianDatabase) {
         firebaseUtility.addCakeToDatabase(cake)
     }
 
-    /*fun removeCakeFromDatabase(cake: Cake) {
-        firebaseUtility.removeCakeFromDatabase(cake)
-    }*/
-
     fun uploadImage(image: Uri, onComplete: (downloadUrl: Uri?) -> Unit) {
-        firebaseUtility.uploadImage(image) {
-            onComplete(it)
-        }
+        firebaseUtility.uploadImage(image, onComplete)
     }
 
     fun updateCakeInDatabase(previousCake: Cake) {
@@ -217,14 +191,6 @@ class MainRepository(db: EastylianDatabase) {
         orderDao.clearOrdersBasedOnStatus(status1, status2)
     }
 
-    /*suspend fun clearOrdersBasedOnStatus(status: String? = null) {
-        if (status != null) {
-            orderDao.clearOrdersBasedOnStatus(status)
-        } else {
-            clearOrders()
-        }
-    }*/
-
     suspend fun insertRefunds(refunds: List<Refund>) {
         refundDao.insertItems(refunds)
     }
@@ -242,15 +208,11 @@ class MainRepository(db: EastylianDatabase) {
     }
 
     fun createOrDeleteModerator(changes: Map<String, Any>, onComplete: ((result: Task<HttpsCallableResult>) -> Unit)? = null) {
-        firebaseUtility.createOrDeleteModerator(changes) {
-            onComplete?.let { it1 -> it1(it) }
-        }
+        firebaseUtility.createOrDeleteModerator(changes, onComplete)
     }
 
     fun createOrDeleteDeliveryExecutive(changes: Map<String, Any>, onComplete: ((result: Task<HttpsCallableResult>) -> Unit)? = null) {
-        firebaseUtility.createOrDeleteDeliveryExecutive(changes) {
-            onComplete?.let { it1 -> it1(it) }
-        }
+        firebaseUtility.createOrDeleteDeliveryExecutive(changes, onComplete)
     }
 
     fun confirmCashOnDeliveryOrder(
@@ -260,11 +222,7 @@ class MainRepository(db: EastylianDatabase) {
         restaurantChanges: Map<String, Any>,
         onComplete: ((result: Task<Void>) -> Unit)? = null
     ) {
-        firebaseUtility.confirmCashOnDeliveryOrder(orderId, orderSenderId, orderChanges, restaurantChanges) {
-            if (onComplete != null) {
-                onComplete(it)
-            }
-        }
+        firebaseUtility.confirmCashOnDeliveryOrder(orderId, orderSenderId, orderChanges, restaurantChanges, onComplete)
     }
 
 	suspend fun getMenuItems() {
@@ -281,6 +239,10 @@ class MainRepository(db: EastylianDatabase) {
 
     suspend fun insertUser(user: User) {
         userDao.insert(user)
+    }
+
+    fun deleteOrderFromFirebase(currentOrder: Order) {
+        firebaseUtility.deleteOrder(currentOrder)
     }
 
     companion object {

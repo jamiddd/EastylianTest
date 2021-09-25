@@ -86,6 +86,15 @@
                     android:layout_gravity="center_vertical"
                     android:text="Edit" />
 
+                <ProgressBar
+                    android:id="@+id/profilePhotoUploadProgress"
+                    style="?android:attr/progressBarStyle"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="8dp"
+                    android:visibility="gone" />
+
 
             </LinearLayout>
 

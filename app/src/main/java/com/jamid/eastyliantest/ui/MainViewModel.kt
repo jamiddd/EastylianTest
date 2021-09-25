@@ -2,7 +2,6 @@ package com.jamid.eastyliantest.ui
 
 import android.net.Uri
 import android.util.Log
-import android.util.Patterns
 import androidx.lifecycle.*
 import androidx.paging.*
 import com.google.android.gms.maps.model.LatLng
@@ -407,13 +406,6 @@ class MainViewModel(val repo: MainRepository): ViewModel() {
         repo.confirmLocation(currentPlace)
     }
 
-    private fun CharSequence?.isValidEmail() =
-        !isNullOrEmpty() && Patterns.EMAIL_ADDRESS.matcher(this).matches()
-
-    fun isEmailValid(email: String): Boolean {
-        return email.isValidEmail()
-    }
-
     fun updateOrderTime(time: Long, isSetByUser: Boolean = true) {
         val previousOrder = currentCartOrder.value
         if (previousOrder != null) {
@@ -438,10 +430,6 @@ class MainViewModel(val repo: MainRepository): ViewModel() {
 
     fun insertCake(cake: Cake) = viewModelScope.launch(Dispatchers.IO) {
         repo.insertCake(cake)
-    }
-
-    fun deleteCurrentOrderFromFirebase(currentOrder: Order) = viewModelScope.launch (Dispatchers.IO) {
-        repo.deleteCurrentOrderFromFirebase(currentOrder)
     }
 
     fun updateOrder(orderId: String, orderSenderId: String, changes: Map<String, Any>, onComplete: ((result: Task<Void>) -> Unit)? = null) = viewModelScope.launch (Dispatchers.IO) {
@@ -471,9 +459,7 @@ class MainViewModel(val repo: MainRepository): ViewModel() {
     }
 
     fun uploadImage(image: Uri, onComplete: (uri: Uri?) -> Unit) {
-        repo.uploadImage(image) {
-            onComplete(it)
-        }
+        repo.uploadImage(image, onComplete)
     }
 
     fun updateCakeInDatabase(previousCake: Cake) {
@@ -606,27 +592,15 @@ class MainViewModel(val repo: MainRepository): ViewModel() {
 	}
 
 	fun uploadOrder(order: Order, onComplete: ((result: Task<Void>) -> Unit)? = null) {
-		repo.firebaseUtility.uploadNewOrder(order) {
-            if (onComplete != null) {
-                onComplete(it)
-            }
-        }
+		repo.firebaseUtility.uploadNewOrder(order, onComplete)
 	}
 
     fun updateRestaurantData(changes: Map<String, Any>, onComplete: ((result: Task<Void>) -> Unit)? = null) = viewModelScope.launch(Dispatchers.IO) {
-        repo.firebaseUtility.updateRestaurantData(changes) { result ->
-            onComplete?.let {
-                it(result)
-            }
-        }
+        repo.firebaseUtility.updateRestaurantData(changes, onComplete)
     }
 
     fun confirmOrder(orderId: String, orderSenderId: String, orderChanges: Map<String, Any>, restaurantChanges: Map<String, Any>, onComplete: ((result: Task<Void>) -> Unit)? = null) = viewModelScope.launch(Dispatchers.IO) {
-        repo.confirmCashOnDeliveryOrder(orderId, orderSenderId, orderChanges, restaurantChanges) {
-            if (onComplete != null) {
-                onComplete(it)
-            }
-        }
+        repo.confirmCashOnDeliveryOrder(orderId, orderSenderId, orderChanges, restaurantChanges, onComplete)
     }
 
     fun getCakes() = viewModelScope.launch(Dispatchers.IO) {
@@ -638,23 +612,15 @@ class MainViewModel(val repo: MainRepository): ViewModel() {
     }
 
     fun createOrDeleteModerator(changes: Map<String, Any>, onComplete: ((result: Task<HttpsCallableResult>) -> Unit)? = null) = viewModelScope.launch (Dispatchers.IO) {
-        repo.createOrDeleteModerator(changes) {
-            onComplete?.let { it1 -> it1(it) }
-        }
+        repo.createOrDeleteModerator(changes, onComplete)
     }
 
     fun createOrDeleteDeliveryExecutive(changes: Map<String, Any>, onComplete: ((result: Task<HttpsCallableResult>) -> Unit)? = null) = viewModelScope.launch (Dispatchers.IO) {
-        repo.createOrDeleteDeliveryExecutive(changes) {
-            onComplete?.let { it1 -> it1(it) }
-        }
+        repo.createOrDeleteDeliveryExecutive(changes, onComplete)
     }
 
     fun deleteCake(id: String, onComplete: ((result: Task<Void>) -> Unit)? = null) {
-        repo.firebaseUtility.deleteCake(id) {
-            if (onComplete != null) {
-                onComplete(it)
-            }
-        }
+        repo.firebaseUtility.deleteCake(id, onComplete)
     }
 
     fun removeCakeMenuItem(cakeMenuItem: CakeMenuItem) {
@@ -662,11 +628,7 @@ class MainViewModel(val repo: MainRepository): ViewModel() {
     }
 
     fun updateFirebaseUser(changes: Map<String, String?>, onComplete: ((result: Task<Void>) -> Unit)? = null) {
-        repo.firebaseUtility.updateFirebaseUser(changes) {
-            if (onComplete != null) {
-                onComplete(it)
-            }
-        }
+        repo.firebaseUtility.updateFirebaseUser(changes, onComplete)
     }
 
     fun updateUser(changes: Map<String, String?>) {
@@ -681,6 +643,13 @@ class MainViewModel(val repo: MainRepository): ViewModel() {
         uploadNotification(notification, onComplete)
     }
 
+    fun deleteOrderFromFirebase() {
+        val currentOrder = currentCartOrder.value
+        if (currentOrder != null) {
+            repo.deleteOrderFromFirebase(currentOrder)
+        }
+    }
+
     companion object {
         private const val TAG = "MainViewModel"
         private const val one: Long = 1
@@ -688,7 +657,6 @@ class MainViewModel(val repo: MainRepository): ViewModel() {
         private const val LIKE_DELIVERING = "%Delivering%"
         private const val LIKE_PREPARING = "%Preparing%"
         private const val LIKE_PAID = "%Paid%"
-        private const val LIKE_DUE = "%Due%"
         private const val LIKE_CANCELLED = "%Cancelled%"
     }
 

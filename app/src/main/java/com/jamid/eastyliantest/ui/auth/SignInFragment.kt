@@ -3,10 +3,10 @@ package com.jamid.eastyliantest.ui.auth
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -21,6 +21,7 @@ import com.google.firebase.ktx.Firebase
 import com.jamid.eastyliantest.R
 import com.jamid.eastyliantest.databinding.FragmentSignInBinding
 import com.jamid.eastyliantest.db.EastylianDatabase
+import com.jamid.eastyliantest.model.User
 import com.jamid.eastyliantest.repo.MainRepository
 import com.jamid.eastyliantest.utility.*
 import kotlinx.coroutines.delay
@@ -95,19 +96,20 @@ class SignInFragment : Fragment(R.layout.fragment_sign_in), View.OnClickListener
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentSignInBinding.bind(view)
 
-        viewModel = ViewModelProviders.of(requireActivity(), AuthViewModelFactory(
+        val context = requireContext()
+        val activity = context as FragmentActivity
+
+        viewModel = ViewModelProviders.of(activity, AuthViewModelFactory(
 			MainRepository.newInstance(
-            EastylianDatabase.getInstance(requireContext(), lifecycleScope)))).get(AuthViewModel::class.java)
+            EastylianDatabase.getInstance(context, lifecycleScope)))).get(AuthViewModel::class.java)
 
         binding.signInBottomContent.phoneInput.doAfterTextChanged {
             binding.signInBottomContent.phoneInputLayout.error = null
             binding.signInBottomContent.signInButton.isEnabled = !it.isNullOrBlank() && it.length == 10
         }
 
-        requireActivity().let {
-            it.onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-                it.finish()
-            }
+        activity.onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            activity.finish()
         }
 
         binding.signInBottomContent.signInButton.setOnClickListener(this)
@@ -116,21 +118,20 @@ class SignInFragment : Fragment(R.layout.fragment_sign_in), View.OnClickListener
             binding.signInBottomContent.signInButton.isEnabled = !it.isNullOrBlank() && it.length == 6
         }
 
-        viewModel.repository.firebaseUtility.currentFirebaseUserLive.observe(viewLifecycleOwner) {
-            if (it != null) {
-                viewLifecycleOwner.lifecycleScope.launch {
-                    val isUserRegistered = viewModel.checkIfUserRegistered(it.uid)
-                    if (isUserRegistered != null) {
-                        if (isUserRegistered) {
-                            it.getIdToken(false).addOnCompleteListener { it1 ->
-                                if (it1.isSuccessful) {
-                                    startActivityBasedOnAuth(it1.result)
+        viewModel.currentUser.observe(viewLifecycleOwner) { firebaseUser ->
+            if (firebaseUser != null) {
+                viewModel.checkIfUserExists(firebaseUser.uid) { it1 ->
+                    if (it1.isSuccessful) {
+                        val userSnapshot = it1.result
+                        if (userSnapshot.exists()) {
+                            val user = userSnapshot.toObject(User::class.java)!!
+                            viewModel.insertUser(user)
+
+                            firebaseUser.getIdToken(false).addOnCompleteListener { it2 ->
+                                if (it2.isSuccessful) {
+                                    startActivityBasedOnAuth(it2.result)
                                 } else {
-                                    Toast.makeText(
-                                        requireContext(),
-                                        "Something went wrong while fetching user data.",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
+                                    toast("Something went wrong while fetching user data.")
                                 }
                             }
                         } else {
@@ -142,7 +143,7 @@ class SignInFragment : Fragment(R.layout.fragment_sign_in), View.OnClickListener
                     }
                 }
             } else {
-                //
+                Log.d(TAG, "Firebase user is null at the moment")
             }
         }
 
@@ -171,16 +172,13 @@ class SignInFragment : Fragment(R.layout.fragment_sign_in), View.OnClickListener
         auth.signInWithCredential(credential)
             .addOnCompleteListener(requireActivity()) { task ->
                 if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
-                    Log.d(TAG, "signInWithCredential:success")
                     val firebaseUser = task.result.user
-                    viewModel.repository.firebaseUtility.currentFirebaseUserLive.postValue(firebaseUser)
+                    viewModel.setCurrentUser(firebaseUser)
                 } else {
-                    // Sign in failed, display a message and update the UI
                     Log.w(TAG, "signInWithCredential:failure", task.exception)
                     if (task.exception is FirebaseAuthInvalidCredentialsException) {
-                        toast("The code you entered was wrong. Try again.")
                         // The verification code entered was invalid
+                        toast("The code you entered was wrong. Try again.")
                     }
 
                     // Update UI
@@ -188,7 +186,6 @@ class SignInFragment : Fragment(R.layout.fragment_sign_in), View.OnClickListener
                 }
             }
     }
-
 
     private fun updateUIOnFailure() {
         currentButtonMode = ButtonMode.SEND_OTP
@@ -238,7 +235,6 @@ class SignInFragment : Fragment(R.layout.fragment_sign_in), View.OnClickListener
             signInProgressBar.show()
         }
     }
-
 
     companion object {
 
