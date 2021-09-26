@@ -50,6 +50,9 @@ class ContactFragment: Fragment(R.layout.fragment_contact), TableItemClickListen
 		viewModel.repo.restaurant.observe(viewLifecycleOwner) { restaurant ->
 			if (restaurant != null) {
 
+				phoneNumberAdapter.icons.addAll(restaurant.randomUserIcons)
+				emailAddressAdapter.icons.addAll(restaurant.randomUserIcons)
+
 				val phoneNumbers = restaurant.adminPhoneNumbers
 				if (phoneNumbers.isNotEmpty()) {
 					phoneNumberAdapter.submitList(phoneNumbers)

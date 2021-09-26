@@ -75,6 +75,7 @@ class OrderViewHolder(val view: View): RecyclerView.ViewHolder(view) {
 
     var isAdmin = false
     var isDeliveryExecutive = false
+    val randomIcons = mutableListOf<String>()
 
     fun resetState() {
         progressBar.hide()
@@ -245,7 +246,16 @@ class OrderViewHolder(val view: View): RecyclerView.ViewHolder(view) {
                     if (it.exists()) {
                         val customer = it.toObject(User::class.java)!!
                         binding.customerName.text = customer.name
-                        binding.customerImage.setImageURI(customer.photoUrl)
+
+                        if (!customer.photoUrl.isNullOrBlank()) {
+                            binding.customerImage.setImageURI(customer.photoUrl)
+                        } else {
+                            if (randomIcons.isNotEmpty()) {
+                                val image = randomIcons.random()
+                                binding.customerImage.setImageURI(image)
+                            }
+                        }
+
                         binding.callCustomerBtn.setOnClickListener {
                             orderClickListener.onCustomerClick(this, customer)
                         }

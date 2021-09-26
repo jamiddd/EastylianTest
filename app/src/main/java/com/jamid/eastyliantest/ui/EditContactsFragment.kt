@@ -57,6 +57,8 @@ class EditContactsFragment: Fragment(R.layout.fragment_edit_contacts), TableItem
 			if (restaurant != null) {
 
 				initLocationLayout(restaurant)
+				phoneNumberAdapter.icons.addAll(restaurant.randomUserIcons)
+				emailAddressAdapter.icons.addAll(restaurant.randomUserIcons)
 
  				val phoneNumbers = restaurant.adminPhoneNumbers
 				if (phoneNumbers.isNotEmpty()) {

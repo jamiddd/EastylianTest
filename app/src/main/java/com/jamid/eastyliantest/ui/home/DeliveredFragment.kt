@@ -1,5 +1,6 @@
 package com.jamid.eastyliantest.ui.home
 
+import android.util.Log
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.PagingDataAdapter
 import com.jamid.eastyliantest.adapter.OrderPagingAdapter
@@ -28,6 +29,8 @@ class DeliveredFragment : PagerListFragment<OrderAndCartItems, OrderViewHolder, 
 
     companion object {
 
+        private const val TAG = "DeliveredFragment"
+
         @JvmStatic
         fun newInstance() =
             DeliveredFragment()
@@ -38,10 +41,20 @@ class DeliveredFragment : PagerListFragment<OrderAndCartItems, OrderViewHolder, 
     }
 
     override fun getAdapter(): PagingDataAdapter<OrderAndCartItems, OrderViewHolder> {
-        return OrderPagingAdapter().apply {
+
+        val ada = OrderPagingAdapter().apply {
             isAdmin = true
             isDeliveryExecutive = false
         }
+
+        val restaurant = viewModel.repo.restaurant.value
+        if (restaurant != null) {
+            ada.randomIcons.addAll(restaurant.randomUserIcons)
+        } else {
+            Log.d(TAG, "Restaurant is null")
+        }
+
+        return ada
     }
 
 }

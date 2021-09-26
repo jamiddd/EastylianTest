@@ -50,10 +50,18 @@ class PendingFragment : PagerListFragment<OrderAndCartItems, OrderViewHolder, Fr
     override fun getAdapter(): PagingDataAdapter<OrderAndCartItems, OrderViewHolder> {
         delivery = arguments?.getBoolean(IS_DELIVERY_EXECUTIVE) ?: false
         admin = !delivery
-        return OrderPagingAdapter().apply {
-            isDeliveryExecutive = delivery
+
+        val ada = OrderPagingAdapter().apply {
             isAdmin = admin
+            isDeliveryExecutive = delivery
         }
+
+        val restaurant = viewModel.repo.restaurant.value
+        if (restaurant != null && admin) {
+            ada.randomIcons.addAll(restaurant.randomUserIcons)
+        }
+
+        return ada
     }
 
 

@@ -219,6 +219,7 @@
     <string name="delivery_executives">Delivery Executives</string>
     <string name="change_menu">Change Menu</string>
     <string name="change">Change</string>
+    <string name="edit">Edit</string>
 
     <!-- <string-array name="occasion_names">
         <item>Birthday</item>

@@ -34,6 +34,9 @@ class AdminDashFragment: Fragment(R.layout.fragment_admin_dash) {
 					orderNumberText.text = it.totalOrderCount.toString()
 					val priceString = "₹ ${getPriceString(it.totalSalesAmount)}"
 					netSaleText.text = priceString
+
+					val nameAndVersion = "${it.name}\n${it.version}"
+					binding.nameAndVersionText.text = nameAndVersion
 				}
 			}
 

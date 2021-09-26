@@ -20,8 +20,10 @@ data class Restaurant(
 	var locationAddress: String,
 	var adminEmailAddresses: List<String>,
 	var adminPhoneNumbers: List<String>,
+	var randomUserIcons: List<String>,
+	var version: String,
 	@Ignore
 	var location: @RawValue GeoPoint,
 ): Parcelable {
-	constructor() : this("", 0, 0, 0, 0, "", emptyList(), emptyList(), GeoPoint(0.0, 0.0))
+	constructor() : this("", 0, 0, 0, 0, "", emptyList(), emptyList(), emptyList(), "", GeoPoint(0.0, 0.0))
 }

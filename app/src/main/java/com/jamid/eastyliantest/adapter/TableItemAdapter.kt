@@ -19,6 +19,7 @@ interface TableItemClickListener {
 class TableItemAdapter(val tableItemClickListener: TableItemClickListener): ListAdapter<String, TableItemAdapter.TableItemViewHolder>(stringComparator) {
 
 	var isAdmin = false
+	var icons = mutableListOf<String>()
 
 	companion object {
 		val stringComparator = object: DiffUtil.ItemCallback<String>() {
@@ -43,6 +44,10 @@ class TableItemAdapter(val tableItemClickListener: TableItemClickListener): List
 		fun bind(item: String) {
 			tableItem.text = item
 
+			if (icons.isNotEmpty()) {
+				contactImage.setImageURI(icons.random())
+			}
+
 			actionBtn.setOnClickListener {
 				tableItemClickListener.onPrimaryActionClick(item)
 			}
@@ -55,11 +60,12 @@ class TableItemAdapter(val tableItemClickListener: TableItemClickListener): List
 					actionBtn.text = "Call"
 					actionBtn.icon = ContextCompat.getDrawable(view.context, R.drawable.ic_round_call_24)
 				}
+			} else {
+				view.setOnClickListener {
+					// Not implemented
+				}
 			}
 
-			view.setOnClickListener {
-				// Not implemented
-			}
 
 		}
 

@@ -9,6 +9,7 @@ import com.jamid.eastyliantest.model.OrderAndCartItems
 
 class OrderPagingAdapter: PagingDataAdapter<OrderAndCartItems, OrderViewHolder>(OrderAndCartItemsComparator()){
 
+	val randomIcons = mutableListOf<String>()
 	var isAdmin = false
 	var isDeliveryExecutive = false
 
@@ -23,6 +24,7 @@ class OrderPagingAdapter: PagingDataAdapter<OrderAndCartItems, OrderViewHolder>(
 		val orderVH = OrderViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.order_item, parent, false))
 		orderVH.isAdmin = isAdmin
 		orderVH.isDeliveryExecutive = isDeliveryExecutive
+		orderVH.randomIcons.addAll(randomIcons)
 		return orderVH
 	}
 

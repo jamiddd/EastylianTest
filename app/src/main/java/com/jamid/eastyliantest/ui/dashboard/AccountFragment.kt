@@ -46,12 +46,27 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
 
 		viewModel.repo.currentUser.observe(viewLifecycleOwner) {
 			if (it != null) {
-				binding.customerImage.setImageURI(it.photoUrl)
+				if (it.photoUrl != null) {
+					binding.customerImage.setImageURI(it.photoUrl)
+				} else {
+					val restaurant = viewModel.repo.restaurant.value
+					if (restaurant != null) {
+						val images = restaurant.randomUserIcons
+						if (images.isNotEmpty()) {
+							binding.customerImage.setImageURI(images.random())
+						}
+					} else {
+						Log.d(TAG, "Restaurant is null.")
+					}
+				}
+
 				binding.customerNameText.setText(it.name)
 				binding.customerNameTextView.text = it.name
 
 				binding.accountToolbar.title = it.name
 				binding.accountToolbar.subtitle = "${it.phoneNo} • ${it.email}"
+
+
 			}
 		}
 
@@ -66,7 +81,7 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
 				binding.customerNameText.show()
 				binding.customerNameTextView.hide()
 
-				binding.editBtn.text = "Done"
+				binding.editBtn.text = getString(R.string.done)
 
 			} else {
 				binding.customerNameText.hide()
@@ -80,7 +95,7 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
 					viewModel.updateUser(changes1)
 				}
 
-				binding.editBtn.text = "Edit"
+				binding.editBtn.text = getString(R.string.edit)
 				binding.editBtn.enable()
 
 			}

@@ -156,6 +156,12 @@ class AdminActivity : LocationAwareActivity(), OrderClickListener, CakeMiniListe
             }
         }
 
+        viewModel.repo.restaurant.observe(this) {
+            if (it != null) {
+                Log.d(TAG, "Invoking the observer.")
+            }
+        }
+
         Firebase.firestore.collection(RESTAURANT)
             .document(EASTYLIAN)
             .addSnapshotListener (this) { value, error ->

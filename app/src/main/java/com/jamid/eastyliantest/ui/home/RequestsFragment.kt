@@ -37,10 +37,18 @@ class RequestsFragment : PagerListFragment<OrderAndCartItems, OrderViewHolder, F
     }
 
     override fun getAdapter(): PagingDataAdapter<OrderAndCartItems, OrderViewHolder> {
-        return OrderPagingAdapter().apply {
+
+        val ada = OrderPagingAdapter().apply {
             isAdmin = true
             isDeliveryExecutive = false
         }
+
+        val restaurant = viewModel.repo.restaurant.value
+        if (restaurant != null) {
+            ada.randomIcons.addAll(restaurant.randomUserIcons)
+        }
+
+        return ada
     }
 
 

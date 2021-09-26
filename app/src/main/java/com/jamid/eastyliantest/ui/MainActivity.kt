@@ -457,6 +457,12 @@ class MainActivity : LocationAwareActivity(), CakeClickListener, OrderImageClick
             }
         }
 
+        viewModel.repo.restaurant.observe(this) {
+            if (it != null) {
+                Log.d(TAG, "Invoking the observer.")
+            }
+        }
+
         Firebase.firestore.collection(RESTAURANT)
             .document(EASTYLIAN)
             .get()
@@ -468,20 +474,6 @@ class MainActivity : LocationAwareActivity(), CakeClickListener, OrderImageClick
                     Log.e(TAG, msg)
                 }
             }
-
-
-        /*viewModel.repo.firebaseUtility.currentFirebaseUserLive.observe(this) {
-            if (it != null) {
-                val photo = if (it.photoUrl == null) {
-                    null
-                } else {
-                    it.photoUrl.toString()
-                }
-                val changes = mapOf("name" to it.displayName, "photoUrl" to photo)
-                viewModel.updateUser(changes)
-            }
-        }*/
-
     }
 
     // add listener for all current orders
