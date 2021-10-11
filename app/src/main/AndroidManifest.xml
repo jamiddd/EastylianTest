@@ -29,7 +29,23 @@
         android:roundIcon="@mipmap/ic_round_launcher"
         android:supportsRtl="true"
         android:theme="@style/Theme.EastylianTest">
+        <activity
+            android:name=".ui.MainActivity2"
+            android:theme="@style/Theme.EastylianTest.New"
+            android:exported="true">
 
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data
+                    android:pathPrefix="/account"
+                    android:scheme="eastylian" />
+            </intent-filter>
+
+        </activity>
         <activity
             android:name=".ui.DeliveryActivity"
             android:exported="true" />
@@ -44,7 +60,6 @@
         <service
             android:name=".service.MyFirebaseMessagingService"
             android:exported="false">
-
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
@@ -56,8 +71,8 @@
 
         <activity
             android:name=".ui.AdminActivity"
-            android:windowSoftInputMode="adjustPan"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".ui.auth.AuthActivity"
             android:exported="false" />
@@ -67,35 +82,33 @@
             android:theme="@style/Theme.EastylianTest">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".ui.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:windowSoftInputMode="adjustPan">
-
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.BROWSABLE" />
 
+                <category android:name="android.intent.category.BROWSABLE" />
                 <category android:name="android.intent.category.DEFAULT" />
 
-                <data android:scheme="eastylian" android:pathPrefix="/account" />
+                <data
+                    android:pathPrefix="/account"
+                    android:scheme="eastylian" />
             </intent-filter>
-
         </activity>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="${GOOGLE_MAPS_API_KEY}" />
-
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
-
     </application>
 
 </manifest>

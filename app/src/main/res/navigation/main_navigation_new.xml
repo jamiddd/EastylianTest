@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_navigation_new"
+    app:startDestination="@id/containerFragment">
+
+    <fragment
+        android:id="@+id/containerFragment"
+        android:name="com.jamid.eastyliantest.ui.ContainerFragment"
+        tools:layout="@layout/fragment_container"
+        android:label="@string/app_name" >
+        <action
+            android:id="@+id/action_containerFragment_to_locationFragment4"
+            app:destination="@id/locationFragment4" />
+        <action
+            android:id="@+id/action_containerFragment_to_customizeFragment4"
+            app:destination="@id/customizeFragment4" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/locationFragment4"
+        android:name="com.jamid.eastyliantest.ui.LocationFragment"
+        tools:layout="@layout/fragment_location" />
+
+    <fragment
+        android:id="@+id/customizeFragment4"
+        android:name="com.jamid.eastyliantest.ui.CustomizeFragment"
+        tools:layout="@layout/fragment_customize_new"
+        android:label="" >
+    </fragment>
+
+</navigation>

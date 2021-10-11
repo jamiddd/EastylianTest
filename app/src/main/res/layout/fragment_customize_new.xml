@@ -2,14 +2,13 @@
 <androidx.core.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/customizeScroll"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clipToPadding="false"
+    android:id="@+id/customizeScroll"
     android:fillViewport="true"
-    android:paddingBottom="56dp">
-
+    android:paddingBottom="56dp"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
         android:id="@+id/customizationsContainer"
@@ -45,4 +44,6 @@
             tools:listitem="@layout/choice_layout" />
 
     </LinearLayout>
+
+
 </androidx.core.widget.NestedScrollView>

@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewStub
+import android.widget.Button
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.view.children
@@ -18,20 +19,21 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.facebook.drawee.view.SimpleDraweeView
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.jamid.eastyliantest.R
 import com.jamid.eastyliantest.databinding.ChoiceExtraBinding
-import com.jamid.eastyliantest.databinding.FragmentCustomizeBinding
+import com.jamid.eastyliantest.databinding.FragmentCustomizeNewBinding
 import com.jamid.eastyliantest.model.Cake
 import com.jamid.eastyliantest.model.CartItem
 import com.jamid.eastyliantest.model.Flavor.*
 import com.jamid.eastyliantest.utility.*
 import java.util.*
 
-class CustomizeFragment: Fragment(R.layout.fragment_customize) {
+class CustomizeFragment: Fragment() {
 
-	private lateinit var binding: FragmentCustomizeBinding
+	private lateinit var binding: FragmentCustomizeNewBinding
 	private val viewModel: MainViewModel by activityViewModels()
 	private var editMode = false
 
@@ -42,6 +44,15 @@ class CustomizeFragment: Fragment(R.layout.fragment_customize) {
 	private lateinit var choicesAdapter: ChoicesAdapter
 	private var ediblePrintImage: String? = null
 	private lateinit var finalCake: Cake
+
+	override fun onCreateView(
+		inflater: LayoutInflater,
+		container: ViewGroup?,
+		savedInstanceState: Bundle?
+	): View {
+		binding = FragmentCustomizeNewBinding.inflate(inflater)
+		return binding.root
+	}
 
 	private fun initiateRecycler() {
 		choicesAdapter = ChoicesAdapter()
@@ -57,7 +68,7 @@ class CustomizeFragment: Fragment(R.layout.fragment_customize) {
 		val choice3 = Choice(3, "Occasion", "Getting to know the occasion helps us to better design the cake.", listOf("Birthday", "Wedding", "Anniversary", "Valentine\'s Day", "Mother\'s Day"))
 		val choice4 = Choice(4, "Additional", "Additional info such as name on the cake or any specifics.")
 
-		binding.customFragmentContent.choicesRecycler.apply {
+		binding.choicesRecycler.apply {
 			adapter = choicesAdapter
 			layoutManager = LinearLayoutManager(requireContext())
 		}
@@ -71,7 +82,9 @@ class CustomizeFragment: Fragment(R.layout.fragment_customize) {
 	}
 
 	private fun setImage(image: String?) {
-		binding.cakeImageVIew.setImageURI(image)
+		requireActivity().findViewById<SimpleDraweeView>(R.id.main_image)?.let {
+			it.setImageURI(image)
+		}
 	}
 
 	// main function to update the UI on start
@@ -82,10 +95,10 @@ class CustomizeFragment: Fragment(R.layout.fragment_customize) {
 
 			// set short description
 			if (cake.description != null) {
-				binding.customFragmentContent.cakeDescText.text = cake.description
-				binding.customFragmentContent.cakeDescText.show()
+				binding.cakeDescText.text = cake.description
+				binding.cakeDescText.show()
 			} else {
-				binding.customFragmentContent.cakeDescText.hide()
+				binding.cakeDescText.hide()
 			}
 
 			setPrimaryButton()
@@ -102,19 +115,22 @@ class CustomizeFragment: Fragment(R.layout.fragment_customize) {
 
 	// set the primary button based on current mode of this fragment
 	private fun setPrimaryButton() {
-		binding.addToCartBtn.apply {
-			if (editMode) {
-				binding.addToCartBtn.text = getString(R.string.update_item_text)
-			} else {
-				binding.addToCartBtn.text = getString(R.string.add_item_text)
-			}
 
-			setOnClickListener {
-				if (finalCake.isEdiblePrintAttached) {
-					finalCake.thumbnail = finalCake.ediblePrintImage
+		requireActivity().findViewById<Button>(R.id.addToCartBtn)?.let {
+			it.apply {
+				if (editMode) {
+					it.text = getString(R.string.update_item_text)
+				} else {
+					it.text = getString(R.string.add_item_text)
 				}
-				viewModel.updateCurrentCartOrder(finalCake, change = CartItemChange.Update)
-				findNavController().navigateUp()
+
+				setOnClickListener {
+					if (finalCake.isEdiblePrintAttached) {
+						finalCake.thumbnail = finalCake.ediblePrintImage
+					}
+					viewModel.updateCurrentCartOrder(finalCake, change = CartItemChange.Update)
+					findNavController().navigateUp()
+				}
 			}
 		}
 	}
@@ -203,15 +219,9 @@ class CustomizeFragment: Fragment(R.layout.fragment_customize) {
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
-		binding = FragmentCustomizeBinding.bind(view)
 
 		viewModel.windowInsets.observe(viewLifecycleOwner) { (top, bottom) ->
-			binding.backBtn.updateLayout(marginTop = top + convertDpToPx(8), marginLeft = convertDpToPx(8))
-			binding.customFragmentContent.customizeScroll.setPadding(0, 0, 0, convertDpToPx(120) + bottom)
-		}
-
-		binding.backBtn.setOnClickListener {
-			findNavController().navigateUp()
+			binding.customizeScroll.setPadding(0, 0, 0, convertDpToPx(120) + bottom)
 		}
 
 		val cake2 = arguments?.getParcelable<Cake>(ARG_CAKE)
@@ -221,10 +231,10 @@ class CustomizeFragment: Fragment(R.layout.fragment_customize) {
 		presetCake(cake2, cartItem2)
 
 		viewModel.currentImage.observe(viewLifecycleOwner) {
-			binding.imageUploadProgressBar.show()
+//			binding.imageUploadProgressBar.show()
 			if (it != null) {
 				viewModel.uploadImage(it) { downloadUrl ->
-					binding.imageUploadProgressBar.hide()
+//					binding.imageUploadProgressBar.hide()
 					if (downloadUrl != null) {
 						finalCake.thumbnail = null
 						ediblePrintImage = downloadUrl.toString()
@@ -236,7 +246,7 @@ class CustomizeFragment: Fragment(R.layout.fragment_customize) {
 					}
 				}
 			} else {
-				val vg = binding.customFragmentContent.choicesRecycler.getChildAt(0) as ViewGroup?
+				val vg = binding.choicesRecycler.getChildAt(0) as ViewGroup?
 				if (vg != null) {
 					for (ch in vg.children) {
 						if (ch is ViewGroup && ch is ChipGroup) {
@@ -250,7 +260,7 @@ class CustomizeFragment: Fragment(R.layout.fragment_customize) {
 
 				finalCake.isEdiblePrintAttached = false
 				finalCake.ediblePrintImage = null
-				binding.imageUploadProgressBar.hide()
+//				binding.imageUploadProgressBar.hide()
 				ediblePrintImage = null
 			}
 		}
@@ -272,14 +282,16 @@ class CustomizeFragment: Fragment(R.layout.fragment_customize) {
 	}
 
 	private fun updatePriceUI() {
-		val additionalPrice = getCakeAdditionalPrice()
-		finalCake.price = basePrice + additionalPrice
-		val additionalPriceText = getString(R.string.currency_prefix) + (additionalPrice/100).toString()
-		val basePriceText = getString(R.string.currency_prefix) + "${basePrice/100}"
-		val priceText = "$basePriceText + $additionalPriceText (Additional)"
-		val sp = SpannableString(priceText)
-		sp.setSpan(ForegroundColorSpan(ContextCompat.getColor(requireContext(), R.color.primaryColor)), 0, basePriceText.length, SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE)
-		binding.priceText.text = sp
+		requireActivity().findViewById<TextView>(R.id.priceText)?.let {
+			val additionalPrice = getCakeAdditionalPrice()
+			finalCake.price = basePrice + additionalPrice
+			val additionalPriceText = getString(R.string.currency_prefix) + (additionalPrice/100).toString()
+			val basePriceText = getString(R.string.currency_prefix) + "${basePrice/100}"
+			val priceText = "$basePriceText + $additionalPriceText (Additional)"
+			val sp = SpannableString(priceText)
+			sp.setSpan(ForegroundColorSpan(ContextCompat.getColor(requireContext(), R.color.primaryColor)), 0, basePriceText.length, SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE)
+			it.text = sp
+		}
 	}
 
 	companion object {

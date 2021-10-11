@@ -27,7 +27,7 @@ import com.jamid.eastyliantest.model.Flavor
 import com.jamid.eastyliantest.model.OrderStatus
 import com.jamid.eastyliantest.ui.AdminActivity
 import com.jamid.eastyliantest.ui.DeliveryActivity
-import com.jamid.eastyliantest.ui.MainActivity
+import com.jamid.eastyliantest.ui.MainActivity2
 import java.util.*
 
 fun Context.convertDpToPx(dp: Int) = TypedValue.applyDimension(
@@ -285,13 +285,13 @@ fun Context.startActivityBasedOnAuth(result: GetTokenResult) {
                 Intent(this, DeliveryActivity::class.java)
             }
         } else {
-            Intent(this, MainActivity::class.java)
+            Intent(this, MainActivity2::class.java)
         }
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
         startActivity(intent)
         (this as Activity).finish()
     } else {
-        val intent = Intent(this, MainActivity::class.java)
+        val intent = Intent(this, MainActivity2::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
         (this as Activity).finish()

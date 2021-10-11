@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.MainActivity2">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/main_appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/main_collapse"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            app:collapsedTitleTextAppearance="@style/TitleText"
+            app:contentScrim="@color/transparent"
+            app:expandedTitleTextAppearance="@style/TitleTextExpanded"
+            app:layout_scrollFlags="exitUntilCollapsed|scroll|snap|snapMargins"
+            app:titleCollapseMode="fade">
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/main_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:actualImageScaleType="focusCrop"
+                app:overlayImage="@color/nearTransparentDark"
+                app:placeholderImage="@color/primaryColor"
+                tools:visibility="gone" />
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/main_toolbar"
+                style="@style/ToolbarTheme"
+                android:layout_width="match_parent"
+                android:layout_height="?actionBarSize"
+                app:layout_collapseMode="pin" />
+
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/currentLocationText"
+            style="@style/primaryButtonBackgroundTint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:fontFamily="sans-serif-medium"
+            android:gravity="center_vertical"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:maxLines="1"
+            android:paddingStart="24dp"
+            android:paddingTop="8dp"
+            android:paddingEnd="24dp"
+            android:paddingBottom="8dp"
+            android:text="Sonapur Block, PHC"
+            android:textAppearance="@android:style/TextAppearance.Material.Small"
+            android:textSize="16sp"
+            app:cornerRadius="0dp"
+            app:icon="@drawable/ic_round_location_on_24"
+            app:rippleColor="#B4A54F15" />
+
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/nav_host_fragment"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+        app:navGraph="@navigation/main_navigation_new"
+        app:defaultNavHost="true" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/bottomCartAction"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom">
+
+        <View
+            android:id="@+id/divider12"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider" />
+
+        <Button
+            android:id="@+id/addToCartBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="56dp"
+            android:layout_gravity="end"
+            android:layout_marginEnd="16dp"
+            android:fontFamily="@font/manrope_semi_bold"
+            android:text="@string/add_to_cart"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            app:cornerRadius="24dp"
+            app:icon="@drawable/ic_add_shopping_cart_black_24dp" />
+
+        <TextView
+            android:id="@+id/priceText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="16dp"
+            android:fontFamily="@font/manrope_semi_bold"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            tools:text="₹ 550" />
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/bottomCartAction2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:animateLayoutChanges="true"
+        android:focusable="true"
+        android:visibility="gone"
+        app:cardElevation="16dp"
+        app:contentPaddingBottom="72dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/deliveringToText"
+                style="@style/ListItem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/delivering_to"
+                android:textAllCaps="true"
+                android:textColor="#878484"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/addressText"
+                style="@style/ListItem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:visibility="gone"
+                app:drawableLeftCompat="@drawable/ic_round_location_on_24"
+                tools:text="2nd Floor, KMC Building, Gumoria Pathar, 782402"
+                tools:visibility="visible" />
+
+            <CheckBox
+                android:id="@+id/cashOnDeliveryBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"
+                android:text="@string/cash_on_delivery" />
+
+            <Button
+                android:id="@+id/checkOutBtn"
+                android:layout_width="match_parent"
+                android:layout_height="?actionBarSize"
+                android:layout_gravity="bottom"
+                android:enabled="true"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:text="@string/checkout"
+                app:cornerRadius="0dp" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/changeLocationBtn"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:layout_gravity="end"
+            android:fontFamily="@font/manrope_semi_bold"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:text="@string/change"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:visibility="gone" />
+
+    </androidx.cardview.widget.CardView>
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/main_navigation"
+        style="@style/TabLayoutTheme"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:elevation="30dp"
+        app:tabIndicator="@null"
+        app:tabMode="fixed">
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:icon="@drawable/ic_home_black_24dp"
+            android:text="Monday" />
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:icon="@drawable/ic_round_shopping_cart_24"
+            android:text="Tuesday" />
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:icon="@drawable/ic_round_account_circle_24"
+            android:text="Wednesday" />
+    </com.google.android.material.tabs.TabLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
