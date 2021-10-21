@@ -2,6 +2,7 @@ package com.jamid.eastyliantest.ui
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.res.Configuration
 import android.location.Geocoder
 import android.os.Bundle
 import android.util.Log
@@ -24,10 +25,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.LatLngBounds
-import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.*
 import com.google.android.libraries.places.api.net.*
@@ -267,6 +265,18 @@ class LocationFragment: Fragment(R.layout.fragment_location), OnMapReadyCallback
         mGoogleMap = p0
         p0.setMaxZoomPreference(20f)
         loadingDialog?.dismiss()
+
+        when (requireActivity().resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
+            Configuration.UI_MODE_NIGHT_YES -> {
+                p0.setMapStyle(MapStyleOptions.loadRawResourceStyle(requireContext(), R.raw.map_in_night))
+            }
+            Configuration.UI_MODE_NIGHT_NO -> {
+
+            }
+            Configuration.UI_MODE_NIGHT_UNDEFINED -> {
+
+            }
+        }
 
         p0.setOnMapClickListener { latLang ->
             if (binding.nearByPlaces.isVisible) {

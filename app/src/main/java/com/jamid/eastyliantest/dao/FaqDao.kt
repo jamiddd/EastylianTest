@@ -15,6 +15,6 @@ abstract class FaqDao: BaseDao<Faq>() {
 	@Query("DELETE FROM faqs")
 	abstract suspend fun clearTable()
 
-	@Query("SELECT * FROM faqs ORDER BY createdAt DESC")
+	@Query("SELECT * FROM faqs WHERE answered = 0 ORDER BY createdAt DESC")
 	abstract fun pagedQuestions(): PagingSource<Int, Faq>
 }

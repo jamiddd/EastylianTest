@@ -18,10 +18,9 @@ class AnswerFragment: PagerListFragment<Faq, QuestionsViewHolder, FragmentAnswer
 	override fun onViewLaidOut() {
 		super.onViewLaidOut()
 
-		initLayout(binding.faqRecycler)
+		initLayout(binding.faqRecycler, refresher = binding.faqRefresher)
 
 		binding.faqRecycler.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
-
 
 		val query = Firebase.firestore.collection(FAQ)
 			.whereEqualTo(ANSWERED, false)

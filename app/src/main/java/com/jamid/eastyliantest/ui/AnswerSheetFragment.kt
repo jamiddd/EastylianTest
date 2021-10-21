@@ -46,6 +46,9 @@ class AnswerSheetFragment: BottomSheetDialogFragment() {
 				.document(faq.id)
 				.update(mapOf("answer" to binding.answerText.text.toString(), "answered" to true))
 				.addOnSuccessListener {
+					faq.answer = binding.answerText.text.toString()
+					faq.answered = true
+					viewModel.insertFaqs(listOf(faq))
 					Toast.makeText(requireContext(), "Uploaded answer.", Toast.LENGTH_SHORT).show()
 					dismiss()
 				}.addOnFailureListener {

@@ -19,6 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:drawablePadding="16dp"
+        android:drawableTint="#8F8E8E"
         android:ellipsize="end"
         android:fontFamily="@font/manrope_semi_bold"
         android:maxLines="1"

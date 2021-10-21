@@ -1,20 +1,21 @@
 package com.jamid.eastyliantest.ui
 
+import android.content.res.Configuration
 import android.os.Bundle
+import android.text.InputType
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
+import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
-import androidx.core.view.setPadding
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.jamid.eastyliantest.R
 import com.jamid.eastyliantest.databinding.FragmentPaymentBinding
+import com.jamid.eastyliantest.databinding.InputLayoutBinding
 import com.jamid.eastyliantest.interfaces.OnPaymentModeSelected
-import com.jamid.eastyliantest.utility.convertDpToPx
 import com.jamid.eastyliantest.utility.toast
 
 class PaymentFragment: BottomSheetDialogFragment() {
@@ -48,6 +49,18 @@ class PaymentFragment: BottomSheetDialogFragment() {
 
         val paymentModeSelectListener = requireActivity() as OnPaymentModeSelected
 
+        when (requireActivity().resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
+            Configuration.UI_MODE_NIGHT_YES -> {
+                binding.paymentBtn.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.primaryColorVariant))
+            }
+            Configuration.UI_MODE_NIGHT_NO -> {
+
+            }
+            Configuration.UI_MODE_NIGHT_UNDEFINED -> {
+
+            }
+        }
+
         binding.upiBtn.setOnClickListener {
             MaterialAlertDialogBuilder(requireContext())
                 .setTitle("Checking phone number ... ")
@@ -56,16 +69,22 @@ class PaymentFragment: BottomSheetDialogFragment() {
                 .setPositiveButton("Yes") { a, _ ->
                     a.dismiss()
                 }.setNegativeButton("No") { _, _ ->
-                    val editText = EditText(requireContext())
-                    editText.setPadding(convertDpToPx(12))
+
+                    val v = layoutInflater.inflate(R.layout.input_layout, null, false)
+                    val inputLayoutBinding = InputLayoutBinding.bind(v)
+
+                    inputLayoutBinding.inputLayoutText.hint = "Phone number"
+                    inputLayoutBinding.inputLayoutText.editText?.inputType = InputType.TYPE_CLASS_NUMBER
+                    inputLayoutBinding.inputLayoutText.prefixText = "+91"
 
                     MaterialAlertDialogBuilder(requireContext())
                         .setTitle("Enter the phone number linked with your upi id")
                         .setCancelable(false)
-                        .setView(editText)
+                        .setView(inputLayoutBinding.root)
                         .setPositiveButton("Done") { _, _ ->
-                            if (!editText.text.isNullOrBlank()) {
-                                val upiNumber = editText.text.toString()
+
+                            if (!inputLayoutBinding.inputLayoutText.editText?.text.isNullOrBlank()) {
+                                val upiNumber = inputLayoutBinding.inputLayoutText.editText?.text.toString()
                                 viewModel.setCurrentUserUpiNumber(upiNumber) {
                                     if (!it.isSuccessful) {
                                         toast("Something went wrong while trying to change your UPI number.")

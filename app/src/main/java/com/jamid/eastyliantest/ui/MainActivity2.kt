@@ -2,9 +2,13 @@ package com.jamid.eastyliantest.ui
 
 import android.Manifest
 import android.app.Activity
-import android.content.Intent
-import android.content.IntentSender
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.*
+import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -13,12 +17,14 @@ import android.widget.*
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.appcompat.app.AlertDialog
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.core.widget.NestedScrollView
 import androidx.lifecycle.lifecycleScope
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.NavController
+import androidx.navigation.NavDeepLinkBuilder
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
@@ -32,6 +38,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.ktx.messaging
 import com.jamid.eastyliantest.*
 import com.jamid.eastyliantest.adapter.OrderViewHolder
 import com.jamid.eastyliantest.databinding.ActivityMain2Binding
@@ -46,8 +53,9 @@ import com.jamid.eastyliantest.views.zoomable.ImageViewFragment
 import com.razorpay.Checkout
 import com.razorpay.PaymentData
 import com.razorpay.PaymentResultWithDataListener
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
+import java.io.IOException
+import java.net.URL
 import java.util.*
 
 
@@ -57,7 +65,7 @@ class MainActivity2 : LocationAwareActivity(), CakeClickListener, OrderImageClic
     private lateinit var navController: NavController
     private lateinit var repository: MainRepository
     private lateinit var binding: ActivityMain2Binding
-    private var loadingDialog: AlertDialog? = null
+    private lateinit var notificationManager: NotificationManager
 
     val viewModel: MainViewModel by viewModels { MainViewModelFactory(repository) }
     private val orderFeedbacksTemp = mutableMapOf<String, Feedback>()
@@ -96,7 +104,7 @@ class MainActivity2 : LocationAwareActivity(), CakeClickListener, OrderImageClic
                         currentOrder.status = listOf(OrderStatus.Paid)
 
                         // uploading order only after successful payment
-
+                        currentOrder.createdAt = System.currentTimeMillis()
                         viewModel.uploadOrder(currentOrder) { it1 ->
                             if (it1.isSuccessful) {
                                 viewModel.setCurrentPaymentResult(Result.Success(false))
@@ -152,10 +160,103 @@ class MainActivity2 : LocationAwareActivity(), CakeClickListener, OrderImageClic
         }
     }
 
+    private val tokenReceiver = object: BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            val token = intent?.extras?.getString(TOKEN)
+            if (token != null) {
+                viewModel.sendRegistrationTokenToServer(token)
+            }
+        }
+    }
+
+    private val notificationReceiver = object: BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            val title = intent?.extras?.get(TITLE) as String? ?: ""
+            val content = intent?.extras?.get(BODY) as String? ?: ""
+            val image = intent?.extras?.get(IMAGE) as String?
+
+            val notifyBuilder = getNotificationBuilder(title, content, image)
+
+            val orderId = intent?.extras?.get(ORDER_ID) as String?
+            val status = intent?.extras?.get(STATUS) as String?
+
+            if (orderId != null && status != null) {
+                viewModel.updateOrderFromNotification(orderId, status.toOrderStatus())
+
+                if (status == DELIVERED) {
+                    openFeedbackDialog(orderId)
+                }
+
+            }
+
+            notificationManager.notify(NOTIFICATION_ID, notifyBuilder.build())
+        }
+    }
+
+    private fun NotificationCompat.Builder.applyImageUrl(
+        imageUrl: String
+    ) = runBlocking {
+        val url = URL(imageUrl)
+
+        withContext(Dispatchers.IO) {
+            try {
+                val input = url.openStream()
+                BitmapFactory.decodeStream(input)
+            } catch (e: IOException) {
+                null
+            }
+        }?.let { bitmap ->
+            this@applyImageUrl.setStyle(
+                NotificationCompat.BigPictureStyle().bigPicture(bitmap)
+            ).setLargeIcon(bitmap)
+        }
+    }
+
+    private fun getNotificationBuilder(title: String, content: String, image: String? = null): NotificationCompat.Builder {
+        val pendingIntent = NavDeepLinkBuilder(this)
+            .setGraph(R.navigation.main_navigation)
+            .setDestination(R.id.dashboardFragment)
+            .setArguments(null)
+            .createPendingIntent()
+
+        val notificationBuilder = NotificationCompat.Builder(this, PRIMARY_CHANNEL_ID)
+            .setContentTitle(title)
+            .setContentText(content)
+            .setContentIntent(pendingIntent)
+
+        Log.d(TAG, image.toString())
+
+        if (image != null) {
+            notificationBuilder.applyImageUrl(image)
+        }
+
+        return notificationBuilder.setAutoCancel(true)
+            .setSmallIcon(R.mipmap.ic_stat_cake_1)
+    }
+
+    private fun createNotificationChannel() {
+        notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val notificationChannel = NotificationChannel(
+                PRIMARY_CHANNEL_ID,
+                "Mascot Notification",
+                NotificationManager.IMPORTANCE_HIGH
+            )
+            notificationChannel.enableLights(true)
+            notificationChannel.lightColor = Color.RED
+            notificationChannel.enableVibration(true)
+            notificationChannel.description = "Notification from Mascot"
+
+            notificationManager.createNotificationChannel(notificationChannel)
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMain2Binding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        createNotificationChannel()
 
         val database = EastylianDatabase.getInstance(applicationContext, lifecycleScope)
         repository = MainRepository.newInstance(database)
@@ -195,6 +296,9 @@ class MainActivity2 : LocationAwareActivity(), CakeClickListener, OrderImageClic
                 setTextColor(ContextCompat.getColor(this@MainActivity2, R.color.white))
             }
         }
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(tokenReceiver, IntentFilter("tokenIntent"))
+        LocalBroadcastManager.getInstance(this).registerReceiver(notificationReceiver, IntentFilter(NOTIFICATION_INTENT))
 
         viewModel.currentCartOrder.observe(this) { currentOrder ->
             if (currentOrder != null) {
@@ -444,6 +548,15 @@ class MainActivity2 : LocationAwareActivity(), CakeClickListener, OrderImageClic
                 }
             }
 
+        Firebase.messaging.subscribeToTopic(GENERAL)
+            .addOnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    viewModel.setCurrentError(task.exception!!)
+                } else {
+                    Log.d(TAG, "Subscribing to :\"General\": topic in FCM")
+                }
+            }
+
     }
 
     // add listener for all current orders
@@ -492,6 +605,8 @@ class MainActivity2 : LocationAwareActivity(), CakeClickListener, OrderImageClic
 
     companion object {
         private const val TAG = "MainActivity2"
+        private const val PRIMARY_CHANNEL_ID = "PRIMARY_CHANNEL_ID"
+        private const val NOTIFICATION_ID = 14
     }
 
     override fun onCakeClick(cake: Cake) {
@@ -670,6 +785,33 @@ class MainActivity2 : LocationAwareActivity(), CakeClickListener, OrderImageClic
     }
 
     override fun onPrimaryActionClick(vh: OrderViewHolder, order: Order) {
+        if (order.status.first() == OrderStatus.Paid) {
+            val refund = Refund(randomId(), order.orderId, order.senderId, order.paymentId, order.prices.total, "created")
+            viewModel.createRefundRequest(refund) {
+                vh.resetState()
+                if (it.isSuccessful) {
+                    order.status = listOf(OrderStatus.Cancelled)
+                    viewModel.updateOrder(order.orderId, order.senderId, mapOf("status" to listOf(
+                        CANCELLED))) {
+                        viewModel.insertOrder(order)
+                    }
+                } else {
+                    it.exception?.localizedMessage?.let { it1 ->
+                        Log.d(TAG, it1)
+                    }
+                }
+            }
+        }
+
+        if (order.status.first() == OrderStatus.Due) {
+            vh.resetState()
+            order.status = listOf(OrderStatus.Cancelled)
+            viewModel.updateOrder(order.orderId, order.senderId, mapOf("status" to listOf(
+                CANCELLED))) {
+                viewModel.insertOrder(order)
+            }
+        }
+
         if (order.status.first() == OrderStatus.Delivered) {
 
             val tab = binding.mainNavigation.getTabAt(1)
@@ -851,7 +993,7 @@ class MainActivity2 : LocationAwareActivity(), CakeClickListener, OrderImageClic
             .authority("pay")
             .appendQueryParameter("pa", "EASTYLIAN.49075420@hdfcbank")
             .appendQueryParameter("pn", "EASTYLIAN")
-            .appendQueryParameter("mc", "3042")
+            .appendQueryParameter("mc", "TQ8243")
             .appendQueryParameter("tr", tr)
             .appendQueryParameter("tn", "With love from Eastylian")
             /*.appendQueryParameter("am", amount) For real payments */

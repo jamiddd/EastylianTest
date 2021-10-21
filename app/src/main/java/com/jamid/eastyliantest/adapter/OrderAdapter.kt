@@ -12,6 +12,8 @@ import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import androidx.lifecycle.findViewTreeLifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
@@ -31,6 +33,8 @@ import com.jamid.eastyliantest.utility.disable
 import com.jamid.eastyliantest.utility.enable
 import com.jamid.eastyliantest.utility.hide
 import com.jamid.eastyliantest.utility.show
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -163,9 +167,21 @@ class OrderViewHolder(val view: View): RecyclerView.ViewHolder(view) {
             }
             Due, Paid -> {
                 // it's a request, admin can cancel the order here
+                val now = System.currentTimeMillis()
+                val createdAt = order.createdAt
                 setBottomActionVisibility(true)
-                setUpPrimaryActionButton("Start Order")
+                setUpPrimaryActionButton("Start Order", isEnabled = false)
                 setUpSecondaryActionButton("Cancel")
+
+                val diff = now - createdAt
+                if (diff > 2 * 60 * 1000) {
+                    setUpPrimaryActionButton("Start Order")
+                }
+
+                view.findViewTreeLifecycleOwner()?.lifecycleScope?.launch {
+                    delay(diff)
+                    setUpPrimaryActionButton("Start Order")
+                }
 
                 val deliveryText = "Order to be delivered on " + SimpleDateFormat("dd, MMM, EEEE", Locale.getDefault()).format(order.deliveryAt)
                 setOrderDeliveryText(deliveryText, R.color.primaryColor, R.drawable.ic_new_releases_black_24dp__1_)
@@ -290,13 +306,14 @@ class OrderViewHolder(val view: View): RecyclerView.ViewHolder(view) {
         }
     }
 
-    private fun setUpPrimaryActionButton(label: String, isVisible: Boolean = true) {
+    private fun setUpPrimaryActionButton(label: String, isVisible: Boolean = true, isEnabled: Boolean = true) {
         primaryAction.text = label
         if (isVisible) {
             primaryAction.show()
         } else {
             primaryAction.hide()
         }
+        primaryAction.isEnabled = (isVisible && isEnabled)
     }
 
     private fun setUpSecondaryActionButton(label: String, isVisible: Boolean = true) {
@@ -366,6 +383,22 @@ class OrderViewHolder(val view: View): RecyclerView.ViewHolder(view) {
                 val deliveryText = "Order to be delivered on - " + SimpleDateFormat("dd, MMM, EEEE", Locale.getDefault()).format(order.deliveryAt)
                 setOrderDeliveryText(deliveryText, R.color.primaryColor, R.drawable.ic_new_releases_black_24dp__1_)
 
+                val now = System.currentTimeMillis()
+                val createdAt = order.createdAt
+
+                val diff = now - createdAt
+
+                // one minute
+                if (diff > 1 * 60 * 1000) {
+                    setBottomActionVisibility(false)
+                } else {
+                    setBottomActionVisibility(true)
+                    setUpPrimaryActionButton("Cancel", true)
+                    view.findViewTreeLifecycleOwner()?.lifecycleScope?.launch {
+                        delay(diff)
+                        setBottomActionVisibility(false)
+                    }
+                }
             }
             Preparing -> {
 

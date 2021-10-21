@@ -127,16 +127,29 @@
         app:layout_constraintStart_toStartOf="parent"
         tools:visibility="visible">
 
-        <Button
-            android:id="@+id/checkOutBtn"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="?actionBarSize"
-            android:layout_gravity="bottom"
-            android:enabled="true"
-            android:insetTop="0dp"
-            android:insetBottom="0dp"
-            android:text="@string/checkout"
-            app:cornerRadius="0dp" />
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView8"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:text="You can cancel the order within one minute. After that, you cannot cancel the order." />
+
+            <Button
+                android:id="@+id/checkOutBtn"
+                android:layout_width="match_parent"
+                android:layout_height="?actionBarSize"
+                android:layout_gravity="bottom"
+                android:enabled="true"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:text="@string/checkout"
+                app:cornerRadius="0dp" />
+        </LinearLayout>
 
     </androidx.cardview.widget.CardView>
 

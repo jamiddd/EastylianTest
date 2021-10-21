@@ -344,7 +344,7 @@ class AdminActivity : LocationAwareActivity(), OrderClickListener, CakeMiniListe
     override fun onSecondaryActionClick(vh: OrderViewHolder, order: Order) {
         if (order.status.first() == Paid) {
             lifecycleScope.launch (Dispatchers.IO) {
-                RazorpayUtility.initiateRefund(order) {
+                /*RazorpayUtility.initiateRefund(order) {
                     vh.resetState()
                     if (it.isSuccessful) {
                         order.status = listOf(Cancelled)
@@ -354,7 +354,24 @@ class AdminActivity : LocationAwareActivity(), OrderClickListener, CakeMiniListe
                             Log.d(TAG, it1)
                         }
                     }
+                }*/
+
+                val refund = Refund(randomId(), order.orderId, order.senderId, order.paymentId, order.prices.total, "created")
+                viewModel.createRefundRequest(refund) {
+                    vh.resetState()
+                    if (it.isSuccessful) {
+                        order.status = listOf(Cancelled)
+                        viewModel.updateOrder(order.orderId, order.senderId, mapOf("status" to listOf(
+                            CANCELLED))) {
+                            viewModel.insertOrder(order)
+                        }
+                    } else {
+                        it.exception?.localizedMessage?.let { it1 ->
+                            Log.d(TAG, it1)
+                        }
+                    }
                 }
+
             }
         } else {
             order.status = listOf(Cancelled)
