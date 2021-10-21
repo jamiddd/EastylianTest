@@ -1,6 +1,5 @@
 package com.jamid.eastyliantest.ui
 
-import androidx.navigation.fragment.findNavController
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.PagingDataAdapter
 import com.google.firebase.firestore.ktx.firestore
@@ -10,7 +9,6 @@ import com.jamid.eastyliantest.adapter.OrderPagingAdapter
 import com.jamid.eastyliantest.adapter.OrderViewHolder
 import com.jamid.eastyliantest.databinding.FragmentPastOrdersBinding
 import com.jamid.eastyliantest.model.OrderAndCartItems
-import com.jamid.eastyliantest.utility.updateLayout
 
 @ExperimentalPagingApi
 class PastOrdersFragment: PagerListFragment<OrderAndCartItems, OrderViewHolder, FragmentPastOrdersBinding>() {
@@ -21,7 +19,7 @@ class PastOrdersFragment: PagerListFragment<OrderAndCartItems, OrderViewHolder, 
 		initLayout(
 			binding.pastOrdersRecycler,
 			binding.noPastOrders,
-			binding.ordersProgress
+			refresher = binding.pastOrdersRefresher
 		)
 
 		val query = Firebase.firestore.collection(USERS)
@@ -31,14 +29,6 @@ class PastOrdersFragment: PagerListFragment<OrderAndCartItems, OrderViewHolder, 
 
 		getItems {
 			viewModel.pastOrdersFlow(query)
-		}
-
-		viewModel.windowInsets.observe(viewLifecycleOwner) { (top, _) ->
-			binding.pastOrdersToolbar.updateLayout(marginTop = top)
-		}
-
-		binding.pastOrdersToolbar.setNavigationOnClickListener {
-			findNavController().navigateUp()
 		}
 
 	}

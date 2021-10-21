@@ -8,6 +8,7 @@ import androidx.cardview.widget.CardView
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.activityViewModels
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.appbar.AppBarLayout
@@ -22,6 +23,7 @@ import com.jamid.eastyliantest.utility.show
 class ContainerFragment: Fragment() {
 
     private lateinit var binding: FragmentContainerBinding
+    private val viewModel: MainViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -67,17 +69,21 @@ class ContainerFragment: Fragment() {
                     0 -> {
                         // Don't do anything
                         activity.findViewById<CardView>(R.id.bottomCartAction2)?.hide()
-                        activity.findViewById<NestedScrollView>(R.id.fragmentCartScroll)?.isNestedScrollingEnabled = true
-//                        activity.findViewById<CollapsingToolbarLayout>(R.id.main_collapse)?.updateLayout(convertDpToPx(200))
+//                        TODO("Check for changes in the items in the current order and update the buttons in cake adapter.")
+
                     }
                     1 -> {
                         activity.findViewById<NestedScrollView>(R.id.fragmentCartScroll)?.isNestedScrollingEnabled = false
-                        activity.findViewById<CardView>(R.id.bottomCartAction2)?.show()
+                        val currentOrder = viewModel.currentCartOrder.value
+                        if (currentOrder != null) {
+                            activity.findViewById<CardView>(R.id.bottomCartAction2)?.show()
+                        } else {
+                            activity.findViewById<CardView>(R.id.bottomCartAction2)?.hide()
+                        }
                         appbar.setExpanded(false, false)
                     }
                     2 -> {
-//                        activity.findViewById<CollapsingToolbarLayout>(R.id.main_collapse)?.updateLayout(AppBarLayout.LayoutParams.WRAP_CONTENT)
-                        activity.findViewById<NestedScrollView>(R.id.fragmentCartScroll)?.isNestedScrollingEnabled = false
+                        activity.findViewById<NestedScrollView>(R.id.accountScroll)?.isNestedScrollingEnabled = false
                         activity.findViewById<CardView>(R.id.bottomCartAction2)?.hide()
                         appbar.setExpanded(false, false)
                     }
@@ -85,6 +91,17 @@ class ContainerFragment: Fragment() {
             }
         })
 
+    }
+
+    private fun checkForAdapterChanges() {
+        val currentOrder = viewModel.currentCartOrder.value
+        if (currentOrder != null) {
+            val items = currentOrder.items
+            for (item in items) {
+                val cakeId = item.cake.id
+
+            }
+        }
     }
 
     private inner class ContainerPagerAdapter(activity: FragmentActivity): FragmentStateAdapter(activity) {

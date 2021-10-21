@@ -14,7 +14,6 @@ import com.jamid.eastyliantest.adapter.SimplePlaceAdapter
 import com.jamid.eastyliantest.databinding.FragmentAddressBinding
 import com.jamid.eastyliantest.interfaces.OnAddressClickListener
 import com.jamid.eastyliantest.model.SimplePlace
-import com.jamid.eastyliantest.utility.updateLayout
 
 
 class AddressFragment: Fragment(R.layout.fragment_address), OnAddressClickListener {
@@ -39,7 +38,6 @@ class AddressFragment: Fragment(R.layout.fragment_address), OnAddressClickListen
 			}
 		}
 
-
 		val simplePlaceAdapter = SimplePlaceAdapter(this as OnAddressClickListener)
 
 		binding.addressRecycler.apply {
@@ -56,14 +54,6 @@ class AddressFragment: Fragment(R.layout.fragment_address), OnAddressClickListen
 					simplePlaceAdapter.submitList(this)
 				}
 			}
-		}
-
-		binding.fragmentAddressToolbar.setNavigationOnClickListener {
-			findNavController().navigateUp()
-		}
-
-		viewModel.windowInsets.observe(viewLifecycleOwner) { (top, _) ->
-			binding.fragmentAddressToolbar.updateLayout(marginTop = top)
 		}
 
 		binding.changeLocationBtn.setOnClickListener {

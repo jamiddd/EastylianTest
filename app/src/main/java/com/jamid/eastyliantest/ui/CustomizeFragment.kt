@@ -81,10 +81,21 @@ class CustomizeFragment: Fragment() {
 
 	}
 
-	private fun setImage(image: String?) {
-		requireActivity().findViewById<SimpleDraweeView>(R.id.main_image)?.let {
-			it.setImageURI(image)
+	private fun getTitle(cake: Cake): String {
+		return if (cake.fancyName.isNotBlank()) {
+			cake.fancyName
+		} else {
+			if (cake.flavors.first() != VANILLA) {
+				cake.baseName + " with " + getFlavorName(cake.flavors.first()) + " flavor"
+			} else {
+				cake.baseName + " with Vanilla flavor"
+			}
 		}
+
+	}
+
+	private fun setImage(image: String?) {
+		requireActivity().findViewById<SimpleDraweeView>(R.id.main_image)?.setImageURI(image)
 	}
 
 	// main function to update the UI on start
@@ -101,11 +112,12 @@ class CustomizeFragment: Fragment() {
 				binding.cakeDescText.hide()
 			}
 
-			setPrimaryButton()
+			setPrimaryButton(cake)
 
 			finalCake = cake.copy()
 
 			initiateRecycler()
+
 		} else {
 			if (cartItem != null) {
 				presetCake(cartItem.cake)
@@ -114,7 +126,7 @@ class CustomizeFragment: Fragment() {
 	}
 
 	// set the primary button based on current mode of this fragment
-	private fun setPrimaryButton() {
+	private fun setPrimaryButton(cake: Cake) {
 
 		requireActivity().findViewById<Button>(R.id.addToCartBtn)?.let {
 			it.apply {
@@ -122,6 +134,10 @@ class CustomizeFragment: Fragment() {
 					it.text = getString(R.string.update_item_text)
 				} else {
 					it.text = getString(R.string.add_item_text)
+				}
+
+				if (!cake.isCustomizable && cake.isAddedToCart) {
+					it.text = "Add more"
 				}
 
 				setOnClickListener {
@@ -145,7 +161,7 @@ class CustomizeFragment: Fragment() {
 		if (newBaseName == "Edible Print") {
 			val currentImage = viewModel.currentImage.value
 			if (currentImage == null) {
-				(activity as MainActivity?)?.selectImage()
+				(activity as MainActivity2?)?.selectImage()
 			} else {
 				TODO("When the image is already selected")
 			}

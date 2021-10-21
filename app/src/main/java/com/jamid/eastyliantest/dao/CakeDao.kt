@@ -12,8 +12,17 @@ abstract class CakeDao: BaseDao<Cake>() {
 	abstract fun favoriteCakes(): LiveData<List<Cake>>
 
 	@Query("SELECT * FROM cakes WHERE isCustomizable = 0")
-	abstract fun customCakes(): LiveData<List<Cake>>
+	abstract suspend fun customCakes(): List<Cake>
+
+	@Query("SELECT * FROM cakes WHERE isCustomizable = 0")
+	abstract fun customCakesLive(): LiveData<List<Cake>>
 
 	@Query("DELETE FROM cakes")
 	abstract suspend fun clearTable()
+
+	@Query("UPDATE cakes SET isAddedToCart = :flag WHERE id = :cakeId")
+	abstract suspend fun updateCake(cakeId: String, flag: Int)
+
+	@Query("UPDATE cakes SET isAddedToCart = 0")
+	abstract suspend fun removeCakesFromCartOrder()
 }

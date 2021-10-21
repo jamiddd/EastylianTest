@@ -41,6 +41,7 @@ class FirebaseUtility {
                 uid,
                 name,
                 phone,
+                "",
                 0,
                 email,
                 photo,
@@ -381,6 +382,21 @@ class FirebaseUtility {
         val newNotificationRef = Firebase.firestore.collection(NOTIFICATIONS).document()
         val task = newNotificationRef.set(notification)
         task.addOnCompleteListener(onComplete)
+    }
+
+    fun createRefundRequest(refund: Refund, onComplete: ((result: Task<Void>) -> Unit)? = null) {
+        db.collection(USERS).document(refund.receiverId)
+            .collection(REFUNDS).document(refund.refundId)
+            .set(refund)
+            .addOnCompleteListener(onComplete)
+    }
+
+    fun setCurrentUserUpiNumber(upiNumber: String, onComplete: ((result: Task<Void>) -> Unit)? = null) {
+        val formattedNumber = "+91 $upiNumber"
+
+        db.collection(USERS).document(uid).update(mapOf("upiNumber" to formattedNumber))
+            .addOnCompleteListener(onComplete)
+
     }
 
 

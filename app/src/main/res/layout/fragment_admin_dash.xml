@@ -1,406 +1,382 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/nonPrimaryFragment"
+    android:id="@+id/adminDashScroll"
+    android:fillViewport="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/fragmentAdminDashAppBarLayout"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/fragmentAdminDashToolbar"
+        <LinearLayout
+            android:id="@+id/menuLayout"
             android:layout_width="match_parent"
-            android:layout_height="?actionBarSize"
-            app:navigationIcon="@drawable/ic_round_arrow_back_24"
-            app:navigationIconTint="@color/white"
-            app:title="Dashboard"
-            app:titleTextColor="@color/white"
-            tools:layout_marginTop="24dp" />
-
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/adminDashScroll"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true"
-        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/dashLayout"
+            app:layout_constraintVertical_bias="0.0">
 
             <LinearLayout
-                android:id="@+id/menuLayout"
+                style="@style/tableItemBackground"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="32dp"
                 android:orientation="vertical"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/dashLayout"
-                app:layout_constraintVertical_bias="0.0">
+                tools:visibility="visible">
 
-                <LinearLayout
-                    style="@style/tableItemBackground"
+                <TextView
+                    android:id="@+id/textView11"
+                    style="@style/ListItem"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="32dp"
-                    android:orientation="vertical"
-                    tools:visibility="visible">
+                    android:layout_height="wrap_content"
+                    android:text="@string/delivery_executives"
+                    android:textAllCaps="true"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="#9E9E9E" />
 
-                    <TextView
-                        android:id="@+id/textView11"
-                        style="@style/ListItem"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/delivery_executives"
-                        android:textAllCaps="true"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:textColor="#9E9E9E" />
-
-                    <TextView
-                        android:id="@+id/addDeliveryExecutiveBtn"
-                        style="@style/SettingsMenuItem"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:focusable="true"
-                        android:text="@string/add_delivery_executive" />
-
-                    <View
-                        android:id="@+id/divider11"
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="?android:attr/listDivider" />
-
-                    <TextView
-                        android:id="@+id/removeDeliveryExecutiveBtn"
-                        style="@style/SettingsMenuItem"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/remove_delivery_executive" />
-                </LinearLayout>
-
-
-                <LinearLayout
-                    style="@style/tableItemBackground"
+                <TextView
+                    android:id="@+id/addDeliveryExecutiveBtn"
+                    style="@style/SettingsMenuItem"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="32dp"
-                    android:orientation="vertical"
-                    tools:visibility="gone">
+                    android:layout_height="wrap_content"
+                    android:focusable="true"
+                    android:text="@string/add_delivery_executive" />
 
-                    <TextView
-                        android:id="@+id/textView121"
-                        style="@style/ListItem"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/moderators"
-                        android:textAllCaps="true"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:textColor="#858383" />
-
-                    <TextView
-                        android:id="@+id/addModeratorBtn"
-                        style="@style/SettingsMenuItem"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/add_moderator" />
-
-                    <View
-                        android:id="@+id/divider13"
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="?android:attr/listDivider" />
-
-                    <TextView
-                        android:id="@+id/deleteModeratorBtn"
-                        style="@style/SettingsMenuItem"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/delete_moderator" />
-                </LinearLayout>
-
-
-                <LinearLayout
-                    style="@style/tableItemBackground"
+                <View
+                    android:id="@+id/divider11"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="32dp"
-                    android:orientation="vertical"
-                    tools:visibility="visible">
+                    android:layout_height="1dp"
+                    android:background="?android:attr/listDivider" />
 
-                    <TextView
-                        android:id="@+id/textView171"
-                        style="@style/ListItem"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/cakes_amp_payments"
-                        android:textAllCaps="true"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:textColor="#9E9E9E" />
-
-                    <TextView
-                        android:id="@+id/allRefundsBtn"
-                        style="@style/SettingsMenuItem"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/refunds"
-                        tools:visibility="visible" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="?android:attr/listDivider" />
-
-                    <TextView
-                        android:id="@+id/changeMenuBtn"
-                        style="@style/SettingsMenuItem"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/change_menu"
-                        tools:visibility="visible" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="?android:attr/listDivider" />
-
-
-                    <TextView
-                        android:id="@+id/stocksBtn"
-                        style="@style/SettingsMenuItem"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/stocks"
-                        tools:visibility="visible" />
-                </LinearLayout>
-
-                <LinearLayout
-                    style="@style/tableItemBackground"
+                <TextView
+                    android:id="@+id/removeDeliveryExecutiveBtn"
+                    style="@style/SettingsMenuItem"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="32dp"
-                    android:orientation="vertical"
-                    tools:visibility="gone">
+                    android:layout_height="wrap_content"
+                    android:text="@string/remove_delivery_executive" />
+            </LinearLayout>
 
-                    <TextView
-                        android:id="@+id/textView181"
-                        style="@style/ListItem"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/customer_relations"
-                        android:textAllCaps="true"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:textColor="#858383" />
 
-                    <TextView
-                        android:id="@+id/faqBtn"
-                        style="@style/SettingsMenuItem"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/faq"
-                        tools:visibility="visible" />
+            <LinearLayout
+                style="@style/tableItemBackground"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="32dp"
+                android:orientation="vertical"
+                tools:visibility="gone">
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="?android:attr/listDivider" />
+                <TextView
+                    android:id="@+id/textView121"
+                    style="@style/ListItem"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/moderators"
+                    android:textAllCaps="true"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="#858383" />
 
-                    <TextView
-                        android:id="@+id/notificationsBtn"
-                        style="@style/SettingsMenuItem"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/notifications"
-                        tools:visibility="visible" />
+                <TextView
+                    android:id="@+id/addModeratorBtn"
+                    style="@style/SettingsMenuItem"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/add_moderator" />
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="?android:attr/listDivider" />
+                <View
+                    android:id="@+id/divider13"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?android:attr/listDivider" />
 
-                    <TextView
-                        android:id="@+id/feedbacksBtn"
-                        style="@style/SettingsMenuItem"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/feedbacks"
-                        tools:visibility="visible" />
+                <TextView
+                    android:id="@+id/deleteModeratorBtn"
+                    style="@style/SettingsMenuItem"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/delete_moderator" />
+            </LinearLayout>
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="?android:attr/listDivider" />
 
-                    <TextView
-                        android:id="@+id/editContacts"
-                        style="@style/SettingsMenuItem"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/edit_contacts"
-                        tools:visibility="visible" />
-                </LinearLayout>
+            <LinearLayout
+                style="@style/tableItemBackground"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="32dp"
+                android:orientation="vertical"
+                tools:visibility="visible">
+
+                <TextView
+                    android:id="@+id/textView171"
+                    style="@style/ListItem"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/cakes_amp_payments"
+                    android:textAllCaps="true"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="#9E9E9E" />
+
+                <TextView
+                    android:id="@+id/allRefundsBtn"
+                    style="@style/SettingsMenuItem"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/refunds"
+                    tools:visibility="visible" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?android:attr/listDivider" />
+
+                <TextView
+                    android:id="@+id/changeMenuBtn"
+                    style="@style/SettingsMenuItem"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/change_menu"
+                    tools:visibility="visible" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?android:attr/listDivider" />
 
 
                 <TextView
-                    android:id="@+id/logOutBtn"
-                    style="@style/logOutBtn"
+                    android:id="@+id/stocksBtn"
+                    style="@style/SettingsMenuItem"
                     android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:gravity="center_vertical"
-                    android:paddingStart="16dp"
-                    android:text="@string/log_out"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textColor="#F57F17" />
-
+                    android:layout_height="wrap_content"
+                    android:text="@string/stocks"
+                    tools:visibility="visible" />
             </LinearLayout>
-
-
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.5" />
 
             <LinearLayout
-                android:id="@+id/dashLayout"
                 style="@style/tableItemBackground"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                android:layout_marginBottom="16dp"
-                android:orientation="horizontal"
-                app:layout_constraintBottom_toTopOf="@id/menuLayout"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0"
-                app:layout_constraintVertical_chainStyle="packed">
+                android:layout_height="match_parent"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="32dp"
+                android:orientation="vertical"
+                tools:visibility="gone">
 
-                <LinearLayout
-                    android:id="@+id/linearLayout"
-                    android:layout_width="0dp"
+                <TextView
+                    android:id="@+id/textView181"
+                    style="@style/ListItem"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:paddingTop="24dp"
-                    android:paddingBottom="24dp">
+                    android:text="@string/customer_relations"
+                    android:textAllCaps="true"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="#858383" />
 
-                    <TextView
-                        android:id="@+id/orderNumberText"
-                        style="@style/headerText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:fontFamily="sans-serif-black"
-                        tools:text="0"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
-
-                    <TextView
-                        android:id="@+id/textView14"
-                        style="@style/headerText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:fontFamily="sans-serif-medium"
-                        android:text="@string/order_served"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/imageView2"
-                        style="@style/Theme.Button.IconOnly"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="8dp"
-                        android:backgroundTint="#D1D7FB"
-                        app:icon="@drawable/ic_round_edit_note_24"
-                        app:iconTint="#3F51B5"
-                        tools:ignore="SpeakableTextPresentCheck" />
-                </LinearLayout>
+                <TextView
+                    android:id="@+id/faqBtn"
+                    style="@style/SettingsMenuItem"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/faq"
+                    tools:visibility="visible" />
 
                 <View
-                    android:id="@+id/divider25"
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
                     android:background="?android:attr/listDivider" />
 
-                <LinearLayout
-                    android:layout_width="0dp"
+                <TextView
+                    android:id="@+id/notificationsBtn"
+                    style="@style/SettingsMenuItem"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:paddingTop="24dp"
-                    android:paddingBottom="24dp">
+                    android:text="@string/notifications"
+                    tools:visibility="visible" />
 
-                    <TextView
-                        android:id="@+id/netSaleText"
-                        style="@style/headerText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:fontFamily="sans-serif-black"
-                        tools:text="₹ 0"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?android:attr/listDivider" />
 
-                    <TextView
-                        android:id="@+id/textView16"
-                        style="@style/headerText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:fontFamily="sans-serif-medium"
-                        android:text="@string/net_sale"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+                <TextView
+                    android:id="@+id/feedbacksBtn"
+                    style="@style/SettingsMenuItem"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/feedbacks"
+                    tools:visibility="visible" />
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/imageView3"
-                        style="@style/Theme.Button.IconOnly"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="8dp"
-                        android:backgroundTint="#C4FFC7"
-                        app:icon="@drawable/ic_account_balance_wallet_black_24dp"
-                        app:iconTint="#117A15"
-                        tools:ignore="SpeakableTextPresentCheck" />
-                </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?android:attr/listDivider" />
 
+                <TextView
+                    android:id="@+id/editContacts"
+                    style="@style/SettingsMenuItem"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/edit_contacts"
+                    tools:visibility="visible" />
             </LinearLayout>
 
+
             <TextView
-                android:id="@+id/nameAndVersionText"
-                android:layout_width="wrap_content"
+                android:id="@+id/logOutBtn"
+                style="@style/logOutBtn"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:paddingStart="16dp"
+                android:text="@string/log_out"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="#F57F17" />
+
+        </LinearLayout>
+
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5" />
+
+        <LinearLayout
+            android:id="@+id/dashLayout"
+            style="@style/tableItemBackground"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:layout_marginBottom="16dp"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toTopOf="@id/menuLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            app:layout_constraintVertical_chainStyle="packed">
+
+            <LinearLayout
+                android:id="@+id/linearLayout"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="56dp"
-                android:layout_marginBottom="56dp"
-                android:gravity="center"
-                android:text="@string/eastylian_version"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/menuLayout" />
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:paddingTop="24dp"
+                android:paddingBottom="24dp">
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                <TextView
+                    android:id="@+id/orderNumberText"
+                    style="@style/headerText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:fontFamily="sans-serif-black"
+                    tools:text="0"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
 
-    </androidx.core.widget.NestedScrollView>
+                <TextView
+                    android:id="@+id/textView14"
+                    style="@style/headerText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="@string/order_served"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/imageView2"
+                    style="@style/Theme.Button.IconOnly"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="8dp"
+                    android:backgroundTint="#D1D7FB"
+                    app:icon="@drawable/ic_round_edit_note_24"
+                    app:iconTint="#3F51B5"
+                    tools:ignore="SpeakableTextPresentCheck" />
+            </LinearLayout>
+
+            <View
+                android:id="@+id/divider25"
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="?android:attr/listDivider" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:paddingTop="24dp"
+                android:paddingBottom="24dp">
+
+                <TextView
+                    android:id="@+id/netSaleText"
+                    style="@style/headerText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:fontFamily="sans-serif-black"
+                    tools:text="₹ 0"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
+
+                <TextView
+                    android:id="@+id/textView16"
+                    style="@style/headerText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="@string/net_sale"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/imageView3"
+                    style="@style/Theme.Button.IconOnly"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="8dp"
+                    android:backgroundTint="#C4FFC7"
+                    app:icon="@drawable/ic_account_balance_wallet_black_24dp"
+                    app:iconTint="#117A15"
+                    tools:ignore="SpeakableTextPresentCheck" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/nameAndVersionText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="56dp"
+            android:layout_marginBottom="56dp"
+            android:gravity="center"
+            android:text="@string/eastylian_version"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/menuLayout" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.core.widget.NestedScrollView>

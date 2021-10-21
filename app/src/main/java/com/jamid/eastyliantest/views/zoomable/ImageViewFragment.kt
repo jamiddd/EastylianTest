@@ -3,17 +3,14 @@ package com.jamid.eastyliantest.views.zoomable
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
-import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.fragment.findNavController
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.imagepipeline.request.ImageRequest
 import com.jamid.eastyliantest.R
@@ -64,13 +61,6 @@ class ImageViewFragment : Fragment(R.layout.fragment_image_view), OnScaleListene
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        Log.d(TAG, image.toString())
-
-        binding.imageViewFragmentToolbar.setNavigationOnClickListener {
-//            activity?.supportFragmentManager?.beginTransaction()?.remove(this)?.commit()
-            findNavController().navigateUp()
-        }
-
         binding.fullscreenImage.apply {
           /*  setAllowTouchInterceptionWhileZoomed(false)
             setIsLongpressEnabled(false)
@@ -93,42 +83,6 @@ class ImageViewFragment : Fragment(R.layout.fragment_image_view), OnScaleListene
 
 //        binding.fullscreenImage.setScaleListener(this)
 
-        binding.fullscreenImage.setOnClickListener {
-            val nightModeFlags = requireActivity().resources.configuration.uiMode and
-                    Configuration.UI_MODE_NIGHT_MASK
-            if (binding.imageViewFragmentAppBar.translationY == 0f) {
-
-                when (nightModeFlags) {
-                    Configuration.UI_MODE_NIGHT_YES -> {
-
-                    }
-                    Configuration.UI_MODE_NIGHT_NO -> {
-                        binding.fullscreenImage.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.black))
-                    }
-                    Configuration.UI_MODE_NIGHT_UNDEFINED -> {
-
-                    }
-                }
-                hideTopAndBottomActions(binding.imageViewFragmentAppBar)
-            } else {
-                when (nightModeFlags) {
-                    Configuration.UI_MODE_NIGHT_YES -> {
-
-                    }
-                    Configuration.UI_MODE_NIGHT_NO -> {
-                        binding.fullscreenImage.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorGrey))
-                    }
-                    Configuration.UI_MODE_NIGHT_UNDEFINED -> {
-
-                    }
-                }
-                showTopAndBottomActions(binding.imageViewFragmentAppBar)
-            }
-        }
-
-        viewModel.windowInsets.observe(viewLifecycleOwner) { (top, _) ->
-            binding.imageViewFragmentToolbar.updateLayout(marginTop = top)
-        }
     }
 
     private fun hideTopAndBottomActions(top: View) {

@@ -13,6 +13,7 @@
         android:id="@+id/orderIdText"
         style="@style/headerText"
         android:layout_width="wrap_content"
+        tools:text="as4dak6j3safkaGaXCsfkahskfjhas2"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/refundStatus"
         app:layout_constraintStart_toStartOf="@+id/textView12"
@@ -24,6 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
+        tools:text="@string/sample_amount"
         android:layout_marginBottom="16dp"
         android:fontFamily="@font/manrope_semi_bold"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
@@ -42,6 +44,7 @@
         app:layout_constraintBottom_toTopOf="@+id/orderIdText"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
         app:layout_constraintVertical_chainStyle="packed" />
 
     <TextView
@@ -49,7 +52,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/payRefundBtn"
         app:layout_constraintStart_toStartOf="@+id/orderIdText"
-        app:layout_constraintTop_toBottomOf="@+id/orderIdText" />
+        app:layout_constraintTop_toBottomOf="@+id/orderIdText"
+        tools:text="processing" />
+
+    <Button
+        android:id="@+id/payRefundBtn"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="Get Phone Number"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/refundStatus"
+        app:layout_constraintTop_toBottomOf="@+id/refundStatus"
+        tools:visibility="visible" />
 </androidx.constraintlayout.widget.ConstraintLayout>

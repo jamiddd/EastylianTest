@@ -3,13 +3,11 @@ package com.jamid.eastyliantest.ui
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import com.jamid.eastyliantest.CAKE
 import com.jamid.eastyliantest.IS_EDIT_MODE
 import com.jamid.eastyliantest.R
@@ -18,10 +16,8 @@ import com.jamid.eastyliantest.model.Cake
 import com.jamid.eastyliantest.model.Flavor
 import com.jamid.eastyliantest.utility.hide
 import com.jamid.eastyliantest.utility.show
-import com.jamid.eastyliantest.utility.updateLayout
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.util.*
 
 class BuildCakeFragment: Fragment(R.layout.fragment_build_cake) {
 
@@ -38,13 +34,6 @@ class BuildCakeFragment: Fragment(R.layout.fragment_build_cake) {
 		isEditMode = arguments?.getBoolean(IS_EDIT_MODE) ?: false
 		previousCake = arguments?.getParcelable(CAKE)
 
-		viewModel.windowInsets.observe(viewLifecycleOwner) { (top, _) ->
-			binding.fragmentAddCakeToolbar.updateLayout(marginTop = top)
-		}
-
-		binding.fragmentAddCakeToolbar.setNavigationOnClickListener {
-			findNavController().navigateUp()
-		}
 
 		binding.cakeNameLayout.editText?.doAfterTextChanged {
 			binding.cakeNameLayout.error = null
@@ -61,7 +50,7 @@ class BuildCakeFragment: Fragment(R.layout.fragment_build_cake) {
 			binding.shortDescriptionLayout.isErrorEnabled = false
 		}
 
-		binding.addCake.setOnClickListener {
+		/*binding.addCake.setOnClickListener {
 			val nameText = binding.cakeNameLayout.editText?.text
 			if (nameText.isNullOrBlank()) {
 				binding.cakeNameLayout.isErrorEnabled = true
@@ -117,7 +106,7 @@ class BuildCakeFragment: Fragment(R.layout.fragment_build_cake) {
 
 
 			findNavController().navigateUp()
-		}
+		}*/
 
 		binding.addImageBtn.setOnClickListener {
 			(activity as AdminActivity?)?.selectImage()
@@ -161,10 +150,7 @@ class BuildCakeFragment: Fragment(R.layout.fragment_build_cake) {
 		}
 
 		if (isEditMode && previousCake != null) {
-			binding.fragmentAddCakeToolbar.title = getString(R.string.update_cake_details)
 			setUpFromPreviousCake()
-		} else {
-			binding.fragmentAddCakeToolbar.title = getString(R.string.add_cake)
 		}
 
 	}

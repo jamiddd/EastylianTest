@@ -360,13 +360,9 @@ class MainActivity : LocationAwareActivity(), CakeClickListener, OrderImageClick
 
                     }
                 }
-
-                updateHomeCakes(currentOrder)
-
             } else {
                 badge.isVisible = false
                 binding.viewCartCard.slideDown(convertDpToPx(150).toFloat())
-                viewModel.addedCakeList.clear()
             }
         }
 
@@ -509,7 +505,6 @@ class MainActivity : LocationAwareActivity(), CakeClickListener, OrderImageClick
             }
         }
 
-        viewModel.setNewCakeList(addedCakeList)
 
     }
 

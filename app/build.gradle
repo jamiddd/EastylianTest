@@ -4,7 +4,7 @@ plugins {
     id 'kotlin-parcelize'
     id 'com.google.gms.google-services'
     id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
-    id "androidx.navigation.safeargs.kotlin"
+    id "androidx.navigation.safeargs"
     id "kotlin-kapt"
     id 'org.jetbrains.kotlin.android'
 }
@@ -128,5 +128,7 @@ dependencies {
     implementation 'jakarta.xml.bind:jakarta.xml.bind-api:3.0.1'
 
     implementation 'com.squareup.okhttp3:okhttp:4.9.1'
+
+    implementation 'com.shreyaspatil:EasyUpiPayment:2.0'
 
 }

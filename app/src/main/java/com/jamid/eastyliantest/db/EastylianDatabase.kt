@@ -55,6 +55,9 @@ abstract class EastylianDatabase: RoomDatabase() {
             scope.launch (Dispatchers.IO) {
                 instance?.apply {
                     orderDao().clearTable()
+
+                    cakeDao().removeCakesFromCartOrder()
+
                 }
             }
         }

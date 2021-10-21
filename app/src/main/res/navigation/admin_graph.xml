@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/adminHomeFragment"
         android:name="com.jamid.eastyliantest.ui.AdminHomeFragment"
-        android:label="AdminHomeFragment"
+        android:label="Eastylian"
         tools:layout="@layout/fragment_admin">
         <action
             android:id="@+id/action_adminHomeFragment_to_adminDashFragment"
@@ -20,8 +20,8 @@
     <fragment
         android:id="@+id/adminDashFragment"
         android:name="com.jamid.eastyliantest.ui.AdminDashFragment"
-        tools:layout="@layout/fragment_admin_dash"
-        android:label="AdminDashFragment" >
+        android:label="Dashboard"
+        tools:layout="@layout/fragment_admin_dash">
         <action
             android:id="@+id/action_adminDashFragment_to_refundFragment2"
             app:destination="@id/refundFragment2" />
@@ -47,13 +47,13 @@
     <fragment
         android:id="@+id/refundFragment2"
         android:name="com.jamid.eastyliantest.ui.dashboard.RefundFragment"
-        android:label="RefundFragment"
+        android:label="@string/refunds"
         tools:layout="@layout/fragment_refund" />
     <fragment
         android:id="@+id/organizeFragment"
         android:name="com.jamid.eastyliantest.ui.OrganizeFragment"
-        tools:layout="@layout/fragment_organize"
-        android:label="OrganizeFragment" >
+        android:label="Stocks"
+        tools:layout="@layout/fragment_organize">
         <action
             android:id="@+id/action_organizeFragment_to_addCakeFragment"
             app:destination="@id/addCakeFragment" />
@@ -61,13 +61,18 @@
     <fragment
         android:id="@+id/addCakeFragment"
         android:name="com.jamid.eastyliantest.ui.BuildCakeFragment"
-        tools:layout="@layout/fragment_build_cake"
-        android:label="AddCakeFragment" />
+        android:label="{title}"
+        tools:layout="@layout/fragment_build_cake" >
+        <argument
+            android:name="title"
+            app:argType="string"
+            android:defaultValue="Add Cake" />
+    </fragment>
     <fragment
         android:id="@+id/notificationsFragment"
         android:name="com.jamid.eastyliantest.ui.notifications.NotificationsFragment"
-        android:label="fragment_notifications"
-        tools:layout="@layout/fragment_notifications" >
+        android:label="Notifications"
+        tools:layout="@layout/fragment_notifications">
         <action
             android:id="@+id/action_notificationsFragment_to_addNotificationFragment"
             app:destination="@id/addNotificationFragment" />
@@ -75,28 +80,28 @@
     <fragment
         android:id="@+id/addNotificationFragment"
         android:name="com.jamid.eastyliantest.ui.notifications.AddNotificationFragment"
-        tools:layout="@layout/fragment_add_notification"
-        android:label="AddNotificationFragment" />
+        android:label="Create Notification"
+        tools:layout="@layout/fragment_add_notification" />
     <fragment
         android:id="@+id/answerFragment"
         android:name="com.jamid.eastyliantest.ui.AnswerFragment"
-        tools:layout="@layout/fragment_answer"
-        android:label="AnswerFragment" />
+        android:label="Questions"
+        tools:layout="@layout/fragment_answer" />
     <fragment
         android:id="@+id/editContactsFragment"
         android:name="com.jamid.eastyliantest.ui.EditContactsFragment"
-        tools:layout="@layout/fragment_edit_contacts"
-        android:label="EditContactsFragment" />
+        android:label="@string/edit_contacts"
+        tools:layout="@layout/fragment_edit_contacts" />
     <fragment
         android:id="@+id/feedbackFragment"
-        tools:layout="@layout/fragment_feedback"
         android:name="com.jamid.eastyliantest.ui.FeedbackFragment"
-        android:label="FeedbackFragment" />
+        android:label="Feedbacks"
+        tools:layout="@layout/fragment_feedback" />
     <fragment
         android:id="@+id/changeMenuFragment"
         android:name="com.jamid.eastyliantest.ui.ChangeMenuFragment"
-        tools:layout="@layout/fragment_change_menu"
-        android:label="ChangeMenuFragment" >
+        android:label="Update Menu"
+        tools:layout="@layout/fragment_change_menu">
         <action
             android:id="@+id/action_changeMenuFragment_to_addMenuItemFragment"
             app:destination="@id/addMenuItemFragment" />
@@ -104,11 +109,18 @@
     <fragment
         android:id="@+id/addMenuItemFragment"
         android:name="com.jamid.eastyliantest.ui.AddMenuItemFragment"
-        tools:layout="@layout/fragment_add_menu_item"
-        android:label="AddMenuItemFragment" />
+        android:label="{title}"
+        tools:layout="@layout/fragment_add_menu_item">
+
+        <argument
+            android:name="title"
+            app:argType="string"
+            android:defaultValue="Add Menu Item" />
+
+    </fragment>
     <fragment
         android:id="@+id/imageViewFragment"
         android:name="com.jamid.eastyliantest.views.zoomable.ImageViewFragment"
-        tools:layout="@layout/fragment_image_view"
-        android:label="ImageViewFragment" />
+        android:label=" "
+        tools:layout="@layout/fragment_image_view" />
 </navigation>

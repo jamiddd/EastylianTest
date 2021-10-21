@@ -15,6 +15,7 @@ data class User(
     var userId: String,
     var name: String,
     var phoneNo: String,
+    var upiPhoneNo: String,
     var balance: Long,
     var email: String,
     var photoUrl: String?,
@@ -23,7 +24,7 @@ data class User(
     var isAdmin: Boolean = false
 ): Parcelable {
 
-    constructor(): this("", "", "", 0, "", null, null, false)
+    constructor(): this("", "", "", "", 0, "", null, null, false)
 
     override fun toString(): String {
         return "[$userId, $name, $phoneNo, $balance, $email, $photoUrl]"

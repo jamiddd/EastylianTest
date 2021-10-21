@@ -17,11 +17,11 @@ import androidx.core.os.bundleOf
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupWithNavController
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.LocationSettingsResponse
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.material.appbar.MaterialToolbar
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -63,11 +63,16 @@ class AdminActivity : LocationAwareActivity(), OrderClickListener, CakeMiniListe
         binding = ActivityAdminBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        setSupportActionBar(binding.adminToolbar)
+
         val database = EastylianDatabase.getInstance(applicationContext, lifecycleScope)
         repository = MainRepository.newInstance(database)
 
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.adminContainer) as NavHostFragment
         navController = navHostFragment.navController
+
+        val appBarConfiguration = AppBarConfiguration(navController.graph)
+        binding.adminToolbar.setupWithNavController(navController, appBarConfiguration)
 
         locationUtility.getNearbyPlaces()
 
@@ -143,7 +148,7 @@ class AdminActivity : LocationAwareActivity(), OrderClickListener, CakeMiniListe
         }
 
 
-        viewModel.contextModeState.observe(this) { contextObj ->
+        /*viewModel.contextModeState.observe(this) { contextObj ->
             val organizeToolbar = findViewById<MaterialToolbar>(R.id.fragmentOrganizeToolbar)
             val addCakeBtn = findViewById<FloatingActionButton>(R.id.createCakeBtn)
             if (contextObj.state) {
@@ -154,7 +159,7 @@ class AdminActivity : LocationAwareActivity(), OrderClickListener, CakeMiniListe
                 addCakeBtn?.slideReset()
                 organizeToolbar?.show()
             }
-        }
+        }*/
 
         viewModel.repo.restaurant.observe(this) {
             if (it != null) {
@@ -178,6 +183,15 @@ class AdminActivity : LocationAwareActivity(), OrderClickListener, CakeMiniListe
                 }
 
             }
+
+
+        navController.addOnDestinationChangedListener { controller, destination, arguments ->
+            if (destination.id == R.id.adminHomeFragment) {
+                binding.adminTabLayout.show()
+            } else {
+                binding.adminTabLayout.hide()
+            }
+        }
 
 
     }
@@ -400,6 +414,7 @@ class AdminActivity : LocationAwareActivity(), OrderClickListener, CakeMiniListe
         val bundle = Bundle().apply {
             putParcelable(CAKE, cake)
             putBoolean(IS_EDIT_MODE, true)
+            putString("title", "Update Cake")
         }
         navController.navigate(R.id.addCakeFragment, bundle, slideRightNavOptions())
     }
@@ -561,6 +576,7 @@ class AdminActivity : LocationAwareActivity(), OrderClickListener, CakeMiniListe
     override fun onBaseCakeClick(cakeMenuItem: CakeMenuItem) {
         val bundle = Bundle().apply {
             putParcelable("cakeMenuItem", cakeMenuItem)
+            putString("title", "Update Item")
         }
         navController.navigate(R.id.action_changeMenuFragment_to_addMenuItemFragment, bundle, slideRightNavOptions())
     }

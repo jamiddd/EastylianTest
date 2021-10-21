@@ -29,6 +29,25 @@ class OrganizeFragment: Fragment(R.layout.fragment_organize) {
 	private val arrowUp: Drawable by lazy { ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_keyboard_arrow_up_24) ?: throw NullPointerException("No drawable found") }
 	private val arrowDown: Drawable by lazy { ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_keyboard_arrow_down_24) ?: throw NullPointerException("No drawable found") }
 
+
+	override fun onCreate(savedInstanceState: Bundle?) {
+		super.onCreate(savedInstanceState)
+		setHasOptionsMenu(true)
+	}
+
+	override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+		super.onCreateOptionsMenu(menu, inflater)
+		inflater.inflate(R.menu.organize_menu, menu)
+	}
+
+	override fun onOptionsItemSelected(item: MenuItem): Boolean {
+		if (item.itemId == R.id.add_organize_item) {
+			findNavController().navigate(R.id.action_organizeFragment_to_addCakeFragment, null, slideRightNavOptions())
+		}
+		return super.onOptionsItemSelected(item)
+	}
+
+
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 		binding = FragmentOrganizeBinding.bind(view)
@@ -121,18 +140,6 @@ class OrganizeFragment: Fragment(R.layout.fragment_organize) {
 			}
 		}
 
-		viewModel.windowInsets.observe(viewLifecycleOwner) { (top, _) ->
-			binding.fragmentOrganizeToolbar.updateLayout(marginTop = top)
-			binding.organizeFragmentScroll.setPadding(0, 0, 0, convertDpToPx(100))
-		}
-
-		binding.fragmentOrganizeToolbar.setNavigationOnClickListener {
-			findNavController().navigateUp()
-		}
-
-		binding.createCakeBtn.setOnClickListener {
-			findNavController().navigate(R.id.action_organizeFragment_to_addCakeFragment, null, slideRightNavOptions())
-		}
 
 		/*binding.editCakesBtn.setOnClickListener {
 

@@ -1,5 +1,9 @@
 package com.jamid.eastyliantest.ui.notifications
 
+import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import androidx.navigation.fragment.findNavController
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.PagingDataAdapter
@@ -14,19 +18,37 @@ import com.jamid.eastyliantest.databinding.FragmentNotificationsBinding
 import com.jamid.eastyliantest.model.SimpleNotification
 import com.jamid.eastyliantest.ui.PagerListFragment
 import com.jamid.eastyliantest.utility.slideRightNavOptions
-import com.jamid.eastyliantest.utility.updateLayout
 
 @ExperimentalPagingApi
 class NotificationsFragment : PagerListFragment<SimpleNotification, NotificationViewHolder, FragmentNotificationsBinding>() {
 
+    private var isAdmin: Boolean = false
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        isAdmin = arguments?.getBoolean(IS_ADMIN) ?: false
+        if (isAdmin) {
+            setHasOptionsMenu(true)
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.notifications_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.create_notification) {
+            findNavController().navigate(R.id.action_notificationsFragment_to_addNotificationFragment, null, slideRightNavOptions())
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+
     override fun onViewLaidOut() {
         super.onViewLaidOut()
-        val isAdmin = arguments?.getBoolean(IS_ADMIN) ?: false
-
         initLayout(
-            binding.notificationsRecycler,
-            binding.noNotificationsText,
-            binding.notificationProgress
+            binding.notificationsRecycler
         )
 
         val query = Firebase.firestore.collection(NOTIFICATIONS)
@@ -35,24 +57,6 @@ class NotificationsFragment : PagerListFragment<SimpleNotification, Notification
             viewModel.pagedNotificationsFlow(query)
         }
 
-        binding.fragmentNotificationsToolbar.setNavigationOnClickListener {
-            findNavController().navigateUp()
-        }
-
-        viewModel.windowInsets.observe(viewLifecycleOwner) { (top, _) ->
-            binding.fragmentNotificationsToolbar.updateLayout(marginTop = top)
-        }
-
-        binding.addNotificationBtn.setOnClickListener {
-            findNavController().navigate(R.id.action_notificationsFragment_to_addNotificationFragment, null, slideRightNavOptions())
-        }
-
-
-        if (isAdmin) {
-            binding.addNotificationBtn.show()
-        } else {
-            binding.addNotificationBtn.hide()
-        }
     }
 
     companion object {

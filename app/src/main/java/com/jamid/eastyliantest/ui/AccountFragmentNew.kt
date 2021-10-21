@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.isVisible
-import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -17,7 +16,9 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.jamid.eastyliantest.R
 import com.jamid.eastyliantest.adapter.OrderAdapter
 import com.jamid.eastyliantest.databinding.FragmentAccountNewBinding
+import com.jamid.eastyliantest.databinding.SimpleTextDialogLayoutBinding
 import com.jamid.eastyliantest.model.OrderStatus
+import com.jamid.eastyliantest.model.User
 import com.jamid.eastyliantest.ui.auth.AuthActivity
 import com.jamid.eastyliantest.utility.*
 
@@ -26,6 +27,7 @@ class AccountFragmentNew: Fragment() {
     private lateinit var binding: FragmentAccountNewBinding
     private val viewModel: MainViewModel by activityViewModels()
     private var currentImage: String? = null
+    private var justStarted = true
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -54,91 +56,19 @@ class AccountFragmentNew: Fragment() {
 
         viewModel.repo.currentUser.observe(viewLifecycleOwner) {
             if (it != null) {
-                if (it.photoUrl != null) {
-                    binding.customerImage.setImageURI(it.photoUrl)
-                } else {
-                    val restaurant = viewModel.repo.restaurant.value
-                    if (restaurant != null) {
-                        val images = restaurant.randomUserIcons
-                        if (images.isNotEmpty()) {
-                            binding.customerImage.setImageURI(images.random())
-                        }
-                    } else {
-                        Log.d(TAG, "Restaurant is null.")
-                    }
-                }
-
-                binding.customerNameText.setText(it.name)
-                binding.customerNameTextView.text = it.name
-
+                setUserLayout(it)
             }
         }
-
-        binding.customerNameText.doAfterTextChanged {
-            binding.editBtn.isEnabled = !it.isNullOrBlank() && it.length > 3
-        }
-
-        binding.editBtn.setOnClickListener {
-
-            if (binding.editBtn.text == "Edit") {
-
-                binding.customerNameText.show()
-                binding.customerNameTextView.hide()
-
-                binding.editBtn.text = getString(R.string.done)
-
-            } else {
-                binding.customerNameText.hide()
-                binding.customerNameTextView.show()
-
-                val name = binding.customerNameText.text.toString()
-                val changes = mapOf("fullName" to name)
-
-                viewModel.updateFirebaseUser(changes) {
-                    val changes1 = mapOf("name" to name)
-                    viewModel.updateUser(changes1)
-                }
-
-                binding.editBtn.text = getString(R.string.edit)
-                binding.editBtn.enable()
-
-            }
-
-        }
-
-        var justStarted = true
-
-        binding.customerImage.setOnClickListener {
-            val popupMenu = PopupMenu(requireContext(), it)
-
-            popupMenu.inflate(R.menu.image_menu)
-
-            popupMenu.setOnMenuItemClickListener { it1 ->
-                justStarted = false
-                when (it1.itemId) {
-                    R.id.change_image -> {
-                        (activity as MainActivity?)?.selectImage()
-                    }
-                    R.id.remove_image -> {
-                        viewModel.setCurrentImage(null)
-                    }
-                }
-                return@setOnMenuItemClickListener true
-            }
-
-            popupMenu.show()
-        }
-
 
 
         viewModel.currentImage.observe(viewLifecycleOwner) {
-            binding.profilePhotoUploadProgress.show()
+            binding.customerLayout.uploadProgress.show()
             if (it != null) {
                 viewModel.uploadImage(it) { downloadUri ->
                     if (downloadUri != null) {
                         viewModel.updateFirebaseUser(mapOf("photoUrl" to downloadUri.toString())) { it1 ->
                             if (it1.isSuccessful) {
-                                binding.profilePhotoUploadProgress.hide()
+                                binding.customerLayout.uploadProgress.hide()
                                 val changes1 = mapOf("photoUrl" to downloadUri.toString())
                                 viewModel.updateUser(changes1)
                             } else {
@@ -148,7 +78,7 @@ class AccountFragmentNew: Fragment() {
                     }
                 }
             } else {
-                binding.profilePhotoUploadProgress.hide()
+                binding.customerLayout.uploadProgress.hide()
                 currentImage = null
                 if (!justStarted) {
                     viewModel.updateFirebaseUser(mapOf("photoUrl" to null)) {
@@ -234,13 +164,13 @@ class AccountFragmentNew: Fragment() {
 
         binding.refundBtn.setOnClickListener {
             findNavController().navigate(
-                R.id.action_dashboardFragment_to_refundFragment,
+                R.id.action_containerFragment_to_refundFragment3,
                 null,
                 slideRightNavOptions()
             )
         }
 
-        viewModel.windowInsets.observe(viewLifecycleOwner) { (top, bottom) ->
+        viewModel.windowInsets.observe(viewLifecycleOwner) { (_, bottom) ->
             binding.accountScroll.setPadding(
                 0,
                 convertDpToPx(8),
@@ -250,15 +180,15 @@ class AccountFragmentNew: Fragment() {
         }
 
         binding.changeAddressBtn.setOnClickListener {
-            findNavController().navigate(R.id.addressFragment, null, slideRightNavOptions())
+            findNavController().navigate(R.id.action_containerFragment_to_addressFragment2, null, slideRightNavOptions())
         }
 
         binding.favoritesBtn.setOnClickListener {
-            findNavController().navigate(R.id.favoritesFragment, null, slideRightNavOptions())
+            findNavController().navigate(R.id.action_containerFragment_to_favoritesFragment2, null, slideRightNavOptions())
         }
 
         binding.helpBtn.setOnClickListener {
-            findNavController().navigate(R.id.helpFragment, null, slideRightNavOptions())
+            findNavController().navigate(R.id.action_containerFragment_to_helpFragment2, null, slideRightNavOptions())
         }
 
         binding.pastOrdersHeader.setOnClickListener {
@@ -285,7 +215,7 @@ class AccountFragmentNew: Fragment() {
 
         binding.seeAllPastOrdersBtn.setOnClickListener {
             findNavController().navigate(
-                R.id.action_dashboardFragment_to_pastOrdersFragment,
+                R.id.action_containerFragment_to_pastOrdersFragment2,
                 null,
                 slideRightNavOptions()
             )
@@ -306,6 +236,92 @@ class AccountFragmentNew: Fragment() {
                 }.show()
         }
 
+    }
+
+    private fun setUserLayout(currentUser: User) {
+        binding.customerLayout.apply {
+
+            customerName.text = currentUser.name
+
+            customerMeta.text = "${currentUser.phoneNo} • ${currentUser.email}"
+
+            if (currentUser.photoUrl != null) {
+                customerImg.setImageURI(currentUser.photoUrl)
+            } else {
+                val restaurant = viewModel.repo.restaurant.value
+                if (restaurant != null) {
+                    val images = restaurant.randomUserIcons
+                    if (images.isNotEmpty()) {
+                        customerImg.setImageURI(images.random())
+                    }
+                } else {
+                    Log.d(TAG, "Restaurant is null.")
+                }
+            }
+
+            customerImg.setOnClickListener {
+                val popupMenu = PopupMenu(requireContext(), it)
+
+                popupMenu.inflate(R.menu.image_menu)
+
+                popupMenu.setOnMenuItemClickListener { it1 ->
+                    justStarted = false
+                    when (it1.itemId) {
+                        R.id.change_image -> {
+                            (activity as MainActivity2?)?.selectImage()
+                        }
+                        R.id.remove_image -> {
+                            viewModel.setCurrentImage(null)
+                        }
+                    }
+                    return@setOnMenuItemClickListener true
+                }
+
+                popupMenu.show()
+            }
+
+            customerName.text = currentUser.name
+
+            customerEditBtn.setOnClickListener {
+
+                val layout = layoutInflater.inflate(R.layout.simple_text_dialog_layout, null, false)
+                val inputLayoutBinding = SimpleTextDialogLayoutBinding.bind(layout)
+
+                inputLayoutBinding.dialogHeader.text = "Change your name"
+                inputLayoutBinding.dialogHelperText.hide()
+
+                inputLayoutBinding.dialogInputLayout.editText?.hint = "Write your name ... "
+
+                val alertDialog = MaterialAlertDialogBuilder(requireContext())
+                    .setView(inputLayoutBinding.root)
+                    .show()
+
+                inputLayoutBinding.dialogPositiveBtn.setOnClickListener {
+
+                    val nameText = inputLayoutBinding.dialogInputLayout.editText?.text
+                    if (!nameText.isNullOrBlank()) {
+                        val name = nameText.toString()
+                        val changes = mapOf("fullName" to name)
+
+                        viewModel.updateFirebaseUser(changes) {
+                            val changes1 = mapOf("name" to name)
+                            viewModel.updateUser(changes1)
+                            alertDialog.dismiss()
+                        }
+                        alertDialog.dismiss()
+                    } else {
+                        alertDialog.dismiss()
+                    }
+
+                }
+
+                inputLayoutBinding.dialogNegativeBtn.setOnClickListener {
+                    alertDialog.dismiss()
+                }
+
+            }
+
+        }
     }
 
     companion object {

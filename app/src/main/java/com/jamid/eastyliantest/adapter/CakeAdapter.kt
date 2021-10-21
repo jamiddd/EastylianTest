@@ -29,7 +29,6 @@ class CakeAdapter : ListAdapter<Cake, CakeAdapter.CakeViewHolder>(
 
     var isAlreadyOrdered = false
     var isVertical = false
-    var addedCakeList = listOf<String>()
 
     companion object {
         val cakeComparator = object: DiffUtil.ItemCallback<Cake>() {
@@ -70,8 +69,10 @@ class CakeAdapter : ListAdapter<Cake, CakeAdapter.CakeViewHolder>(
                 cakeClickListener.onCakeClick(cake)
             }
 
-            if (addedCakeList.contains(cake.id)) {
+            if (cake.isAddedToCart) {
                 primaryActionBtn.text = view.context.getString(R.string.add_more)
+            } else {
+                primaryActionBtn.text = "Add"
             }
 
             primaryActionBtn.setOnClickListener {

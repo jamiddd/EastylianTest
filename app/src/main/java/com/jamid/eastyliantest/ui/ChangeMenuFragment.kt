@@ -2,6 +2,9 @@ package com.jamid.eastyliantest.ui
 
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -18,12 +21,29 @@ import com.jamid.eastyliantest.model.CakeMenuItem
 import com.jamid.eastyliantest.utility.hide
 import com.jamid.eastyliantest.utility.show
 import com.jamid.eastyliantest.utility.slideRightNavOptions
-import com.jamid.eastyliantest.utility.updateLayout
 
 class ChangeMenuFragment: Fragment(R.layout.fragment_change_menu) {
 
 	private lateinit var binding: FragmentChangeMenuBinding
 	private val viewModel: MainViewModel by activityViewModels()
+
+	override fun onCreate(savedInstanceState: Bundle?) {
+		super.onCreate(savedInstanceState)
+		setHasOptionsMenu(true)
+	}
+
+	override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+		super.onCreateOptionsMenu(menu, inflater)
+		inflater.inflate(R.menu.change_menu_menu, menu)
+	}
+
+	override fun onOptionsItemSelected(item: MenuItem): Boolean {
+		if (item.itemId == R.id.create_new_cake) {
+			findNavController().navigate(R.id.action_changeMenuFragment_to_addMenuItemFragment, null, slideRightNavOptions())
+		}
+		return super.onOptionsItemSelected(item)
+	}
+
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
@@ -81,18 +101,6 @@ class ChangeMenuFragment: Fragment(R.layout.fragment_change_menu) {
 					baseCakeAdapter2.submitList(second)
 				}
 			}
-
-		viewModel.windowInsets.observe(viewLifecycleOwner) { (top, _) ->
-			binding.changeMenuToolbar.updateLayout(marginTop = top)
-		}
-
-		binding.changeMenuToolbar.setNavigationOnClickListener {
-			findNavController().navigateUp()
-		}
-
-		binding.addMenuItem.setOnClickListener {
-			findNavController().navigate(R.id.action_changeMenuFragment_to_addMenuItemFragment, null, slideRightNavOptions())
-		}
 
 	}
 

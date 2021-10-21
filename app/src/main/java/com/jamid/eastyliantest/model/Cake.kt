@@ -27,7 +27,9 @@ data class Cake(
     @Exclude @set: Exclude @get: Exclude
     var isFavorite: Boolean = false,
     @Exclude @set: Exclude @get: Exclude
-    var isCustomizable: Boolean = true
+    var isCustomizable: Boolean = true,
+    @Exclude @set: Exclude @get: Exclude
+    var isAddedToCart: Boolean = false
 ): Parcelable {
     constructor(): this(randomId(), "Sponge Cream Cake", "", listOf(Flavor.VANILLA), "Birthday", 0.5f, 55000, false, null, null, null)
 

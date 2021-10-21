@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.cardview.widget.CardView
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
@@ -31,6 +32,7 @@ import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.*
 import com.google.android.libraries.places.api.net.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.jamid.eastyliantest.R
 import com.jamid.eastyliantest.databinding.FragmentLocationBinding
 import com.jamid.eastyliantest.interfaces.OnPlaceClickListener
@@ -51,6 +53,7 @@ class LocationFragment: Fragment(R.layout.fragment_location), OnMapReadyCallback
     private lateinit var mapBoundary: LatLngBounds
     private lateinit var geocoder: Geocoder
     private var currentMarker: Marker? = null
+    private var loadingDialog: AlertDialog? = null
     private var mGoogleMap: GoogleMap? = null
     private lateinit var mContext: Context
 
@@ -60,6 +63,13 @@ class LocationFragment: Fragment(R.layout.fragment_location), OnMapReadyCallback
         mContext = requireContext()
         placesClient = Places.createClient(mContext)
         geocoder = Geocoder(mContext)
+
+
+        val v = layoutInflater.inflate(R.layout.loading_layout, null, false)
+
+        loadingDialog = MaterialAlertDialogBuilder(requireContext())
+            .setView(v)
+            .show()
 
         bottomSheetBehavior = BottomSheetBehavior.from(binding.confirmLocationCard)
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
@@ -256,6 +266,7 @@ class LocationFragment: Fragment(R.layout.fragment_location), OnMapReadyCallback
     override fun onMapReady(p0: GoogleMap) {
         mGoogleMap = p0
         p0.setMaxZoomPreference(20f)
+        loadingDialog?.dismiss()
 
         p0.setOnMapClickListener { latLang ->
             if (binding.nearByPlaces.isVisible) {

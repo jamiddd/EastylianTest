@@ -1,123 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/contactScroll"
     style="@style/nonPrimaryFragment"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:clipToPadding="false"
+    android:fillViewport="true"
+    android:paddingBottom="80dp">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/contactAppbar"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#2196F3">
+        android:orientation="vertical">
 
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/contactToolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?actionBarSize"
-            app:navigationIcon="@drawable/ic_round_arrow_back_24"
-            app:navigationIconTint="@color/white"
-            app:title="Contact Us"
-            app:titleTextColor="@color/white"
-            tools:layout_marginTop="24dp" />
 
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:fillViewport="true"
-        android:paddingBottom="80dp"
-        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
-
-        <LinearLayout
+        <include
+            android:id="@+id/phoneNumberContainer"
+            layout="@layout/table_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp" />
+
+        <include
+            android:id="@+id/emailAddressContainer"
+            layout="@layout/table_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/textView34"
+            style="@style/ListItem"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:fontFamily="sans-serif-black"
+            android:gravity="center"
+            android:text="@string/or_meet_us_directly"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+        <Button
+            android:id="@+id/startNavigationBtn"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:backgroundTint="#2196F3"
+            android:elevation="8dp"
+            android:text="@string/start_navigation"
+            android:textSize="16sp"
+            app:cornerRadius="8dp"
+            app:icon="@drawable/ic_round_near_me_24" />
+
+        <LinearLayout
+            style="@style/tableItemBackground"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="16dp"
             android:orientation="vertical">
 
-
-            <include
-                android:id="@+id/phoneNumberContainer"
-                layout="@layout/table_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp" />
-
-            <include
-                android:id="@+id/emailAddressContainer"
-                layout="@layout/table_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp" />
-
             <TextView
-                android:id="@+id/textView34"
-                style="@style/ListItem"
+                android:id="@+id/textView38"
+                style="@style/listHeaderItem"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
                 android:fontFamily="sans-serif-black"
                 android:gravity="center"
-                android:text="@string/or_meet_us_directly"
+                android:text="@string/our_address"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
-            <Button
-                android:id="@+id/startNavigationBtn"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:backgroundTint="#2196F3"
-                android:elevation="8dp"
-                android:text="@string/start_navigation"
-                android:textSize="16sp"
-                app:cornerRadius="8dp"
-                app:icon="@drawable/ic_round_near_me_24" />
-
-            <LinearLayout
-                style="@style/tableItemBackground"
+            <TextView
+                android:id="@+id/copyAddressBtn"
+                style="@style/headerText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="32dp"
-                android:layout_marginEnd="16dp"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/textView38"
-                    style="@style/listHeaderItem"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-black"
-                    android:gravity="center"
-                    android:text="@string/our_address"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-
-                <TextView
-                    android:id="@+id/copyAddressBtn"
-                    style="@style/headerText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="?selectableItemBackground"
-                    android:clickable="true"
-                    android:drawablePadding="16dp"
-                    android:focusable="true"
-                    android:gravity="center"
-                    android:padding="16dp"
-                    app:drawableEndCompat="@drawable/ic_round_content_copy_24"
-                    app:drawableTint="#2196F3"
-                    tools:text="Some Address, some some address, near some street, 872349, State" />
-            </LinearLayout>
-
+                android:background="?selectableItemBackground"
+                android:clickable="true"
+                android:drawablePadding="16dp"
+                android:focusable="true"
+                android:gravity="center"
+                android:padding="16dp"
+                app:drawableEndCompat="@drawable/ic_round_content_copy_24"
+                app:drawableTint="#2196F3"
+                tools:text="Some Address, some some address, near some street, 872349, State" />
         </LinearLayout>
 
-    </androidx.core.widget.NestedScrollView>
+    </LinearLayout>
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</androidx.core.widget.NestedScrollView>

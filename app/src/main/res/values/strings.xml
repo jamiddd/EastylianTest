@@ -90,6 +90,7 @@
     <string name="add_more">Add more</string>
     <string name="reorder">Reorder</string>
     <string name="currency_prefix">"₹ "</string>
+    <string name="sample_amount">₹ 540.25</string>
     <string name="place_order">Place Order</string>
     <string name="view_cart">View Cart</string>
     <string name="large_cart_info_text">By default the delivery time is next day from order day. You can choose custom timing if it needs to be scheduled within 3 days.</string>
@@ -220,6 +221,7 @@
     <string name="change_menu">Change Menu</string>
     <string name="change">Change</string>
     <string name="edit">Edit</string>
+    <string name="preparing">Preparing</string>
 
     <!-- <string-array name="occasion_names">
         <item>Birthday</item>

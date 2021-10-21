@@ -42,15 +42,6 @@ class CartItemAdapter: ListAdapter<CartItem, CartItemAdapter.CartItemViewHolder>
 
             val customizeBtn: Button = view.findViewById(R.id.customizeBtn)
 
-            /*if (cartItem.cake.thumbnail != null) {
-
-            } else {
-                if (cartItem.cake.flavors.first() != VANILLA) {
-                    cakeImage.setActualImageResource(view.context.getImageResourceBasedOnFlavor(cartItem.cake.flavors.first()))
-                } else {
-                    cakeImage.setActualImageResource(view.context.getImageResourceBasedOnBaseName(cartItem.cake.baseName))
-                }
-            }*/
             cakeImage.setImageURI(cartItem.cake.thumbnail)
 
             if (cartItem.cake.fancyName.isNotBlank()) {

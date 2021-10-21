@@ -11,7 +11,6 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -37,13 +36,13 @@ class EditContactsFragment: Fragment(R.layout.fragment_edit_contacts), TableItem
 		super.onViewCreated(view, savedInstanceState)
 		binding = FragmentEditContactsBinding.bind(view)
 
-		viewModel.windowInsets.observe(viewLifecycleOwner) { (top, _) ->
+		/*viewModel.windowInsets.observe(viewLifecycleOwner) { (top, _) ->
 			binding.editContactsToolbar.updateLayout(marginTop = top)
 		}
 
 		binding.editContactsToolbar.setNavigationOnClickListener {
 			findNavController().navigateUp()
-		}
+		}*/
 
 		val phoneNumberAdapter = TableItemAdapter(this)
 		phoneNumberAdapter.isAdmin = true

@@ -39,8 +39,6 @@ class AddMenuItemFragment: Fragment(R.layout.fragment_add_menu_item) {
 			}
 
 			binding.additemBtn.text = "Update item"
-
-			binding.addMenuItemToolbar.title = "Update Menu Item"
 		}
 
 
@@ -126,14 +124,6 @@ class AddMenuItemFragment: Fragment(R.layout.fragment_add_menu_item) {
 					toast("Something went wrong. ${it.localizedMessage}")
 				}
 
-		}
-
-		viewModel.windowInsets.observe(viewLifecycleOwner) { (top, _) ->
-			binding.addMenuItemToolbar.updateLayout(marginTop = top)
-		}
-
-		binding.addMenuItemToolbar.setNavigationOnClickListener {
-			findNavController().navigateUp()
 		}
 
 	}

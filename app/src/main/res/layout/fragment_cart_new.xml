@@ -336,9 +336,9 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/toggleContainer"
         android:layout_width="match_parent"
-        android:layout_height="64dp"
-        android:background="@color/white"
+        android:layout_height="56dp"
         android:orientation="vertical"
+        app:cardBackgroundColor="#F6ECE9"
         app:cardElevation="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

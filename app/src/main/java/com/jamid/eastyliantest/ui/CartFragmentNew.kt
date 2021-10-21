@@ -10,14 +10,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.Button
-import android.widget.CheckBox
-import android.widget.TextView
-import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.datepicker.*
 import com.google.android.material.tabs.TabLayout
@@ -27,7 +23,10 @@ import com.jamid.eastyliantest.databinding.FragmentCartNewBinding
 import com.jamid.eastyliantest.model.Order
 import com.jamid.eastyliantest.model.OrderStatus
 import com.jamid.eastyliantest.model.Result
-import com.jamid.eastyliantest.utility.*
+import com.jamid.eastyliantest.utility.RazorpayUtility
+import com.jamid.eastyliantest.utility.convertDpToPx
+import com.jamid.eastyliantest.utility.hide
+import com.jamid.eastyliantest.utility.show
 import com.razorpay.RazorpayClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -45,10 +44,6 @@ class CartFragmentNew: Fragment() {
     private var lastHeight = 0
     private lateinit var bottomCartAction: CardView
     private lateinit var checkOutBtn: Button
-    private lateinit var changeLocationBtn: Button
-    private lateinit var cashOnDeliveryBtn: CheckBox
-    private lateinit var addressText: TextView
-    private lateinit var deliveringToText: TextView
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -69,15 +64,10 @@ class CartFragmentNew: Fragment() {
 
         bottomCartAction = activity.findViewById(R.id.bottomCartAction2)
         checkOutBtn = activity.findViewById(R.id.checkOutBtn)
-        changeLocationBtn = activity.findViewById(R.id.changeLocationBtn)
-        addressText = activity.findViewById(R.id.addressText)
-        cashOnDeliveryBtn = activity.findViewById(R.id.cashOnDeliveryBtn)
-        deliveringToText = activity.findViewById(R.id.deliveringToText)
 
         val cartItemAdapter = initCartItemRecycler()
 
         viewModel.currentCartOrder.observe(viewLifecycleOwner) { currentOrder ->
-
             updateContainerUI(currentOrder)
             setCheckoutButton(currentOrder)
 
@@ -122,29 +112,6 @@ class CartFragmentNew: Fragment() {
             viewModel.updateDeliveryMethod(checkedId == R.id.delivery)
         }
 
-        changeLocationBtn.setOnClickListener {
-            findNavController().navigate(R.id.action_cartFragment_to_locationFragment2)
-        }
-
-        viewModel.currentPlace.observe(viewLifecycleOwner) {
-            if (it != null) {
-                if (it.name.isNotBlank()) {
-                    val currentOrder = viewModel.currentCartOrder.value
-                    if (currentOrder != null) {
-                        val currentOrderPlace = currentOrder.place
-                        if (currentOrderPlace.latitude != it.latitude || currentOrderPlace.longitude != it.longitude) {
-                            viewModel.updateOrderLocation(it)
-                        }
-                    }
-                    addressText.text = it.name
-                } else {
-                    addressText.text = getString(R.string.no_location_text)
-                }
-            } else {
-                addressText.text = getString(R.string.no_location_text)
-            }
-        }
-
         val preferences = activity.getSharedPreferences(
             EASTYLIAN_PREFERENCES,
             Context.MODE_PRIVATE
@@ -174,7 +141,7 @@ class CartFragmentNew: Fragment() {
 
     private fun updateCashOnDeliveryUI(currentOrder: Order) {
 
-        if (!currentOrder.delivery) {
+      /*  if (!currentOrder.delivery) {
             cashOnDeliveryBtn.hide()
         } else {
             cashOnDeliveryBtn.show()
@@ -190,7 +157,7 @@ class CartFragmentNew: Fragment() {
             }
             currentOrder.paymentMethod = method
             viewModel.updateOrderPaymentMethod(currentOrder)
-        }
+        }*/
     }
 
     private fun setOrderTime() {
@@ -267,9 +234,11 @@ class CartFragmentNew: Fragment() {
 
     private fun updateContainerUI(currentOrder: Order?) {
         val tabLayout = requireActivity().findViewById<TabLayout>(R.id.main_navigation)
-        if (currentOrder != null && currentOrder.status[0] == OrderStatus.Created && tabLayout?.selectedTabPosition == 1) {
+        if (currentOrder != null && currentOrder.status[0] == OrderStatus.Created) {
             binding.cartContainerLayout.show()
-            bottomCartAction.show()
+            if (tabLayout.selectedTabPosition == 1) {
+                bottomCartAction.show()
+            }
             binding.noItemsText.hide()
             binding.noItemsAnimation.hide()
             binding.toggleContainer.show()
@@ -320,7 +289,7 @@ class CartFragmentNew: Fragment() {
     }
 
     private fun updateLocationUI(currentOrder: Order) {
-        if (currentOrder.delivery) {
+        /*if (currentOrder.delivery) {
             changeLocationBtn.show()
             addressText.show()
             deliveringToText.show()
@@ -328,11 +297,27 @@ class CartFragmentNew: Fragment() {
             changeLocationBtn.hide()
             addressText.hide()
             deliveringToText.hide()
-        }
+        }*/
     }
 
     private fun setCheckoutButton(currentOrder: Order?) {
-        if (currentOrder != null && currentOrder.status[0] == OrderStatus.Created) {
+
+        if (currentOrder != null) {
+            val totalString = (currentOrder.prices.total/100).toString()
+
+            checkOutBtn.setOnClickListener {
+                val frag = PaymentFragment.newInstance(totalString)
+                frag.show(requireActivity().supportFragmentManager, "PaymentFragment")
+            }
+        }
+
+        /*checkOutBtn.setOnClickListener {
+            val frag = PaymentFragment.newInstance("")
+            frag.show(requireActivity().supportFragmentManager, "PaymentFragment")
+        }*/
+
+
+        /*if (currentOrder != null && currentOrder.status[0] == OrderStatus.Created) {
             checkOutBtn.show()
 
             if (currentOrder.paymentMethod == COD) {
@@ -408,7 +393,7 @@ class CartFragmentNew: Fragment() {
 
         } else {
             checkOutBtn.hide()
-        }
+        }*/
     }
 
     private fun updateBill(currentOrder: Order) {

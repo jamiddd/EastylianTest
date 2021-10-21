@@ -1,18 +1,22 @@
 package com.jamid.eastyliantest.ui
 
 import android.Manifest
+import android.app.Activity
 import android.content.Intent
 import android.content.IntentSender
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Button
-import android.widget.ProgressBar
-import android.widget.Toast
+import android.view.animation.AnimationUtils
+import android.widget.*
 import androidx.activity.result.IntentSenderRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.content.ContextCompat
+import androidx.core.widget.NestedScrollView
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -22,6 +26,8 @@ import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.LocationSettingsResponse
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.tabs.TabLayout
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ktx.firestore
@@ -36,19 +42,115 @@ import com.jamid.eastyliantest.interfaces.*
 import com.jamid.eastyliantest.model.*
 import com.jamid.eastyliantest.repo.MainRepository
 import com.jamid.eastyliantest.utility.*
+import com.jamid.eastyliantest.views.zoomable.ImageViewFragment
 import com.razorpay.Checkout
 import com.razorpay.PaymentData
 import com.razorpay.PaymentResultWithDataListener
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import java.util.*
 
 
 class MainActivity2 : LocationAwareActivity(), CakeClickListener, OrderImageClickListener,
-    PaymentResultWithDataListener, CartItemClickListener, OrderClickListener, FaqListener {
+    PaymentResultWithDataListener, CartItemClickListener, OrderClickListener, FaqListener, OnPaymentModeSelected {
 
     private lateinit var navController: NavController
     private lateinit var repository: MainRepository
     private lateinit var binding: ActivityMain2Binding
+    private var loadingDialog: AlertDialog? = null
+
     val viewModel: MainViewModel by viewModels { MainViewModelFactory(repository) }
     private val orderFeedbacksTemp = mutableMapOf<String, Feedback>()
+
+    private val selectImageLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        if (it.resultCode == Activity.RESULT_OK) {
+            val image = it.data?.data
+            viewModel.setCurrentImage(image)
+        } else {
+            viewModel.setCurrentImage(null)
+        }
+
+    }
+
+    private fun onUPIResultReceived(result: String) {
+        val abstractKeyValuePairs = result.split('&')
+        val resultMap = mutableMapOf<String, String>()
+        for (abstractPair in abstractKeyValuePairs) {
+            val keyValuePair = abstractPair.split('=')
+            if (keyValuePair.size > 1) {
+                resultMap[keyValuePair[0]] = keyValuePair[1]
+            }
+        }
+
+        Log.d(TAG, resultMap.toString())
+
+        if (resultMap.containsKey("Status") || resultMap.containsKey("status")) {
+            val successArray = listOf("success", "Success", "SUCCESS")
+            val failureArray = listOf("failure", "Failure", "FAILURE")
+            val statusResult = resultMap["Status"]
+            when {
+                successArray.contains(statusResult) -> {
+                    val currentOrder = viewModel.currentCartOrder.value
+                    val paymentId = resultMap["txnId"]
+                    if (currentOrder != null) {
+                        currentOrder.status = listOf(OrderStatus.Paid)
+
+                        // uploading order only after successful payment
+
+                        viewModel.uploadOrder(currentOrder) { it1 ->
+                            if (it1.isSuccessful) {
+                                viewModel.setCurrentPaymentResult(Result.Success(false))
+                                // previously used signed methods
+                                viewModel.confirmOrder(currentOrder.orderId, currentOrder.senderId, mapOf(
+                                    STATUS to listOf(
+                                        PAID
+                                    ), PAYMENT_ID to paymentId.orEmpty()), mapOf(
+                                    TOTAL_ORDER_COUNT to FieldValue.increment(1), TOTAL_SALES_AMOUNT to FieldValue.increment(currentOrder.prices.total)))
+                            } else {
+                                viewModel.setCurrentPaymentResult(Result.Error(Exception("Couldn't upload or create order.")))
+                                Log.d(TAG, it1.exception?.localizedMessage.orEmpty())
+
+                                val refund = Refund(randomId(), currentOrder.orderId, currentOrder.senderId, paymentId.orEmpty(), currentOrder.prices.total, "created")
+                                viewModel.createRefundRequest(refund) { it2 ->
+                                    if (it2.isSuccessful) {
+                                        toast("Order couldn't be created due to some error. A refund has been initiated if any money was deducted from your bank account.")
+                                    } else {
+                                        Snackbar.make(binding.root, "Something went wrong. Contact us if money has been deducted from your account.", Snackbar.LENGTH_INDEFINITE).show()
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                failureArray.contains(statusResult) -> {
+                    viewModel.setCurrentPaymentResult(Result.Error(Exception("Transaction Failed")))
+                }
+                else -> {
+                    viewModel.setCurrentPaymentResult(Result.Error(Exception("Unknown Error")))
+                }
+            }
+        } else {
+            viewModel.setCurrentPaymentResult(Result.Error(Exception("Transaction failed or couldn't complete.")))
+        }
+
+        navController.navigate(R.id.action_containerFragment_to_paymentResultFragment2, null, slideRightNavOptions())
+
+    }
+
+    private val paymentIntentLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        if (it.resultCode == Activity.RESULT_OK) {
+            val data = it.data
+            if (data != null) {
+                data.getStringExtra("response")?.let { it1 ->
+                    onUPIResultReceived(it1)
+                }
+            } else {
+                toast("Transaction failed. Unknown error")
+            }
+        } else {
+            toast("Payment cancelled.")
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,8 +165,12 @@ class MainActivity2 : LocationAwareActivity(), CakeClickListener, OrderImageClic
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
 
-        val appBarConfiguration = AppBarConfiguration(setOf(R.id.containerFragment))
-        binding.mainToolbar.setupWithNavController(navController, appBarConfiguration)
+        val appBarConfiguration = AppBarConfiguration(navController.graph)
+        binding.mainCollapse.setupWithNavController(binding.mainToolbar, navController, appBarConfiguration)
+
+        viewModel.getCakes()
+
+        viewModel.getPastOrders()
 
         locationUtility.getNearbyPlaces()
 
@@ -80,6 +186,42 @@ class MainActivity2 : LocationAwareActivity(), CakeClickListener, OrderImageClic
                 } else {
                     requestLocationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
                 }
+            }
+        }
+
+        binding.coItemCount.setFactory {
+            TextView(this).apply {
+                setTextAppearance(android.R.style.TextAppearance_Material_Medium)
+                setTextColor(ContextCompat.getColor(this@MainActivity2, R.color.white))
+            }
+        }
+
+        viewModel.currentCartOrder.observe(this) { currentOrder ->
+            if (currentOrder != null) {
+
+                val inAnim = AnimationUtils.loadAnimation(this, android.R.anim.slide_in_left)
+                val outAnim = AnimationUtils.loadAnimation(this, android.R.anim.slide_out_right)
+
+                inAnim.duration = 150
+                outAnim.duration = 150
+
+                binding.coItemCount.inAnimation = inAnim
+                binding.coItemCount.outAnimation = outAnim
+
+                if (currentOrder.items.size == 1) {
+
+                    binding.coItemCount.setText("${currentOrder.items.size} Item")
+                } else {
+                    binding.coItemCount.setText("${currentOrder.items.size} Items")
+                }
+
+                if (binding.mainNavigation.selectedTabPosition == 1) {
+                    binding.viewCartCard.slideDown(convertDpToPx(150).toFloat())
+                } else {
+                    binding.viewCartCard.slideReset()
+                }
+            } else {
+                binding.viewCartCard.slideDown(convertDpToPx(150).toFloat())
             }
         }
 
@@ -109,6 +251,12 @@ class MainActivity2 : LocationAwareActivity(), CakeClickListener, OrderImageClic
             stopLocationUpdates()
         }
 
+        viewModel.repo.currentUser.observe(this) { currentUser ->
+            if (currentUser != null) {
+                addCurrentOrdersListener(currentUser)
+            }
+        }
+
         viewModel.currentPlace.observe(this) {
             if (it != null) {
                 Log.d(TAG, "Place is not null")
@@ -130,10 +278,57 @@ class MainActivity2 : LocationAwareActivity(), CakeClickListener, OrderImageClic
         }
 
         binding.currentLocationText.setOnClickListener {
-            navController.navigate(R.id.action_containerFragment_to_locationFragment4)
+            navController.navigate(R.id.action_containerFragment_to_locationFragment4, null, slideRightNavOptions())
         }
 
+        binding.mainNavigation.addOnTabSelectedListener(object: TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                // TODO("Refractor this")
+                if (binding.mainNavigation.selectedTabPosition == 1) {
+                    binding.viewCartCard.slideDown(convertDpToPx(150).toFloat())
+                } else {
+                    if (viewModel.currentCartOrder.value != null) {
+                        binding.viewCartCard.slideReset()
+                    } else {
+                        binding.viewCartCard.slideDown(convertDpToPx(150).toFloat())
+                    }
+                }
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+
+            }
+
+        })
+
         navController.addOnDestinationChangedListener { controller, destination, arguments ->
+
+            if (destination.id != R.id.containerFragment) {
+                binding.mainCollapse.setExpandedTitleTextAppearance(R.style.TitleTextExpandedNormal)
+                binding.mainCollapse.setCollapsedTitleTextAppearance(R.style.TitleTextNormal)
+                binding.mainToolbar.logo = null
+
+                binding.viewCartCard.slideDown(convertDpToPx(150).toFloat())
+            } else {
+                binding.mainToolbar.setLogo(R.drawable.ic_logo_6_med)
+                binding.mainCollapse.setExpandedTitleTextAppearance(R.style.TitleTextExpanded)
+                binding.mainCollapse.setCollapsedTitleTextAppearance(R.style.TitleText)
+
+                if (viewModel.currentCartOrder.value != null) {
+                    binding.viewCartCard.slideReset()
+                }
+
+                binding.viewCartCard.setOnClickListener {
+                    val tab = binding.mainNavigation.getTabAt(1)
+                    binding.mainNavigation.selectTab(tab)
+                }
+
+            }
+
             when (destination.id) {
                 R.id.containerFragment -> {
                     binding.mainAppbar.show()
@@ -154,6 +349,7 @@ class MainActivity2 : LocationAwareActivity(), CakeClickListener, OrderImageClic
                     binding.navHostFragment.layoutParams = params
 
                     binding.mainAppbar.hide()
+                    binding.bottomCartAction2.hide()
 
                     binding.mainNavigation.hide()
                 }
@@ -164,9 +360,109 @@ class MainActivity2 : LocationAwareActivity(), CakeClickListener, OrderImageClic
                     binding.mainNavigation.hide()
                     binding.bottomCartAction.show()
                 }
+                R.id.addressFragment2 -> {
+                    binding.currentLocationText.hide()
+                    binding.mainImage.hide()
+
+                    binding.mainNavigation.hide()
+                    binding.bottomCartAction.hide()
+
+                    lifecycleScope.launch {
+                        delay(500)
+                        findViewById<NestedScrollView>(R.id.addressScroll)?.isNestedScrollingEnabled = false
+                    }
+                }
+                R.id.refundFragment3 -> {
+                    binding.currentLocationText.hide()
+                    binding.mainImage.hide()
+
+                    binding.mainNavigation.hide()
+                    binding.bottomCartAction.hide()
+
+                    lifecycleScope.launch {
+                        delay(500)
+                        findViewById<NestedScrollView>(R.id.refundScroll)?.isNestedScrollingEnabled = false
+                    }
+                }
+                R.id.helpFragment2 -> {
+                    binding.currentLocationText.hide()
+                    binding.mainImage.hide()
+
+                    binding.mainNavigation.hide()
+                    binding.bottomCartAction.hide()
+
+                    lifecycleScope.launch {
+                        delay(500)
+                        findViewById<NestedScrollView>(R.id.helpScroll)?.isNestedScrollingEnabled = false
+                    }
+                }
+                R.id.contactFragment3 -> {
+                    binding.currentLocationText.hide()
+                    binding.mainImage.hide()
+
+                    binding.mainNavigation.hide()
+                    binding.bottomCartAction.hide()
+
+                    lifecycleScope.launch {
+                        delay(500)
+                        findViewById<NestedScrollView>(R.id.contactScroll)?.isNestedScrollingEnabled = false
+                    }
+                }
+                R.id.paymentResultFragment2 -> {
+                    binding.mainAppbar.hide()
+                    binding.bottomCartAction2.hide()
+                    binding.mainNavigation.hide()
+                }
+                R.id.pastOrdersFragment2 -> {
+                    binding.currentLocationText.hide()
+                    binding.mainNavigation.hide()
+                    binding.bottomCartAction.hide()
+                }
+                R.id.imageViewFragment2 -> {
+                    binding.currentLocationText.hide()
+                    binding.mainNavigation.hide()
+                    binding.bottomCartAction.hide()
+                }
             }
         }
 
+        viewModel.repo.restaurant.observe(this) {
+            if (it != null) {
+                Log.d(TAG, "Invoking the observer.")
+            }
+        }
+
+        Firebase.firestore.collection(RESTAURANT)
+            .document(EASTYLIAN)
+            .get()
+            .addOnSuccessListener {
+                val restaurant = it.toObject(Restaurant::class.java)!!
+                viewModel.insertRestaurantData(restaurant)
+            }.addOnFailureListener { error ->
+                error.localizedMessage?.let { msg ->
+                    Log.e(TAG, msg)
+                }
+            }
+
+    }
+
+    // add listener for all current orders
+    private fun addCurrentOrdersListener(currentUser: User) {
+        Firebase.firestore.collection(USERS)
+            .document(currentUser.userId)
+            .collection(ORDERS)
+            .whereArrayContainsAny(STATUS, listOf(DUE, PAID, PREPARING, DELIVERING))
+            .addSnapshotListener { querySnapshot, error ->
+                if (error != null) {
+                    viewModel.setCurrentError(error)
+                    return@addSnapshotListener
+                }
+
+                if (querySnapshot != null && !querySnapshot.isEmpty) {
+                    val orders = querySnapshot.toObjects(Order::class.java)
+                    viewModel.insertOrders(orders)
+                }
+            }
     }
 
     private fun onLocationSettingsRetrieved(result: Result<LocationSettingsResponse>) {
@@ -256,7 +552,17 @@ class MainActivity2 : LocationAwareActivity(), CakeClickListener, OrderImageClic
     }
 
     override fun onImageClick(view: View, image: String) {
-        TODO("Not yet implemented")
+        val bundle = Bundle().apply {
+            putString(ImageViewFragment.ARG_IMAGE, image)
+        }
+        when (navController.currentDestination?.id) {
+            R.id.pastOrdersFragment2 -> {
+                navController.navigate(R.id.action_pastOrdersFragment2_to_imageViewFragment2, bundle)
+            }
+            R.id.containerFragment -> {
+                navController.navigate(R.id.action_containerFragment_to_imageViewFragment2, bundle)
+            }
+        }
     }
 
     override fun onPaymentSuccess(p0: String?, p1: PaymentData?) {
@@ -372,12 +678,16 @@ class MainActivity2 : LocationAwareActivity(), CakeClickListener, OrderImageClic
             val newOrder = createNewOrderFromPreviousOrder(order)
             viewModel.setCurrentCartOrder(newOrder)
 
-            if (binding.mainNavigation.selectedTabPosition == 2) {
+            if (navController.currentDestination?.id == R.id.containerFragment) {
                 tab?.select()
             } else {
                 navController.navigateUp()
-                tab?.select()
+                lifecycleScope.launch {
+                    delay(500)
+                    tab?.select()
+                }
             }
+
 
         } else if (order.status.first() == OrderStatus.Delivering) {
             val latitude = 25.560272
@@ -419,9 +729,6 @@ class MainActivity2 : LocationAwareActivity(), CakeClickListener, OrderImageClic
                         viewModel.setCurrentError(it)
                     }
             } else {
-                // call admin
-                /*Toast.makeText(this, "Cannot call cause order is not delivery", Toast.LENGTH_SHORT)
-					.show()*/
                 vh.resetState()
             }
         } else {
@@ -478,8 +785,81 @@ class MainActivity2 : LocationAwareActivity(), CakeClickListener, OrderImageClic
         })
     }
 
+    private fun startPayment(uri: Uri) {
+        val intent = Intent()
+        intent.action = Intent.ACTION_VIEW
+        intent.data = uri
+        val chooser = Intent.createChooser(intent, "Pay with...")
+        paymentIntentLauncher.launch(chooser)
+
+
+        /*
+        * val upiPayIntent = Intent(Intent.ACTION_VIEW)
+    upiPayIntent.data = uri
+
+    // will always show a dialog to user to choose an app
+    val chooser = Intent.createChooser(upiPayIntent, "Pay with")
+
+    // check if intent resolves
+    if (null != chooser.resolveActivity(packageManager)) {
+        startActivityForResult(chooser, UPI_PAYMENT)
+    } else {
+        Toast.makeText(this@UPIActivity, "No UPI app found, please install one to continue", Toast.LENGTH_SHORT).show()
+    }
+        * */
+
+    }
+
     override fun onCustomerClick(vh: OrderViewHolder, user: User) {
 
+    }
+
+    fun selectImage() {
+        val intent = Intent().apply {
+            type = "image/*"
+            action = Intent.ACTION_GET_CONTENT
+        }
+        selectImageLauncher.launch(intent)
+    }
+
+    override fun onCashOnDeliverySelected() {
+        val currentOrder = viewModel.currentCartOrder.value
+        if (currentOrder != null) {
+            currentOrder.paymentMethod = COD
+            currentOrder.status = listOf(OrderStatus.Due)
+            viewModel.setCurrentCartOrder(currentOrder)
+            navController.navigate(R.id.action_containerFragment_to_paymentResultFragment2, null, slideRightNavOptions())
+
+            viewModel.uploadOrder(currentOrder) {
+                if (it.isSuccessful) {
+                    viewModel.setCurrentPaymentResult(Result.Success(true))
+                } else {
+                    it.exception?.let { e ->
+                        viewModel.setCurrentError(e)
+                    }
+                }
+            }
+        }
+    }
+
+    override fun onUpiSelected(amount: String) {
+
+        val tr = randomId()
+
+        val intentUri = Uri.Builder()
+            .scheme("upi")
+            .authority("pay")
+            .appendQueryParameter("pa", "EASTYLIAN.49075420@hdfcbank")
+            .appendQueryParameter("pn", "EASTYLIAN")
+            .appendQueryParameter("mc", "3042")
+            .appendQueryParameter("tr", tr)
+            .appendQueryParameter("tn", "With love from Eastylian")
+            /*.appendQueryParameter("am", amount) For real payments */
+            .appendQueryParameter("am", "1.00")
+            .appendQueryParameter("cu", "INR")
+            .build()
+
+        startPayment(intentUri)
     }
 
 }

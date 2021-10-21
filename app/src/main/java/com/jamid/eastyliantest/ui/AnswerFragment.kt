@@ -1,6 +1,5 @@
 package com.jamid.eastyliantest.ui
 
-import androidx.navigation.fragment.findNavController
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -12,7 +11,6 @@ import com.jamid.eastyliantest.adapter.QuestionsPagingAdapter
 import com.jamid.eastyliantest.adapter.QuestionsViewHolder
 import com.jamid.eastyliantest.databinding.FragmentAnswerBinding
 import com.jamid.eastyliantest.model.Faq
-import com.jamid.eastyliantest.utility.updateLayout
 
 @ExperimentalPagingApi
 class AnswerFragment: PagerListFragment<Faq, QuestionsViewHolder, FragmentAnswerBinding>() {
@@ -20,17 +18,9 @@ class AnswerFragment: PagerListFragment<Faq, QuestionsViewHolder, FragmentAnswer
 	override fun onViewLaidOut() {
 		super.onViewLaidOut()
 
-		initLayout(binding.faqRecycler, binding.noQuestionsText, binding.questionsProgress)
+		initLayout(binding.faqRecycler)
 
 		binding.faqRecycler.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
-
-		viewModel.windowInsets.observe(viewLifecycleOwner) { (top, _) ->
-			binding.answerToolbar.updateLayout(marginTop = top)
-		}
-
-		binding.answerToolbar.setNavigationOnClickListener {
-			findNavController().navigateUp()
-		}
 
 
 		val query = Firebase.firestore.collection(FAQ)

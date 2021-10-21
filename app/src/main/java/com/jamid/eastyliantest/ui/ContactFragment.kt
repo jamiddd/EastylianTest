@@ -9,7 +9,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jamid.eastyliantest.R
 import com.jamid.eastyliantest.adapter.TableItemAdapter
@@ -18,7 +17,6 @@ import com.jamid.eastyliantest.databinding.FragmentContactBinding
 import com.jamid.eastyliantest.utility.composeEmail
 import com.jamid.eastyliantest.utility.hide
 import com.jamid.eastyliantest.utility.toast
-import com.jamid.eastyliantest.utility.updateLayout
 
 class ContactFragment: Fragment(R.layout.fragment_contact), TableItemClickListener {
 
@@ -29,14 +27,6 @@ class ContactFragment: Fragment(R.layout.fragment_contact), TableItemClickListen
 		super.onViewCreated(view, savedInstanceState)
 		binding = FragmentContactBinding.bind(view)
 		val activity = requireActivity()
-
-		viewModel.windowInsets.observe(viewLifecycleOwner) { (top, _) ->
-			binding.contactToolbar.updateLayout(marginTop = top)
-		}
-
-		binding.contactToolbar.setNavigationOnClickListener {
-			findNavController().navigateUp()
-		}
 
 		val phoneNumberAdapter = TableItemAdapter(this)
 		phoneNumberAdapter.isAdmin = false

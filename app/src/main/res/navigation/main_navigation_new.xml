@@ -16,6 +16,30 @@
         <action
             android:id="@+id/action_containerFragment_to_customizeFragment4"
             app:destination="@id/customizeFragment4" />
+        <action
+            android:id="@+id/action_containerFragment_to_addressFragment2"
+            app:destination="@id/addressFragment2" />
+        <action
+            android:id="@+id/action_containerFragment_to_refundFragment3"
+            app:destination="@id/refundFragment3" />
+        <action
+            android:id="@+id/action_containerFragment_to_favoritesFragment2"
+            app:destination="@id/favoritesFragment2" />
+        <action
+            android:id="@+id/action_containerFragment_to_helpFragment2"
+            app:destination="@id/helpFragment2" />
+        <action
+            android:id="@+id/action_containerFragment_to_contactFragment3"
+            app:destination="@id/contactFragment3" />
+        <action
+            android:id="@+id/action_containerFragment_to_paymentResultFragment2"
+            app:destination="@id/paymentResultFragment2" />
+        <action
+            android:id="@+id/action_containerFragment_to_pastOrdersFragment2"
+            app:destination="@id/pastOrdersFragment2" />
+        <action
+            android:id="@+id/action_containerFragment_to_imageViewFragment2"
+            app:destination="@id/imageViewFragment2" />
     </fragment>
 
     <fragment
@@ -26,8 +50,55 @@
     <fragment
         android:id="@+id/customizeFragment4"
         android:name="com.jamid.eastyliantest.ui.CustomizeFragment"
-        tools:layout="@layout/fragment_customize_new"
-        android:label="" >
+        android:label=" "
+        tools:layout="@layout/fragment_customize_new"/>
+
+    <fragment
+        android:id="@+id/addressFragment2"
+        android:name="com.jamid.eastyliantest.ui.AddressFragment"
+        android:label="Your addresses"
+        tools:layout="@layout/fragment_address" />
+    <fragment
+        android:id="@+id/favoritesFragment2"
+        android:name="com.jamid.eastyliantest.ui.dashboard.FavoritesFragment"
+        tools:layout="@layout/fragment_favorites"
+        android:label="FavoritesFragment" />
+    <fragment
+        android:id="@+id/refundFragment3"
+        android:name="com.jamid.eastyliantest.ui.dashboard.RefundFragment"
+        android:label="@string/refunds"
+        tools:layout="@layout/fragment_refund" />
+    <fragment
+        android:id="@+id/helpFragment2"
+        android:name="com.jamid.eastyliantest.ui.dashboard.HelpFragment"
+        android:label="@string/help"
+        tools:layout="@layout/fragment_help" >
+        <action
+            android:id="@+id/action_helpFragment2_to_contactFragment3"
+            app:destination="@id/contactFragment3" />
     </fragment>
+    <fragment
+        android:id="@+id/contactFragment3"
+        android:name="com.jamid.eastyliantest.ui.ContactFragment"
+        android:label="@string/contact_us"
+        tools:layout="@layout/fragment_contact" />
+    <fragment
+        android:id="@+id/paymentResultFragment2"
+        android:name="com.jamid.eastyliantest.ui.PaymentResultFragment"
+        android:label="PaymentResultFragment" />
+    <fragment
+        android:id="@+id/pastOrdersFragment2"
+        android:name="com.jamid.eastyliantest.ui.PastOrdersFragment"
+        android:label="@string/past_orders"
+        tools:layout="@layout/fragment_past_orders" >
+        <action
+            android:id="@+id/action_pastOrdersFragment2_to_imageViewFragment2"
+            app:destination="@id/imageViewFragment2" />
+    </fragment>
+    <fragment
+        android:id="@+id/imageViewFragment2"
+        android:name="com.jamid.eastyliantest.views.zoomable.ImageViewFragment"
+        android:label=" "
+        tools:layout="@layout/fragment_image_view" />
 
 </navigation>

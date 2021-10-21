@@ -11,9 +11,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.tabs.TabLayout
 import com.jamid.eastyliantest.R
 import com.jamid.eastyliantest.databinding.FragmentPaymentResultBinding
+import com.jamid.eastyliantest.model.Cake
 import com.jamid.eastyliantest.model.Result
 import com.jamid.eastyliantest.utility.convertDpToPx
 import com.jamid.eastyliantest.utility.hide
@@ -33,8 +34,11 @@ class PaymentResultFragment: Fragment(R.layout.fragment_payment_result) {
         activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner) {
             findNavController().navigateUp()
             // hope this works
-            activity?.findViewById<BottomNavigationView>(R.id.nav_view)?.selectedItemId =
-                R.id.account_navigation
+            val bottomTabLayout = activity?.findViewById<TabLayout>(R.id.main_navigation)
+            if (bottomTabLayout != null) {
+                val tab = bottomTabLayout.getTabAt(2)
+                bottomTabLayout.selectTab(tab)
+            }
         }
 
         viewModel.currentPaymentResult.observe(viewLifecycleOwner) { result ->
@@ -59,6 +63,18 @@ class PaymentResultFragment: Fragment(R.layout.fragment_payment_result) {
                         is Result.Success -> {
                             // payment successful
                             val isCashOnDelivery = result.data
+
+                            val currentOrder = viewModel.currentCartOrder.value
+                            if (currentOrder != null) {
+                                val listOfCakes = mutableListOf<Cake>()
+                                for (item in currentOrder.items) {
+                                    val cake = item.cake
+                                    cake.isAddedToCart = false
+                                    listOfCakes.add(cake)
+                                }
+
+                                viewModel.insertCakes(listOfCakes)
+                            }
 
                             viewModel.setCurrentCartOrder(null)
 
@@ -86,9 +102,11 @@ class PaymentResultFragment: Fragment(R.layout.fragment_payment_result) {
 
         binding.checkOrderBtn.setOnClickListener {
             findNavController().navigateUp()
-            // hope this works
-            activity?.findViewById<BottomNavigationView>(R.id.nav_view)?.selectedItemId =
-                R.id.account_navigation
+            val bottomTabLayout = activity?.findViewById<TabLayout>(R.id.main_navigation)
+            if (bottomTabLayout != null) {
+                val tab = bottomTabLayout.getTabAt(2)
+                bottomTabLayout.selectTab(tab)
+            }
         }
 
     }

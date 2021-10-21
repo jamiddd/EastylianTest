@@ -56,7 +56,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         val snapHelper1 = LinearSnapHelper()
 
         val cakeAdapter = CakeAdapter()
-        cakeAdapter.addedCakeList = viewModel.addedCakeList
 
         binding.topCakesRecycler.apply {
             adapter = cakeAdapter

@@ -38,9 +38,13 @@ class MainRepository(db: EastylianDatabase) {
     val pastPlaces = placeDao.getPastLocations()
     val favoriteCakes = cakeDao.favoriteCakes()
 
-    val customCakes = cakeDao.customCakes()
+    val customCakes = cakeDao.customCakesLive()
     val allFaqs = faqDao.allFaqs()
     val restaurant = restaurantDao.restaurant()
+
+
+
+
 
     suspend fun uploadNewUser(name: String, phoneNumber: String, email: String, photo: String? = null) {
         val user = firebaseUtility.uploadNewUser(name, phoneNumber, email, photo)
@@ -125,7 +129,7 @@ class MainRepository(db: EastylianDatabase) {
         firebaseUtility.sendQuestion(question)
     }
 
-    private suspend fun insertCakes(cakes: List<Cake>) {
+    suspend fun insertCakes(cakes: List<Cake>) {
         cakeDao.insertItems(cakes)
     }
 
@@ -171,6 +175,7 @@ class MainRepository(db: EastylianDatabase) {
     suspend fun getCakes() {
         when (val cakesResult = firebaseUtility.getCakes()) {
             is Result.Success -> {
+                Log.d(TAG, "Got the non customizable cakes")
                 if (!cakesResult.data.isEmpty) {
                     val cakes = cakesResult.data.toObjects(Cake::class.java)
                     for (cake in cakes) {
@@ -243,6 +248,26 @@ class MainRepository(db: EastylianDatabase) {
 
     fun deleteOrderFromFirebase(currentOrder: Order) {
         firebaseUtility.deleteOrder(currentOrder)
+    }
+
+    suspend fun getCustomCakes(): List<Cake> {
+        return cakeDao.customCakes()
+    }
+
+    suspend fun removeCakeFromCartOrder(cakeId: String) {
+        cakeDao.updateCake(cakeId, 0)
+    }
+
+    suspend fun addCakeToCartOrder(cakeId: String) {
+        cakeDao.updateCake(cakeId, 1)
+    }
+
+    fun createRefundRequest(refund: Refund, onComplete: ((result: Task<Void>) -> Unit)? = null) {
+        firebaseUtility.createRefundRequest(refund, onComplete)
+    }
+
+    fun setCurrentUserUpiNumber(upiNumber: String, onComplete: ((result: Task<Void>) -> Unit)? = null) {
+        firebaseUtility.setCurrentUserUpiNumber(upiNumber, onComplete)
     }
 
     companion object {

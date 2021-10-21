@@ -1,6 +1,7 @@
 package com.jamid.eastyliantest.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,17 +37,18 @@ class HomeFragmentNew: Fragment() {
         val snapHelper1 = LinearSnapHelper()
 
         val cakeAdapter = CakeAdapter()
-        cakeAdapter.addedCakeList = viewModel.addedCakeList
 
         binding.topCakesRecycler.apply {
             adapter = cakeAdapter
+            itemAnimator = null
             onFlingListener = null
             snapHelper1.attachToRecyclerView(this)
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         }
 
         viewModel.repo.customCakes.observe(viewLifecycleOwner) {
-            if (it.isNotEmpty()) {
+            if (!it.isNullOrEmpty()) {
+                Log.d(TAG, "Got the cakes")
                 cakeAdapter.submitList(it)
             }
         }
@@ -80,9 +82,13 @@ class HomeFragmentNew: Fragment() {
         }
 
         binding.customCakeLayout.contactUsBtn.setOnClickListener {
-            findNavController().navigate(R.id.action_homeFragment_to_contactFragment, null, slideRightNavOptions())
+            findNavController().navigate(R.id.action_containerFragment_to_contactFragment3, null, slideRightNavOptions())
         }
 
+    }
+
+    companion object {
+        private const val TAG = "HomeFragmentNew"
     }
 
 }

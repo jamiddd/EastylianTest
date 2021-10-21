@@ -15,7 +15,10 @@ import com.jamid.eastyliantest.databinding.AddModeratorLayoutBinding
 import com.jamid.eastyliantest.databinding.DeliveryExecutiveLayoutBinding
 import com.jamid.eastyliantest.databinding.FragmentAdminDashBinding
 import com.jamid.eastyliantest.ui.auth.AuthActivity
-import com.jamid.eastyliantest.utility.*
+import com.jamid.eastyliantest.utility.hide
+import com.jamid.eastyliantest.utility.showDialog
+import com.jamid.eastyliantest.utility.slideRightNavOptions
+import com.jamid.eastyliantest.utility.toActivity
 
 class AdminDashFragment: Fragment(R.layout.fragment_admin_dash) {
 
@@ -46,14 +49,6 @@ class AdminDashFragment: Fragment(R.layout.fragment_admin_dash) {
 			setCakeAndPayments(allRefundsBtn, stocksBtn, changeMenuBtn)
 			setCustomerRelationsSections(faqBtn, notificationsBtn, feedbacksBtn, editContacts)
 			setAccountSection(logOutBtn)
-
-			viewModel.windowInsets.observe(viewLifecycleOwner) { (top, _) ->
-				fragmentAdminDashToolbar.updateLayout(marginTop = top)
-			}
-
-			fragmentAdminDashToolbar.setNavigationOnClickListener {
-				findNavController().navigateUp()
-			}
 
 		}
 

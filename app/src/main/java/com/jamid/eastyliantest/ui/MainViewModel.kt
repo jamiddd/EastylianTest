@@ -73,6 +73,14 @@ class MainViewModel(val repo: MainRepository): ViewModel() {
 
     private val allCakeMenuItems = repo.allCakeMenuItems
 
+
+    private val _customCakes = MutableLiveData<List<Cake>>().apply { value = emptyList() }
+    val customCakes: LiveData<List<Cake>> = _customCakes
+
+    fun setCustomCakes(cakes: List<Cake>) {
+        _customCakes.postValue(cakes)
+    }
+
     val flavorMenuItems = Transformations.map(allCakeMenuItems) {
         it.filter { it1 ->
             it1.category == "flavor"
@@ -137,6 +145,10 @@ class MainViewModel(val repo: MainRepository): ViewModel() {
         return basePrice
     }
 
+    private fun removeCakeFromCartOrder(cakeId: String) = viewModelScope.launch (Dispatchers.IO) {
+        repo.removeCakeFromCartOrder(cakeId)
+    }
+
     fun updateCurrentCartOrder(cake: Cake? = null, cartItem: CartItem? = null, change: CartItemChange) {
         val currentOrder = _currentCartOrder.value
 
@@ -158,6 +170,8 @@ class MainViewModel(val repo: MainRepository): ViewModel() {
                         val newCartItem = decreaseCartItemCount(existingCartItem)
                         if (newCartItem == null) {
 
+                            removeCakeFromCartOrder(existingCartItem.cake.id)
+
                             // remove the cart item from the list
                             existingItemsList.removeAtIf {
                                 it.cartItemId == existingCartItem.cartItemId
@@ -165,6 +179,7 @@ class MainViewModel(val repo: MainRepository): ViewModel() {
 
                             // after removing check if it was the only item
                             if (existingItemsList.isEmpty()) {
+
                                 setCurrentCartOrder(null)
                                 return false
                             }
@@ -207,6 +222,9 @@ class MainViewModel(val repo: MainRepository): ViewModel() {
                 if (existingItem == null) {
                     // didn't find any cart item which has the cake
                     val newCartItem = CartItem.newInstance(cake!!, currentOrder.orderId)
+
+                    addCakeToCartOrder(cake.id)
+
                     existingItemsList.add(newCartItem)
                 } else {
                     existingItem.cake = cake!!
@@ -228,11 +246,16 @@ class MainViewModel(val repo: MainRepository): ViewModel() {
                 newOrder.items = listOf(cartItem)
             } else {
                 val newCartItem = CartItem.newInstance(cake!!, newOrder.orderId)
+                addCakeToCartOrder(cake.id)
                 newOrder.items = listOf(newCartItem)
             }
             setOrderAmount(newOrder)
             setCurrentCartOrder(newOrder)
         }
+    }
+
+    private fun addCakeToCartOrder(cakeId: String) = viewModelScope.launch (Dispatchers.IO) {
+        repo.addCakeToCartOrder(cakeId)
     }
 
     private fun increaseCartItemCount(cartItem: CartItem): CartItem {
@@ -575,11 +598,6 @@ class MainViewModel(val repo: MainRepository): ViewModel() {
         setCurrentCartOrder(order)
     }
 
-    var addedCakeList = mutableListOf<String>()
-
-    fun setNewCakeList(newAddedCakeList: List<String>) {
-        addedCakeList = newAddedCakeList.toMutableList()
-    }
 
 	@ExperimentalPagingApi
     fun getFeedbacks(query: Query): Flow<PagingData<Feedback>> {
@@ -648,6 +666,22 @@ class MainViewModel(val repo: MainRepository): ViewModel() {
         if (currentOrder != null) {
             repo.deleteOrderFromFirebase(currentOrder)
         }
+    }
+
+    fun getCustomCakes() = viewModelScope.launch (Dispatchers.IO) {
+        _customCakes.postValue(repo.getCustomCakes())
+    }
+
+    fun createRefundRequest(refund: Refund, onComplete: ((result: Task<Void>) -> Unit)? = null) {
+        repo.createRefundRequest(refund, onComplete)
+    }
+
+    fun insertCakes(cakes: List<Cake>) = viewModelScope.launch (Dispatchers.IO) {
+        repo.insertCakes(cakes)
+    }
+
+    fun setCurrentUserUpiNumber(upiNumber: String, onComplete: ((result: Task<Void>) -> Unit)? = null) {
+        repo.setCurrentUserUpiNumber(upiNumber, onComplete)
     }
 
     companion object {

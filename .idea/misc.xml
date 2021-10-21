@@ -103,6 +103,9 @@
         <entry key="..\:/xx/EastylianTest/app/src/main/res/drawable/ic_home_black_24dp.xml" value="0.23515981735159816" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/drawable/ic_logo_6.xml" value="0.23333333333333334" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/drawable/ic_logo_6_alt.xml" value="0.33378995433789954" />
+        <entry key="..\:/xx/EastylianTest/app/src/main/res/drawable/ic_logo_6_small.xml" value="0.30833333333333335" />
+        <entry key="..\:/xx/EastylianTest/app/src/main/res/drawable/ic_round_account_balance_wallet_24.xml" value="0.30833333333333335" />
+        <entry key="..\:/xx/EastylianTest/app/src/main/res/drawable/ic_round_arrow_back_24.xml" value="0.33378995433789954" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/drawable/ic_round_delete_24.xml" value="0.33055555555555555" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/drawable/ic_sync_alt_black_24dp.xml" value="0.33055555555555555" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/drawable/ic_text_logo.xml" value="0.15648148148148147" />
@@ -127,7 +130,7 @@
         <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/activity_auth.xml" value="0.14814814814814814" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/activity_delivery.xml" value="0.2222222222222222" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/activity_main.xml" value="0.4" />
-        <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/activity_main2.xml" value="0.3347222222222222" />
+        <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/activity_main2.xml" value="0.25" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/activity_main_alternate.xml" value="0.14814814814814814" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/activity_splash.xml" value="0.14814814814814814" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/add_moderator_layout.xml" value="0.264" />
@@ -140,6 +143,7 @@
         <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/card_layout.xml" value="0.22407407407407406" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/cart_custom_item.xml" value="0.2" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/cart_item.xml" value="0.4" />
+        <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/change_name_layout.xml" value="0.34629629629629627" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/choice_extra.xml" value="0.32407407407407407" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/choice_layout.xml" value="0.32407407407407407" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/content_home.xml" value="0.2222222222222222" />
@@ -151,12 +155,12 @@
         <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/faq_item.xml" value="0.4" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/fargment_active_delivery.xml" value="0.2222222222222222" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/feedback_item.xml" value="0.4" />
-        <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/feedback_layout.xml" value="0.2222222222222222" />
+        <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/feedback_layout.xml" value="0.5" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/fragment_account.xml" value="0.4" />
-        <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/fragment_account_new.xml" value="0.34629629629629627" />
+        <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/fragment_account_new.xml" value="0.25" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/fragment_active_delivery.xml" value="0.22407407407407406" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/fragment_add_card.xml" value="0.22407407407407406" />
-        <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/fragment_add_menu_item.xml" value="0.5" />
+        <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/fragment_add_menu_item.xml" value="0.25" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/fragment_add_notification.xml" value="0.264" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/fragment_address.xml" value="0.4" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/fragment_admin.xml" value="0.33" />
@@ -165,7 +169,7 @@
         <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/fragment_build_cake.xml" value="0.264" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/fragment_cake_detail.xml" value="0.22407407407407406" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/fragment_cart.xml" value="0.4" />
-        <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/fragment_cart_new.xml" value="0.34629629629629627" />
+        <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/fragment_cart_new.xml" value="0.5" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/fragment_change_menu.xml" value="0.264" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/fragment_contact.xml" value="0.4" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/fragment_container.xml" value="0.22407407407407406" />
@@ -178,19 +182,20 @@
         <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/fragment_delivery_dashboard.xml" value="0.22407407407407406" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/fragment_delivery_home.xml" value="0.2222222222222222" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/fragment_edit_contacts.xml" value="0.264" />
-        <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/fragment_feedback.xml" value="0.4" />
+        <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/fragment_feedback.xml" value="0.2199074074074074" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/fragment_generic_orders.xml" value="0.2222222222222222" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/fragment_help.xml" value="0.4" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/fragment_home.xml" value="0.264" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/fragment_home_new.xml" value="0.34629629629629627" />
-        <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/fragment_image_view.xml" value="0.4" />
+        <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/fragment_image_view.xml" value="0.2" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/fragment_intro.xml" value="0.264" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/fragment_location.xml" value="0.4" />
-        <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/fragment_notifications.xml" value="0.319634703196347" />
+        <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/fragment_notifications.xml" value="0.24197656647987772" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/fragment_order.xml" value="0.536" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/fragment_organize.xml" value="0.264" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/fragment_paging_list.xml" value="0.32407407407407407" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/fragment_past_orders.xml" value="0.2222222222222222" />
+        <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/fragment_payment.xml" value="0.536" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/fragment_payment_result.xml" value="0.4" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/fragment_payments.xml" value="0.1" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/fragment_pending.xml" value="0.22407407407407406" />
@@ -198,6 +203,7 @@
         <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/fragment_requests.xml" value="0.22407407407407406" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/fragment_sign_in.xml" value="0.33" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/fragment_sign_in_bottom_content.xml" value="0.264" />
+        <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/loading_layout.xml" value="0.2199074074074074" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/location_bottom_sheet.xml" value="0.22407407407407406" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/marker_info_contents.xml" value="0.22407407407407406" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/mini_cake_item.xml" value="0.4" />
@@ -206,16 +212,21 @@
         <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/order_item_cake.xml" value="0.536" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/order_item_customer_layout.xml" value="0.536" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/rate_answer_layout.xml" value="0.264" />
-        <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/refund_item.xml" value="0.4" />
+        <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/refund_item.xml" value="0.5" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/restaurant_address_layout.xml" value="0.2222222222222222" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/simple_table_item_with_action.xml" value="0.4" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/simple_text_dialog_layout.xml" value="0.264" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/table_layout.xml" value="0.4" />
+        <entry key="..\:/xx/EastylianTest/app/src/main/res/layout/user_layout.xml" value="0.9" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/menu/bottom_nav_menu.xml" value="0.1" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/menu/cake_item_menu.xml" value="0.22407407407407406" />
+        <entry key="..\:/xx/EastylianTest/app/src/main/res/menu/change_menu_menu.xml" value="0.2199074074074074" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/menu/context_menu.xml" value="0.32407407407407407" />
+        <entry key="..\:/xx/EastylianTest/app/src/main/res/menu/help_menu.xml" value="0.1986111111111111" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/menu/image_menu.xml" value="0.4" />
         <entry key="..\:/xx/EastylianTest/app/src/main/res/menu/notification_menu.xml" value="0.22407407407407406" />
+        <entry key="..\:/xx/EastylianTest/app/src/main/res/menu/notifications_meni.xml" value="0.19907407407407407" />
+        <entry key="..\:/xx/EastylianTest/app/src/main/res/menu/organize_menu.xml" value="0.2199074074074074" />
       </map>
     </option>
   </component>

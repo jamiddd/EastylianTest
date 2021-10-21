@@ -6,7 +6,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.fragment.findNavController
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.jamid.eastyliantest.NOTIFICATIONS
@@ -32,14 +31,6 @@ class AddNotificationFragment: Fragment(R.layout.fragment_add_notification) {
 			binding.notificationTitleLayout.editText?.setText(existingNotification.title)
 			binding.notificationContentLayout.editText?.setText(existingNotification.content)
 			binding.createNotificationBtn.enable()
-		}
-
-		binding.fragmentAddNotificationToolbar.setNavigationOnClickListener {
-			findNavController().navigateUp()
-		}
-
-		viewModel.windowInsets.observe(viewLifecycleOwner) { (top, _) ->
-			binding.fragmentAddNotificationToolbar.updateLayout(marginTop = top)
 		}
 
 		var justStarted = true
