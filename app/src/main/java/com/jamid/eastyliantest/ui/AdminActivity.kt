@@ -722,7 +722,7 @@ class AdminActivity : LocationAwareActivity(), OrderClickListener, CakeMiniListe
                 Firebase.firestore.collection(USERS).document(refund.receiverId)
                     .collection(REFUNDS)
                     .document(refund.refundId)
-                    .update(mapOf("status" to status))
+                    .update(mapOf("status" to status.lowercase(Locale.getDefault())))
                     .addOnSuccessListener {
                         refund.status = status.lowercase(Locale.getDefault())
                         viewModel.insertRefund(refund)
