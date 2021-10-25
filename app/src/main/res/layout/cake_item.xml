@@ -124,6 +124,25 @@
             app:layout_constraintTop_toTopOf="@+id/primaryCakeAction"
             app:srcCompat="@drawable/animated_check" />
 
+        <LinearLayout
+            android:id="@+id/customizeLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/round_background"
+            android:backgroundTint="#EFC3B5"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/primaryCakeAction"
+            app:layout_constraintEnd_toEndOf="@id/primaryCakeAction"
+            app:layout_constraintTop_toTopOf="@+id/primaryCakeAction">
+
+            <include
+                android:id="@+id/amountCustomizerContainer"
+                layout="@layout/amount_customize_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </com.google.android.material.card.MaterialCardView>

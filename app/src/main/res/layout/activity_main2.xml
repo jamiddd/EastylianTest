@@ -121,11 +121,10 @@
         android:focusable="true"
         android:visibility="gone"
         app:cardElevation="16dp"
-        app:contentPaddingBottom="72dp"
+        app:contentPaddingBottom="56dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:visibility="visible">
+        app:layout_constraintStart_toStartOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -153,41 +152,20 @@
 
     </androidx.cardview.widget.CardView>
 
-    <com.google.android.material.tabs.TabLayout
+    <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/main_navigation"
-        style="@style/TabLayoutTheme"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:elevation="30dp"
-        app:tabIndicator="@null"
-        app:tabMode="fixed">
-
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:icon="@drawable/ic_home_black_24dp"
-            android:text="Monday" />
-
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:icon="@drawable/ic_round_shopping_cart_24"
-            android:text="Tuesday" />
-
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:icon="@drawable/ic_round_account_circle_24"
-            android:text="Wednesday" />
-    </com.google.android.material.tabs.TabLayout>
+        app:elevation="30dp"
+        app:menu="@menu/bottom_navigation_new" />
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/viewCartCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:layout_marginBottom="72dp"
+        android:layout_marginBottom="56dp"
         android:clickable="true"
         android:focusable="true"
         android:minHeight="48dp"

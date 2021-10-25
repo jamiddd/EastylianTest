@@ -140,53 +140,6 @@ class OrganizeFragment: Fragment(R.layout.fragment_organize) {
 			}
 		}
 
-
-		/*binding.editCakesBtn.setOnClickListener {
-
-			binding.editCakesBtn.hide()
-
-			binding.createCakeBtn.slideDown(convertDpToPx(100).toFloat())
-
-			for (child in binding.inStockItems.children) {
-				child.findViewById<View>(R.id.deleteButton)?.show()
-				child.findViewById<View>(R.id.divider19)?.show()
-				child.findViewById<View>(R.id.updateBtn)?.show()
-			}
-
-			for (child in binding.outOfStockRecycler.children) {
-				child.findViewById<View>(R.id.deleteButton)?.show()
-				child.findViewById<View>(R.id.divider19)?.show()
-				child.findViewById<View>(R.id.updateBtn)?.show()
-			}
-
-			binding.fragmentOrganizeToolbar.navigationIcon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_close_24)
-
-			binding.fragmentOrganizeToolbar.setNavigationOnClickListener {
-
-				binding.createCakeBtn.slideReset()
-
-				for (child in binding.inStockItems.children) {
-					child.findViewById<View>(R.id.deleteButton)?.hide()
-					child.findViewById<View>(R.id.divider19)?.hide()
-					child.findViewById<View>(R.id.updateBtn)?.hide()
-				}
-
-				for (child in binding.outOfStockRecycler.children) {
-					child.findViewById<View>(R.id.deleteButton)?.hide()
-					child.findViewById<View>(R.id.divider19)?.hide()
-					child.findViewById<View>(R.id.updateBtn)?.hide()
-				}
-
-				binding.fragmentOrganizeToolbar.navigationIcon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_round_arrow_back_24)
-				binding.editCakesBtn.show()
-
-				binding.fragmentOrganizeToolbar.setNavigationOnClickListener {
-					findNavController().navigateUp()
-				}
-			}
-
-		}*/
-
 	}
 
 

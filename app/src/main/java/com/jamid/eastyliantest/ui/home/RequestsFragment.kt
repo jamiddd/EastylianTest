@@ -1,5 +1,6 @@
 package com.jamid.eastyliantest.ui.home
 
+import androidx.lifecycle.lifecycleScope
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.PagingDataAdapter
 import com.jamid.eastyliantest.adapter.OrderPagingAdapter
@@ -38,7 +39,7 @@ class RequestsFragment : PagerListFragment<OrderAndCartItems, OrderViewHolder, F
 
     override fun getAdapter(): PagingDataAdapter<OrderAndCartItems, OrderViewHolder> {
 
-        val ada = OrderPagingAdapter().apply {
+        val ada = OrderPagingAdapter(viewLifecycleOwner.lifecycleScope).apply {
             isAdmin = true
             isDeliveryExecutive = false
         }

@@ -5,7 +5,7 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.fragment.findNavController
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -57,7 +57,7 @@ class AddressFragment: Fragment(R.layout.fragment_address), OnAddressClickListen
 		}
 
 		binding.changeLocationBtn.setOnClickListener {
-			findNavController().navigate(R.id.locationFragment3)
+			activity?.findNavController(R.id.nav_host_fragment)?.navigate(R.id.action_addressFragment2_to_locationFragment4)
 		}
 
 	}

@@ -4,11 +4,16 @@
         <!-- Primary brand color. -->
         <item name="colorPrimary">#F89779</item>
         <item name="colorPrimaryVariant">#B12B01</item>
-        <item name="colorOnPrimary">@color/black</item>
+<!--        <item name="colorOnPrimary">@color/black</item>-->
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/orange_200</item>
         <item name="colorSecondaryVariant">@color/orange_200</item>
-        <item name="colorOnSecondary">@color/black</item>
+<!--        <item name="colorOnSecondary">@color/black</item>-->
+
+<!--        <item name="colorControlHighlight">#B52424</item>-->
+        <item name="colorOnSurface">@color/white</item>
+        <item name="colorOnPrimarySurface">@color/white</item>
+        <item name="colorPrimarySurface">@color/white</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">#1B1A1A</item>
         <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
@@ -78,7 +83,7 @@
     </style>
 
     <style name="nonPrimaryFragment">
-        <item name="backgroundColor">@color/colorGrey</item>
+        <item name="android:background">#252525</item>
     </style>
 
     <style name="tableItemBackground">
@@ -106,6 +111,14 @@
 
     <style name="GenericBtn" parent="Theme.Button.IconOnly">
         <item name="iconTint">@color/primaryColor</item>
+    </style>
+
+    <style name="SomeTheme" parent="Widget.MaterialComponents.MaterialButtonToggleGroup">
+
+    </style>
+
+    <style name="OutlinedButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="strokeColor">@color/button_group_stroke</item>
     </style>
 
 

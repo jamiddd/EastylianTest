@@ -5,13 +5,11 @@ import android.animation.ObjectAnimator
 import android.os.Bundle
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
-import androidx.activity.addCallback
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.tabs.TabLayout
 import com.jamid.eastyliantest.R
 import com.jamid.eastyliantest.databinding.FragmentPaymentResultBinding
 import com.jamid.eastyliantest.model.Cake
@@ -30,16 +28,6 @@ class PaymentResultFragment: Fragment(R.layout.fragment_payment_result) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentPaymentResultBinding.bind(view)
-
-        activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner) {
-            findNavController().navigateUp()
-            // hope this works
-            val bottomTabLayout = activity?.findViewById<TabLayout>(R.id.main_navigation)
-            if (bottomTabLayout != null) {
-                val tab = bottomTabLayout.getTabAt(2)
-                bottomTabLayout.selectTab(tab)
-            }
-        }
 
         viewModel.currentPaymentResult.observe(viewLifecycleOwner) { result ->
             viewLifecycleOwner.lifecycleScope.launch {
@@ -61,6 +49,7 @@ class PaymentResultFragment: Fragment(R.layout.fragment_payment_result) {
                             viewModel.deleteOrderFromFirebase()
                         }
                         is Result.Success -> {
+                            viewModel.shouldCheckAccount = true
                             // payment successful
                             val isCashOnDelivery = result.data
 
@@ -102,11 +91,6 @@ class PaymentResultFragment: Fragment(R.layout.fragment_payment_result) {
 
         binding.checkOrderBtn.setOnClickListener {
             findNavController().navigateUp()
-            val bottomTabLayout = activity?.findViewById<TabLayout>(R.id.main_navigation)
-            if (bottomTabLayout != null) {
-                val tab = bottomTabLayout.getTabAt(2)
-                bottomTabLayout.selectTab(tab)
-            }
         }
 
     }

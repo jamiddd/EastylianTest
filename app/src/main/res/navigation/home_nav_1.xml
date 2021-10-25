@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/home_nav_1"
+    app:startDestination="@id/homeFragmentNew">
+
+    <fragment
+        android:id="@+id/homeFragmentNew"
+        android:name="com.jamid.eastyliantest.ui.home.HomeFragmentNew"
+        tools:layout="@layout/fragment_home_new"
+        android:label="HomeFragmentNew" />
+</navigation>

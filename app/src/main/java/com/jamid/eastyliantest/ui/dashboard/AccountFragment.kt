@@ -9,6 +9,7 @@ import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -31,8 +32,8 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
 		super.onViewCreated(view, savedInstanceState)
 		binding = FragmentAccountBinding.bind(view)
 
-		val orderAdapter = OrderAdapter()
-		val orderAdapter1 = OrderAdapter()
+		val orderAdapter = OrderAdapter(viewLifecycleOwner.lifecycleScope)
+		val orderAdapter1 = OrderAdapter(viewLifecycleOwner.lifecycleScope)
 
 		binding.pastOrdersRecycler.apply {
 			adapter = orderAdapter

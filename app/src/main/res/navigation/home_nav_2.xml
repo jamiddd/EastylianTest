@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/home_nav_2"
+    app:startDestination="@id/cartFragmentNew">
+
+    <fragment
+        android:id="@+id/cartFragmentNew"
+        android:name="com.jamid.eastyliantest.ui.CartFragmentNew"
+        tools:layout="@layout/fragment_cart_new"
+        android:label="CartFragmentNew" />
+</navigation>

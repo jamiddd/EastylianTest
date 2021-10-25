@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.fragment.findNavController
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import com.jamid.eastyliantest.R
@@ -82,7 +82,7 @@ class HomeFragmentNew: Fragment() {
         }
 
         binding.customCakeLayout.contactUsBtn.setOnClickListener {
-            findNavController().navigate(R.id.action_containerFragment_to_contactFragment3, null, slideRightNavOptions())
+            activity?.findNavController(R.id.nav_host_fragment)?.navigate(R.id.action_containerFragment_to_contactFragment3, null, slideRightNavOptions())
         }
 
     }

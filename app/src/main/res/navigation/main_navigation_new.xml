@@ -57,7 +57,11 @@
         android:id="@+id/addressFragment2"
         android:name="com.jamid.eastyliantest.ui.AddressFragment"
         android:label="Your addresses"
-        tools:layout="@layout/fragment_address" />
+        tools:layout="@layout/fragment_address" >
+        <action
+            android:id="@+id/action_addressFragment2_to_locationFragment4"
+            app:destination="@id/locationFragment4" />
+    </fragment>
     <fragment
         android:id="@+id/favoritesFragment2"
         android:name="com.jamid.eastyliantest.ui.dashboard.FavoritesFragment"

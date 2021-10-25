@@ -7,6 +7,7 @@ import android.view.MenuItem
 import androidx.navigation.fragment.findNavController
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.DividerItemDecoration
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.jamid.eastyliantest.IS_ADMIN
@@ -52,6 +53,8 @@ class NotificationsFragment : PagerListFragment<SimpleNotification, Notification
         )
 
         val query = Firebase.firestore.collection(NOTIFICATIONS)
+
+        binding.notificationsRecycler.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
 
         getItems {
             viewModel.pagedNotificationsFlow(query)

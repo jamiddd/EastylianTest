@@ -1,15 +1,19 @@
 package com.jamid.eastyliantest.ui
 
 import android.Manifest
+import android.app.Activity
 import android.content.Intent
 import android.content.IntentSender
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.view.WindowInsets
 import androidx.activity.result.IntentSenderRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.common.api.ResolvableApiException
@@ -26,13 +30,12 @@ import com.jamid.eastyliantest.databinding.ActivityDeliveryBinding
 import com.jamid.eastyliantest.db.EastylianDatabase
 import com.jamid.eastyliantest.interfaces.OrderClickListener
 import com.jamid.eastyliantest.interfaces.OrderImageClickListener
-import com.jamid.eastyliantest.model.Order
-import com.jamid.eastyliantest.model.OrderStatus
-import com.jamid.eastyliantest.model.Result
-import com.jamid.eastyliantest.model.User
+import com.jamid.eastyliantest.model.*
 import com.jamid.eastyliantest.repo.MainRepository
 import com.jamid.eastyliantest.utility.toast
 import com.jamid.eastyliantest.utility.updateLayout
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class DeliveryActivity : LocationAwareActivity(), OrderClickListener, OrderImageClickListener {
 
@@ -40,12 +43,35 @@ class DeliveryActivity : LocationAwareActivity(), OrderClickListener, OrderImage
 	val viewModel: MainViewModel by viewModels { MainViewModelFactory(repository) }
 	private lateinit var binding: ActivityDeliveryBinding
 
+	override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+		menuInflater.inflate(R.menu.admin_home_menu, menu)
+		return super.onCreateOptionsMenu(menu)
+	}
+
+	override fun onOptionsItemSelected(item: MenuItem): Boolean {
+		when (item.itemId) {
+			R.id.admin_dash -> {
+				val fragment = DeliveryDashboardFragment.newInstance()
+				fragment.show(supportFragmentManager, DeliveryDashboardFragment.TAG)
+			}
+		}
+		return super.onOptionsItemSelected(item)
+	}
+
+	private val selectImageLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+		if (it.resultCode == Activity.RESULT_OK) {
+			val image = it.data?.data
+			viewModel.setCurrentImage(image)
+		}
+	}
+
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 
 		binding = ActivityDeliveryBinding.inflate(layoutInflater)
 		setContentView(binding.root)
 		initiate(binding.root)
+		setSupportActionBar(binding.deliveryToolbar)
 
 		val database = EastylianDatabase.getInstance(applicationContext, lifecycleScope)
 		repository = MainRepository.newInstance(database)
@@ -120,41 +146,39 @@ class DeliveryActivity : LocationAwareActivity(), OrderClickListener, OrderImage
 			}
 		}
 
-		binding.deliveryPager.adapter = DeliveryPagerAdapter(this)
+		lifecycleScope.launch {
+			delay(500)
+			binding.deliveryPager.adapter = DeliveryPagerAdapter(this@DeliveryActivity)
 
-		TabLayoutMediator(binding.deliveryTabLayout, binding.deliveryPager) { a, b ->
-			when (b) {
-				0 -> a.text = "Preparing"
-				1 -> a.text = "Deliveries"
-			}
-		}.attach()
-
-		/*val bottomSheetBehavior = BottomSheetBehavior.from(binding.deliveryExecutiveDashboard)
-		bottomSheetBehavior.isHideable = true
-		bottomSheetBehavior.peekHeight = 0
-		bottomSheetBehavior.skipCollapsed = true*/
-
-		/*bottomSheetBehavior.addBottomSheetCallback(object: BottomSheetBehavior.BottomSheetCallback() {
-			override fun onStateChanged(bottomSheet: View, newState: Int) {
-
-			}
-
-			override fun onSlide(bottomSheet: View, slideOffset: Float) {
-
-			}
-		})*/
-
-		binding.deliveryDashboardBtn.setOnClickListener {
-			/*if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
-				bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-			} else {
-				bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-			}*/
-			val fragment = DeliveryDashboardFragment.newInstance()
-			fragment.show(supportFragmentManager, DeliveryDashboardFragment.TAG)
+			TabLayoutMediator(binding.deliveryTabLayout, binding.deliveryPager) { a, b ->
+				when (b) {
+					0 -> a.text = "Preparing"
+					1 -> a.text = "Deliveries"
+				}
+			}.attach()
 		}
 
+		Firebase.firestore.collection(RESTAURANT)
+			.document(EASTYLIAN)
+			.get()
+			.addOnSuccessListener {
+				if (it.exists()) {
+					val restaurant = it.toObject(Restaurant::class.java)!!
+					viewModel.insertRestaurantData(restaurant)
+				}
+			}.addOnFailureListener {
+				toast("Something went wrong while fetching restaurant data.")
+			}
 	}
+
+	fun selectImage() {
+		val intent = Intent().apply {
+			type = "image/*"
+			action = Intent.ACTION_GET_CONTENT
+		}
+		selectImageLauncher.launch(intent)
+	}
+
 
 	private fun onLocationSettingsRetrieved(result: Result<LocationSettingsResponse>) {
 		when (result) {

@@ -1,6 +1,5 @@
 package com.jamid.eastyliantest.ui
 
-import android.animation.ObjectAnimator
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
@@ -8,15 +7,14 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.Button
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.datepicker.*
-import com.google.android.material.tabs.TabLayout
 import com.jamid.eastyliantest.*
 import com.jamid.eastyliantest.adapter.CartItemAdapter
 import com.jamid.eastyliantest.databinding.FragmentCartNewBinding
@@ -65,7 +63,7 @@ class CartFragmentNew: Fragment() {
         bottomCartAction = activity.findViewById(R.id.bottomCartAction2)
         checkOutBtn = activity.findViewById(R.id.checkOutBtn)
 
-        val cartItemAdapter = initCartItemRecycler()
+        var cartItemAdapter = initCartItemRecycler()
 
         viewModel.currentCartOrder.observe(viewLifecycleOwner) { currentOrder ->
             updateContainerUI(currentOrder)
@@ -73,11 +71,13 @@ class CartFragmentNew: Fragment() {
 
             if (currentOrder != null) {
 
-                binding.cartItemRecycler.alpha = 0f
-                val animator = ObjectAnimator.ofFloat(binding.cartItemRecycler, View.ALPHA, 1f)
-                animator.duration = 500
-                animator.interpolator = AccelerateDecelerateInterpolator()
-                animator.start()
+
+                if (viewModel.shouldUpdateCart) {
+                    cartItemAdapter = initCartItemRecycler()
+                    viewModel.shouldUpdateCart = false
+                }
+
+                Log.d("MainActivity2", "Cart " + currentOrder.items.map { it.quantity }.toString())
 
                 cartItemAdapter.submitList(currentOrder.items.sortedByDescending {
                     it.cartItemId
@@ -233,10 +233,10 @@ class CartFragmentNew: Fragment() {
     }
 
     private fun updateContainerUI(currentOrder: Order?) {
-        val tabLayout = requireActivity().findViewById<TabLayout>(R.id.main_navigation)
+        val bottomNavigationView = requireActivity().findViewById<BottomNavigationView>(R.id.main_navigation)
         if (currentOrder != null && currentOrder.status[0] == OrderStatus.Created) {
             binding.cartContainerLayout.show()
-            if (tabLayout.selectedTabPosition == 1) {
+            if (bottomNavigationView.selectedItemId == R.id.home_nav_2) {
                 bottomCartAction.show()
             }
             binding.noItemsText.hide()

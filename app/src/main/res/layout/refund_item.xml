@@ -63,10 +63,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
+        android:fontFamily="@font/manrope_semi_bold"
         android:text="Get Phone Number"
-        android:visibility="gone"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/refundStatus"
-        app:layout_constraintTop_toBottomOf="@+id/refundStatus"
-        tools:visibility="visible" />
+        app:layout_constraintTop_toBottomOf="@+id/refundStatus" />
+
+    <Button
+        android:id="@+id/updateStatusBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:fontFamily="@font/manrope_semi_bold"
+        android:text="Update status"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        app:layout_constraintBottom_toBottomOf="@+id/payRefundBtn"
+        app:layout_constraintEnd_toEndOf="@+id/refundAmount"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/payRefundBtn"
+        app:layout_constraintTop_toTopOf="@+id/payRefundBtn" />
 </androidx.constraintlayout.widget.ConstraintLayout>

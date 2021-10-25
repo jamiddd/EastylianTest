@@ -20,11 +20,13 @@ import androidx.activity.viewModels
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.core.widget.NestedScrollView
 import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.NavController
 import androidx.navigation.NavDeepLinkBuilder
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
@@ -32,8 +34,8 @@ import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.LocationSettingsResponse
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.tabs.TabLayout
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ktx.firestore
@@ -60,7 +62,7 @@ import java.util.*
 
 
 class MainActivity2 : LocationAwareActivity(), CakeClickListener, OrderImageClickListener,
-    PaymentResultWithDataListener, CartItemClickListener, OrderClickListener, FaqListener, OnPaymentModeSelected {
+    PaymentResultWithDataListener, CartItemClickListener, OrderClickListener, FaqListener, OnPaymentModeSelected, RefundClickListener {
 
     private lateinit var navController: NavController
     private lateinit var repository: MainRepository
@@ -77,7 +79,6 @@ class MainActivity2 : LocationAwareActivity(), CakeClickListener, OrderImageClic
         } else {
             viewModel.setCurrentImage(null)
         }
-
     }
 
     private fun onUPIResultReceived(result: String) {
@@ -89,8 +90,6 @@ class MainActivity2 : LocationAwareActivity(), CakeClickListener, OrderImageClic
                 resultMap[keyValuePair[0]] = keyValuePair[1]
             }
         }
-
-        Log.d(TAG, resultMap.toString())
 
         if (resultMap.containsKey("Status") || resultMap.containsKey("status")) {
             val successArray = listOf("success", "Success", "SUCCESS")
@@ -214,17 +213,15 @@ class MainActivity2 : LocationAwareActivity(), CakeClickListener, OrderImageClic
 
     private fun getNotificationBuilder(title: String, content: String, image: String? = null): NotificationCompat.Builder {
         val pendingIntent = NavDeepLinkBuilder(this)
-            .setGraph(R.navigation.main_navigation)
-            .setDestination(R.id.dashboardFragment)
-            .setArguments(null)
+            .setGraph(R.navigation.main_navigation_new)
+            .setDestination(R.id.containerFragment)
+            .setArguments(bundleOf("page" to 3))
             .createPendingIntent()
 
         val notificationBuilder = NotificationCompat.Builder(this, PRIMARY_CHANNEL_ID)
             .setContentTitle(title)
             .setContentText(content)
             .setContentIntent(pendingIntent)
-
-        Log.d(TAG, image.toString())
 
         if (image != null) {
             notificationBuilder.applyImageUrl(image)
@@ -303,6 +300,10 @@ class MainActivity2 : LocationAwareActivity(), CakeClickListener, OrderImageClic
         viewModel.currentCartOrder.observe(this) { currentOrder ->
             if (currentOrder != null) {
 
+                if (binding.mainNavigation.selectedItemId != R.id.home_nav_2) {
+                    binding.viewCartCard.slideReset()
+                }
+
                 val inAnim = AnimationUtils.loadAnimation(this, android.R.anim.slide_in_left)
                 val outAnim = AnimationUtils.loadAnimation(this, android.R.anim.slide_out_right)
 
@@ -313,18 +314,13 @@ class MainActivity2 : LocationAwareActivity(), CakeClickListener, OrderImageClic
                 binding.coItemCount.outAnimation = outAnim
 
                 if (currentOrder.items.size == 1) {
-
                     binding.coItemCount.setText("${currentOrder.items.size} Item")
                 } else {
                     binding.coItemCount.setText("${currentOrder.items.size} Items")
                 }
 
-                if (binding.mainNavigation.selectedTabPosition == 1) {
-                    binding.viewCartCard.slideDown(convertDpToPx(150).toFloat())
-                } else {
-                    binding.viewCartCard.slideReset()
-                }
             } else {
+                Log.d(TAG, "Current order is null")
                 binding.viewCartCard.slideDown(convertDpToPx(150).toFloat())
             }
         }
@@ -362,10 +358,8 @@ class MainActivity2 : LocationAwareActivity(), CakeClickListener, OrderImageClic
         }
 
         viewModel.currentPlace.observe(this) {
-            if (it != null) {
-                Log.d(TAG, "Place is not null")
-            } else {
-                Log.d(TAG, "Place is null")
+            if (it == null) {
+                Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.action_containerFragment_to_locationFragment4)
             }
         }
 
@@ -385,31 +379,7 @@ class MainActivity2 : LocationAwareActivity(), CakeClickListener, OrderImageClic
             navController.navigate(R.id.action_containerFragment_to_locationFragment4, null, slideRightNavOptions())
         }
 
-        binding.mainNavigation.addOnTabSelectedListener(object: TabLayout.OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab?) {
-                // TODO("Refractor this")
-                if (binding.mainNavigation.selectedTabPosition == 1) {
-                    binding.viewCartCard.slideDown(convertDpToPx(150).toFloat())
-                } else {
-                    if (viewModel.currentCartOrder.value != null) {
-                        binding.viewCartCard.slideReset()
-                    } else {
-                        binding.viewCartCard.slideDown(convertDpToPx(150).toFloat())
-                    }
-                }
-            }
-
-            override fun onTabUnselected(tab: TabLayout.Tab?) {
-
-            }
-
-            override fun onTabReselected(tab: TabLayout.Tab?) {
-
-            }
-
-        })
-
-        navController.addOnDestinationChangedListener { controller, destination, arguments ->
+        navController.addOnDestinationChangedListener { _, destination, _ ->
 
             if (destination.id != R.id.containerFragment) {
                 binding.mainCollapse.setExpandedTitleTextAppearance(R.style.TitleTextExpandedNormal)
@@ -427,8 +397,22 @@ class MainActivity2 : LocationAwareActivity(), CakeClickListener, OrderImageClic
                 }
 
                 binding.viewCartCard.setOnClickListener {
-                    val tab = binding.mainNavigation.getTabAt(1)
-                    binding.mainNavigation.selectTab(tab)
+                    binding.mainNavigation.selectedItemId = R.id.home_nav_2
+                }
+
+                if (viewModel.shouldCheckAccount) {
+                    lifecycleScope.launch {
+                        delay(500)
+                        binding.mainNavigation.selectedItemId = R.id.home_nav_3
+                        viewModel.shouldCheckAccount = false
+                        delay(500)
+                        val v = findViewById<View>(R.id.currentOrdersHeader)
+                        val co = intArrayOf(0, 0)
+                        v.getLocationOnScreen(co)
+
+                        val scroll = findViewById<NestedScrollView>(R.id.accountScroll)
+                        scroll?.smoothScrollTo(co[0], co[1] - binding.mainAppbar.measuredHeight)
+                    }
                 }
 
             }
@@ -437,10 +421,6 @@ class MainActivity2 : LocationAwareActivity(), CakeClickListener, OrderImageClic
                 R.id.containerFragment -> {
                     binding.mainAppbar.show()
                     binding.mainImage.hide()
-                    val params = binding.navHostFragment.layoutParams as CoordinatorLayout.LayoutParams
-                    params.behavior = AppBarLayout.ScrollingViewBehavior()
-                    binding.navHostFragment.layoutParams = params
-
                     binding.mainNavigation.show()
                     binding.bottomCartAction.hide()
                     binding.currentLocationText.show()
@@ -458,15 +438,24 @@ class MainActivity2 : LocationAwareActivity(), CakeClickListener, OrderImageClic
                     binding.mainNavigation.hide()
                 }
                 R.id.customizeFragment4 -> {
+                    binding.mainAppbar.show()
+                    val params = binding.navHostFragment.layoutParams as CoordinatorLayout.LayoutParams
+                    params.behavior = AppBarLayout.ScrollingViewBehavior()
+                    binding.navHostFragment.layoutParams = params
+
                     binding.currentLocationText.hide()
                     binding.mainImage.show()
 
                     binding.mainNavigation.hide()
                     binding.bottomCartAction.show()
+                    binding.bottomCartAction2.hide()
                 }
                 R.id.addressFragment2 -> {
                     binding.currentLocationText.hide()
                     binding.mainImage.hide()
+
+                    binding.mainAppbar.show()
+                    binding.mainAppbar.setExpanded(false)
 
                     binding.mainNavigation.hide()
                     binding.bottomCartAction.hide()
@@ -480,6 +469,7 @@ class MainActivity2 : LocationAwareActivity(), CakeClickListener, OrderImageClic
                     binding.currentLocationText.hide()
                     binding.mainImage.hide()
 
+                    binding.mainAppbar.setExpanded(false)
                     binding.mainNavigation.hide()
                     binding.bottomCartAction.hide()
 
@@ -491,6 +481,8 @@ class MainActivity2 : LocationAwareActivity(), CakeClickListener, OrderImageClic
                 R.id.helpFragment2 -> {
                     binding.currentLocationText.hide()
                     binding.mainImage.hide()
+
+                    binding.mainAppbar.setExpanded(false)
 
                     binding.mainNavigation.hide()
                     binding.bottomCartAction.hide()
@@ -557,7 +549,15 @@ class MainActivity2 : LocationAwareActivity(), CakeClickListener, OrderImageClic
                 }
             }
 
+        val preDefinedPage = intent.extras?.getInt("page")
+        if (preDefinedPage != null) {
+            if (preDefinedPage == 3) {
+                binding.mainNavigation.selectedItemId = R.id.home_nav_3
+            }
+        }
+
     }
+
 
     // add listener for all current orders
     private fun addCurrentOrdersListener(currentUser: User) {
@@ -616,7 +616,7 @@ class MainActivity2 : LocationAwareActivity(), CakeClickListener, OrderImageClic
                     putParcelable(CustomizeFragment.ARG_CAKE, cake)
                     putString("title", cake.baseName)
                 }
-                navController.navigate(
+                Navigation.findNavController(this, R.id.nav_host_fragment).navigate(
                     R.id.action_containerFragment_to_customizeFragment4,
                     bundle,
                     slideRightNavOptions()
@@ -626,7 +626,7 @@ class MainActivity2 : LocationAwareActivity(), CakeClickListener, OrderImageClic
                 val bundle = Bundle().apply {
                     putParcelable(CustomizeFragment.ARG_CAKE, cake)
                 }
-                navController.navigate(
+                Navigation.findNavController(this, R.id.nav_host_fragment).navigate(
                     R.id.action_favoritesFragment_to_customizeFragment3,
                     bundle,
                     slideRightNavOptions()
@@ -670,12 +670,13 @@ class MainActivity2 : LocationAwareActivity(), CakeClickListener, OrderImageClic
         val bundle = Bundle().apply {
             putString(ImageViewFragment.ARG_IMAGE, image)
         }
-        when (navController.currentDestination?.id) {
+        val controller = Navigation.findNavController(this, R.id.nav_host_fragment)
+        when (controller.currentDestination?.id) {
             R.id.pastOrdersFragment2 -> {
-                navController.navigate(R.id.action_pastOrdersFragment2_to_imageViewFragment2, bundle)
+                controller.navigate(R.id.action_pastOrdersFragment2_to_imageViewFragment2, bundle)
             }
             R.id.containerFragment -> {
-                navController.navigate(R.id.action_containerFragment_to_imageViewFragment2, bundle)
+                controller.navigate(R.id.action_containerFragment_to_imageViewFragment2, bundle)
             }
         }
     }
@@ -725,10 +726,12 @@ class MainActivity2 : LocationAwareActivity(), CakeClickListener, OrderImageClic
     }
 
     override fun onAddItemClick(cartItem: CartItem) {
+        viewModel.shouldUpdateCart = true
         viewModel.updateCurrentCartOrder(cartItem = cartItem, change = CartItemChange.Increment)
     }
 
     override fun onRemoveItemClick(cartItem: CartItem) {
+        viewModel.shouldUpdateCart = true
         viewModel.updateCurrentCartOrder(cartItem = cartItem, change = CartItemChange.Decrement)
     }
 
@@ -737,8 +740,9 @@ class MainActivity2 : LocationAwareActivity(), CakeClickListener, OrderImageClic
             putParcelable(CustomizeFragment.ARG_CART_ITEM, cartItem)
             putBoolean(CustomizeFragment.ARG_IS_EDIT_MODE, true)
         }
+        val navController = Navigation.findNavController(this, R.id.nav_host_fragment)
         navController.navigate(
-            R.id.action_cartFragment_to_customizeFragment2,
+            R.id.action_containerFragment_to_customizeFragment4,
             bundle,
             slideRightNavOptions()
         )
@@ -813,20 +817,17 @@ class MainActivity2 : LocationAwareActivity(), CakeClickListener, OrderImageClic
         }
 
         if (order.status.first() == OrderStatus.Delivered) {
-
-            val tab = binding.mainNavigation.getTabAt(1)
-
             // creating new order from previous order
             val newOrder = createNewOrderFromPreviousOrder(order)
             viewModel.setCurrentCartOrder(newOrder)
 
             if (navController.currentDestination?.id == R.id.containerFragment) {
-                tab?.select()
+                binding.mainNavigation.selectedItemId = R.id.home_nav_2
             } else {
                 navController.navigateUp()
                 lifecycleScope.launch {
                     delay(500)
-                    tab?.select()
+                    binding.mainNavigation.selectedItemId = R.id.home_nav_2
                 }
             }
 
@@ -934,22 +935,6 @@ class MainActivity2 : LocationAwareActivity(), CakeClickListener, OrderImageClic
         val chooser = Intent.createChooser(intent, "Pay with...")
         paymentIntentLauncher.launch(chooser)
 
-
-        /*
-        * val upiPayIntent = Intent(Intent.ACTION_VIEW)
-    upiPayIntent.data = uri
-
-    // will always show a dialog to user to choose an app
-    val chooser = Intent.createChooser(upiPayIntent, "Pay with")
-
-    // check if intent resolves
-    if (null != chooser.resolveActivity(packageManager)) {
-        startActivityForResult(chooser, UPI_PAYMENT)
-    } else {
-        Toast.makeText(this@UPIActivity, "No UPI app found, please install one to continue", Toast.LENGTH_SHORT).show()
-    }
-        * */
-
     }
 
     override fun onCustomerClick(vh: OrderViewHolder, user: User) {
@@ -1002,6 +987,28 @@ class MainActivity2 : LocationAwareActivity(), CakeClickListener, OrderImageClic
             .build()
 
         startPayment(intentUri)
+    }
+
+    override fun onUpdateBtnClick(refund: Refund, user: User) {
+
+        val choices = arrayOf("Processing", "Processed")
+
+        MaterialAlertDialogBuilder(this)
+            .setTitle("Select Status")
+            .setItems(choices) { _, which ->
+                val status = choices[which]
+                Firebase.firestore.collection(USERS).document(refund.receiverId)
+                    .collection(REFUNDS)
+                    .document(refund.refundId)
+                    .update(mapOf("status" to status))
+                    .addOnSuccessListener {
+                        refund.status = status
+                        viewModel.insertRefund(refund)
+                    }.addOnFailureListener {
+                        toast("Something went wrong. " + it.localizedMessage.orEmpty())
+                    }
+            }.show()
+
     }
 
 }

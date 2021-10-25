@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:clipToPadding="false"
     android:id="@+id/accountScroll"
+    style="@style/nonPrimaryFragment"
     android:fillViewport="true"
     android:overScrollMode="never"
     android:paddingBottom="8dp"
@@ -51,7 +52,8 @@
             android:paddingBottom="8dp"
             android:text="@string/change_address"
             android:textSize="16sp"
-            app:drawableEndCompat="@drawable/ic_round_keyboard_arrow_right_24" />
+            app:drawableEndCompat="@drawable/ic_round_keyboard_arrow_right_24"
+            app:drawableTint="#807F7F" />
 
 
         <View
@@ -77,7 +79,8 @@
             android:textColor="@color/black"
             android:textSize="16sp"
             android:visibility="gone"
-            app:drawableEndCompat="@drawable/ic_round_keyboard_arrow_right_24" />
+            app:drawableEndCompat="@drawable/ic_round_keyboard_arrow_right_24"
+            app:drawableTint="#807F7F" />
 
         <View
             android:id="@+id/divider2"
@@ -102,7 +105,8 @@
             android:paddingBottom="8dp"
             android:text="@string/refunds"
             android:textSize="16sp"
-            app:drawableEndCompat="@drawable/ic_round_keyboard_arrow_right_24" />
+            app:drawableEndCompat="@drawable/ic_round_keyboard_arrow_right_24"
+            app:drawableTint="#807F7F" />
 
 
         <View
@@ -127,7 +131,8 @@
             android:paddingBottom="8dp"
             android:text="@string/help"
             android:textSize="16sp"
-            app:drawableEndCompat="@drawable/ic_round_keyboard_arrow_right_24" />
+            app:drawableEndCompat="@drawable/ic_round_keyboard_arrow_right_24"
+            app:drawableTint="#807F7F" />
 
         <View
             android:id="@+id/divider4"
@@ -151,7 +156,8 @@
             android:paddingBottom="8dp"
             android:text="@string/log_out"
             android:textColor="@color/primaryColor"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            app:drawableTint="#807F7F" />
 
         <View
             android:id="@+id/divider41"

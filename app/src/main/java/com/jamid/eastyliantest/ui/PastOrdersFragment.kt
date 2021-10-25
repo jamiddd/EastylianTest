@@ -1,5 +1,6 @@
 package com.jamid.eastyliantest.ui
 
+import androidx.lifecycle.lifecycleScope
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.PagingDataAdapter
 import com.google.firebase.firestore.ktx.firestore
@@ -38,7 +39,7 @@ class PastOrdersFragment: PagerListFragment<OrderAndCartItems, OrderViewHolder, 
 	}
 
 	override fun getAdapter(): PagingDataAdapter<OrderAndCartItems, OrderViewHolder> {
-		return OrderPagingAdapter().apply {
+		return OrderPagingAdapter(viewLifecycleOwner.lifecycleScope).apply {
 			isAdmin = false
 			isDeliveryExecutive = false
 		}

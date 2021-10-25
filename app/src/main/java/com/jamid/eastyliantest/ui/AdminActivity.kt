@@ -22,6 +22,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.LocationSettingsResponse
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -39,7 +40,7 @@ import com.jamid.eastyliantest.views.zoomable.ImageViewFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class AdminActivity : LocationAwareActivity(), OrderClickListener, CakeMiniListener, FaqListener, CakeClickListener, OrderImageClickListener, NotificationClickListener {
+class AdminActivity : LocationAwareActivity(), OrderClickListener, CakeMiniListener, FaqListener, CakeClickListener, OrderImageClickListener, NotificationClickListener, RefundClickListener {
 
     private lateinit var binding: ActivityAdminBinding
     private lateinit var navController: NavController
@@ -185,11 +186,15 @@ class AdminActivity : LocationAwareActivity(), OrderClickListener, CakeMiniListe
             }
 
 
-        navController.addOnDestinationChangedListener { controller, destination, arguments ->
+        navController.addOnDestinationChangedListener { _, destination, _ ->
             if (destination.id == R.id.adminHomeFragment) {
                 binding.adminTabLayout.show()
+                binding.adminToolbar.setLogo(R.drawable.ic_logo_6_med)
+                binding.adminToolbar.setTitleTextAppearance(this, R.style.TitleText)
             } else {
                 binding.adminTabLayout.hide()
+                binding.adminToolbar.logo = null
+                binding.adminToolbar.setTitleTextAppearance(this, R.style.TitleTextNormal)
             }
         }
 
@@ -449,6 +454,7 @@ class AdminActivity : LocationAwareActivity(), OrderClickListener, CakeMiniListe
                     val bundle = Bundle().apply {
                         putParcelable(CAKE, cake)
                         putBoolean(IS_EDIT_MODE, true)
+                        putString("title", "Update Cake")
                     }
                     navController.navigate(R.id.addCakeFragment, bundle, slideRightNavOptions())
                 }
@@ -620,6 +626,28 @@ class AdminActivity : LocationAwareActivity(), OrderClickListener, CakeMiniListe
     override fun onNotificationClick(notification: SimpleNotification) {
         val bundle = bundleOf("notification" to notification)
         navController.navigate(R.id.action_notificationsFragment_to_addNotificationFragment, bundle, slideRightNavOptions())
+    }
+
+    override fun onUpdateBtnClick(refund: Refund, user: User) {
+
+        val choices = arrayOf("Processing", "Processed")
+
+        MaterialAlertDialogBuilder(this)
+            .setTitle("Select Status")
+            .setItems(choices) { _, which ->
+                val status = choices[which]
+                Firebase.firestore.collection(USERS).document(refund.receiverId)
+                    .collection(REFUNDS)
+                    .document(refund.refundId)
+                    .update(mapOf("status" to status))
+                    .addOnSuccessListener {
+                        refund.status = status
+                        viewModel.insertRefund(refund)
+                    }.addOnFailureListener {
+                        toast("Something went wrong. " + it.localizedMessage.orEmpty())
+                    }
+            }.show()
+
     }
 
 }

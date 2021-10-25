@@ -10,7 +10,8 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.fragment.findNavController
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.jamid.eastyliantest.R
@@ -41,8 +42,8 @@ class AccountFragmentNew: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val orderAdapter = OrderAdapter()
-        val orderAdapter1 = OrderAdapter()
+        val orderAdapter = OrderAdapter(viewLifecycleOwner.lifecycleScope)
+        val orderAdapter1 = OrderAdapter(viewLifecycleOwner.lifecycleScope)
 
         binding.pastOrdersRecycler.apply {
             adapter = orderAdapter
@@ -163,7 +164,7 @@ class AccountFragmentNew: Fragment() {
         }
 
         binding.refundBtn.setOnClickListener {
-            findNavController().navigate(
+            activity?.findNavController(R.id.nav_host_fragment)?.navigate(
                 R.id.action_containerFragment_to_refundFragment3,
                 null,
                 slideRightNavOptions()
@@ -180,15 +181,15 @@ class AccountFragmentNew: Fragment() {
         }
 
         binding.changeAddressBtn.setOnClickListener {
-            findNavController().navigate(R.id.action_containerFragment_to_addressFragment2, null, slideRightNavOptions())
+            activity?.findNavController(R.id.nav_host_fragment)?.navigate(R.id.action_containerFragment_to_addressFragment2, null, slideRightNavOptions())
         }
 
         binding.favoritesBtn.setOnClickListener {
-            findNavController().navigate(R.id.action_containerFragment_to_favoritesFragment2, null, slideRightNavOptions())
+            activity?.findNavController(R.id.nav_host_fragment)?.navigate(R.id.action_containerFragment_to_favoritesFragment2, null, slideRightNavOptions())
         }
 
         binding.helpBtn.setOnClickListener {
-            findNavController().navigate(R.id.action_containerFragment_to_helpFragment2, null, slideRightNavOptions())
+            activity?.findNavController(R.id.nav_host_fragment)?.navigate(R.id.action_containerFragment_to_helpFragment2, null, slideRightNavOptions())
         }
 
         binding.pastOrdersHeader.setOnClickListener {
@@ -214,7 +215,7 @@ class AccountFragmentNew: Fragment() {
         }
 
         binding.seeAllPastOrdersBtn.setOnClickListener {
-            findNavController().navigate(
+            activity?.findNavController(R.id.nav_host_fragment)?.navigate(
                 R.id.action_containerFragment_to_pastOrdersFragment2,
                 null,
                 slideRightNavOptions()

@@ -42,6 +42,10 @@
 
     </style>
 
+    <style name="OutlinedButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="strokeColor">@color/button_group_stroke</item>
+    </style>
+
     <style name="nonPrimaryFragment">
         <item name="android:background">#FAFAFA</item>
     </style>

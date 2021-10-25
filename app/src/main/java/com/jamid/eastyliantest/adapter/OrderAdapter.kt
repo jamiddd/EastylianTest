@@ -12,8 +12,6 @@ import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
-import androidx.lifecycle.findViewTreeLifecycleOwner
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
@@ -33,6 +31,7 @@ import com.jamid.eastyliantest.utility.disable
 import com.jamid.eastyliantest.utility.enable
 import com.jamid.eastyliantest.utility.hide
 import com.jamid.eastyliantest.utility.show
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -40,11 +39,11 @@ import java.util.*
 
 private const val TAG = "OrderAdapter"
 
-class OrderAdapter: ListAdapter<Order, OrderViewHolder>(OrderComparator()) {
+class OrderAdapter(private val scope: CoroutineScope): ListAdapter<Order, OrderViewHolder>(OrderComparator()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OrderViewHolder {
         return OrderViewHolder(
-            LayoutInflater.from(parent.context).inflate(R.layout.order_item, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.order_item, parent, false), scope
         )
     }
 
@@ -64,7 +63,7 @@ class OrderComparator: DiffUtil.ItemCallback<Order>() {
     }
 }
 
-class OrderViewHolder(val view: View): RecyclerView.ViewHolder(view) {
+class OrderViewHolder(val view: View, val scope: CoroutineScope): RecyclerView.ViewHolder(view) {
 
     private val orderClickListener = view.context as OrderClickListener
 
@@ -178,7 +177,7 @@ class OrderViewHolder(val view: View): RecyclerView.ViewHolder(view) {
                     setUpPrimaryActionButton("Start Order")
                 }
 
-                view.findViewTreeLifecycleOwner()?.lifecycleScope?.launch {
+                scope.launch {
                     delay(diff)
                     setUpPrimaryActionButton("Start Order")
                 }
@@ -394,7 +393,8 @@ class OrderViewHolder(val view: View): RecyclerView.ViewHolder(view) {
                 } else {
                     setBottomActionVisibility(true)
                     setUpPrimaryActionButton("Cancel", true)
-                    view.findViewTreeLifecycleOwner()?.lifecycleScope?.launch {
+
+                    scope.launch {
                         delay(diff)
                         setBottomActionVisibility(false)
                     }

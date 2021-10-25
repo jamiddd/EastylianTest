@@ -71,6 +71,9 @@ class MainViewModel(val repo: MainRepository): ViewModel() {
 
     }
 
+    var shouldUpdateCart: Boolean = false
+    var shouldCheckAccount: Boolean = false
+
     private val allCakeMenuItems = repo.allCakeMenuItems
 
 
@@ -682,6 +685,10 @@ class MainViewModel(val repo: MainRepository): ViewModel() {
 
     fun setCurrentUserUpiNumber(upiNumber: String, onComplete: ((result: Task<Void>) -> Unit)? = null) {
         repo.setCurrentUserUpiNumber(upiNumber, onComplete)
+    }
+
+    fun insertRefund(refund: Refund) = viewModelScope.launch (Dispatchers.IO) {
+        repo.insertRefunds(listOf(refund))
     }
 
     companion object {

@@ -144,7 +144,14 @@ class CustomizeFragment: Fragment() {
 					if (finalCake.isEdiblePrintAttached) {
 						finalCake.thumbnail = finalCake.ediblePrintImage
 					}
-					viewModel.updateCurrentCartOrder(finalCake, change = CartItemChange.Update)
+
+					viewModel.shouldUpdateCart = true
+					if (!finalCake.isCustomizable && finalCake.isAddedToCart) {
+						viewModel.updateCurrentCartOrder(finalCake, change = CartItemChange.Increment)
+					} else {
+						viewModel.updateCurrentCartOrder(finalCake, change = CartItemChange.Update)
+					}
+
 					findNavController().navigateUp()
 				}
 			}

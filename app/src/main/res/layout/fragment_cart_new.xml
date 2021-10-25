@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
+    style="@style/nonPrimaryFragment"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools">
 
@@ -43,18 +44,18 @@
                 app:selectionRequired="true"
                 app:singleSelection="true">
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/normal"
-                    style="?attr/materialButtonOutlinedStyle"
+                    style="@style/OutlinedButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/manrope_semi_bold"
                     android:text="@string/normal"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/custom"
-                    style="?attr/materialButtonOutlinedStyle"
+                    style="@style/OutlinedButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/manrope_semi_bold"
@@ -339,7 +340,6 @@
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:orientation="vertical"
-        app:cardBackgroundColor="#F6ECE9"
         app:cardElevation="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -354,16 +354,16 @@
             app:selectionRequired="true"
             app:singleSelection="true">
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/delivery"
-                style="?attr/materialButtonOutlinedStyle"
+                style="@style/OutlinedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/delivery" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/pickUp"
-                style="?attr/materialButtonOutlinedStyle"
+                style="@style/OutlinedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/pick_up" />
@@ -406,6 +406,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.35"
         app:lottie_autoPlay="true"
         app:lottie_loop="true"
         app:lottie_rawRes="@raw/empty_basket"

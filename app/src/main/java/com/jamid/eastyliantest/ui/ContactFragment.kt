@@ -36,7 +36,6 @@ class ContactFragment: Fragment(R.layout.fragment_contact), TableItemClickListen
 		initPhoneNumbersLayout(phoneNumberAdapter)
 		initEmailAddressesLayout(emailAddressAdapter)
 
-
 		viewModel.repo.restaurant.observe(viewLifecycleOwner) { restaurant ->
 			if (restaurant != null) {
 

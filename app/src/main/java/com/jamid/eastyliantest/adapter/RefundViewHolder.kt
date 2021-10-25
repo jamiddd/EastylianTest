@@ -7,43 +7,41 @@ import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.findViewTreeLifecycleOwner
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.jamid.eastyliantest.R
 import com.jamid.eastyliantest.USERS
+import com.jamid.eastyliantest.interfaces.RefundClickListener
 import com.jamid.eastyliantest.model.Refund
 import com.jamid.eastyliantest.model.User
-import com.jamid.eastyliantest.utility.RazorpayUtility
-import com.jamid.eastyliantest.utility.disable
+import com.jamid.eastyliantest.utility.disappear
+import com.jamid.eastyliantest.utility.hide
 import com.jamid.eastyliantest.utility.toast
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 private const val processed = "processed"
 
 class RefundViewHolder(val view: View): RecyclerView.ViewHolder(view) {
+
+	private val refundClickListener = view.context as RefundClickListener
+
 	fun bind(refund: Refund?) {
 		if (refund != null) {
 			val orderIdText = view.findViewById<TextView>(R.id.orderIdText)
 			val refundAmount = view.findViewById<TextView>(R.id.refundAmount)
 			val refundStatus = view.findViewById<TextView>(R.id.refundStatus)
 			val payRefundBtn = view.findViewById<Button>(R.id.payRefundBtn)
+			val updateStatusBtn = view.findViewById<Button>(R.id.updateStatusBtn)
 
 			orderIdText.text = refund.orderId
 			val amountText = "₹ ${(refund.amount)/100}"
 			refundAmount.text = amountText
 
 			val (color, status) = if (refund.status == processed) {
+				payRefundBtn.hide()
+				updateStatusBtn.hide()
 				ContextCompat.getColor(view.context, R.color.greenDarkTextColor) to view.context.getString(R.string.processed)
 			} else {
-				view.findViewTreeLifecycleOwner()?.lifecycleScope?.launch (Dispatchers.IO) {
-					RazorpayUtility.getRefundStatus(refund) {
-						bind(it)
-					}
-				}
 				ContextCompat.getColor(view.context, R.color.darkRedTextColor) to view.context.getString(R.string.require_confirmation)
 			}
 
@@ -55,13 +53,21 @@ class RefundViewHolder(val view: View): RecyclerView.ViewHolder(view) {
 				.addOnSuccessListener {
 					if (it.exists()) {
 						val user = it.toObject(User::class.java)!!
-						val clipboard = view.context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager?
-						val clip = ClipData.newPlainText("phone", user.upiPhoneNo)
-						clipboard?.setPrimaryClip(clip)
-						view.context.toast("Phone number copied")
+
+						updateStatusBtn.setOnClickListener {
+							refundClickListener.onUpdateBtnClick(refund, user)
+						}
+
+						payRefundBtn.setOnClickListener {
+							val clipboard = view.context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager?
+							val clip = ClipData.newPlainText("phone", user.upiPhoneNo)
+							clipboard?.setPrimaryClip(clip)
+							view.context.toast("Phone number copied")
+						}
+
 					}
 				}.addOnFailureListener {
-					payRefundBtn.disable()
+					payRefundBtn.disappear()
 					view.context.toast("Something went wrong while trying to get user data. ${it.localizedMessage}")
 				}
 

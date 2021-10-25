@@ -6,8 +6,9 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import com.jamid.eastyliantest.R
 import com.jamid.eastyliantest.model.OrderAndCartItems
+import kotlinx.coroutines.CoroutineScope
 
-class OrderPagingAdapter: PagingDataAdapter<OrderAndCartItems, OrderViewHolder>(OrderAndCartItemsComparator()){
+class OrderPagingAdapter(private val scope: CoroutineScope): PagingDataAdapter<OrderAndCartItems, OrderViewHolder>(OrderAndCartItemsComparator()){
 
 	val randomIcons = mutableListOf<String>()
 	var isAdmin = false
@@ -21,7 +22,7 @@ class OrderPagingAdapter: PagingDataAdapter<OrderAndCartItems, OrderViewHolder>(
 	}
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OrderViewHolder {
-		val orderVH = OrderViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.order_item, parent, false))
+		val orderVH = OrderViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.order_item, parent, false), scope)
 		orderVH.isAdmin = isAdmin
 		orderVH.isDeliveryExecutive = isDeliveryExecutive
 		orderVH.randomIcons.addAll(randomIcons)

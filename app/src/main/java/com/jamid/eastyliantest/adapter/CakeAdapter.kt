@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.lifecycle.coroutineScope
 import androidx.lifecycle.findViewTreeLifecycleOwner
@@ -55,6 +56,14 @@ class CakeAdapter : ListAdapter<Cake, CakeAdapter.CakeViewHolder>(
             val cakeDesc = view.findViewById<TextView>(R.id.cakeDesc)
             val customizableText = view.findViewById<TextView>(R.id.customizableText)
             val animatedTick = view.findViewById<ImageView>(R.id.animatedTick)
+            val customizeLayout = view.findViewById<LinearLayout>(R.id.customizeLayout)
+            val container = view.findViewById<View>(R.id.amountCustomizerContainer)
+
+
+            val decrease = container.findViewById<Button>(R.id.decreaseAmount)
+            val increase = container.findViewById<Button>(R.id.increaseAmount)
+            val amount = container.findViewById<TextView>(R.id.amountText)
+
 
             cakeName.text = cake.fancyName
             cakePrice.text = view.context.getString(R.string.currency_prefix) + (cake.price/100).toString()
@@ -70,9 +79,13 @@ class CakeAdapter : ListAdapter<Cake, CakeAdapter.CakeViewHolder>(
             }
 
             if (cake.isAddedToCart) {
+//                customizeLayout.show()
                 primaryActionBtn.text = view.context.getString(R.string.add_more)
+                primaryActionBtn.show()
             } else {
+//                customizeLayout.hide()
                 primaryActionBtn.text = "Add"
+                primaryActionBtn.show()
             }
 
             primaryActionBtn.setOnClickListener {

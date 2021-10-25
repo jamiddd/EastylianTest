@@ -1,6 +1,7 @@
 package com.jamid.eastyliantest.ui.home
 
 import android.os.Bundle
+import androidx.lifecycle.lifecycleScope
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.PagingDataAdapter
 import com.google.firebase.firestore.ktx.firestore
@@ -57,7 +58,7 @@ class ActiveDeliveryFragment: PagerListFragment<OrderAndCartItems, OrderViewHold
 		delivery = arguments?.getBoolean(IS_DELIVERY_EXECUTIVE) ?: false
 		admin = !delivery
 
-		val ada = OrderPagingAdapter().apply {
+		val ada = OrderPagingAdapter(viewLifecycleOwner.lifecycleScope).apply {
 			isAdmin = admin
 			isDeliveryExecutive = delivery
 		}
