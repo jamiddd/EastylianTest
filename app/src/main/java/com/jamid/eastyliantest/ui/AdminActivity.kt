@@ -4,10 +4,7 @@ import android.Manifest
 import android.app.Activity
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentSender
+import android.content.*
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.net.Uri
@@ -22,6 +19,7 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.core.app.NotificationCompat
 import androidx.core.os.bundleOf
 import androidx.lifecycle.lifecycleScope
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.NavController
 import androidx.navigation.NavDeepLinkBuilder
 import androidx.navigation.fragment.NavHostFragment
@@ -153,6 +151,8 @@ class AdminActivity : LocationAwareActivity(), OrderClickListener, CakeMiniListe
         repository = MainRepository.newInstance(database)
 
         createNotificationChannel()
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(notificationReceiver, IntentFilter(NOTIFICATION_INTENT))
 
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.adminContainer) as NavHostFragment
         navController = navHostFragment.navController
