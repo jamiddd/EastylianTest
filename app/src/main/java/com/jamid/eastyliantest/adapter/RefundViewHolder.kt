@@ -1,8 +1,5 @@
 package com.jamid.eastyliantest.adapter
 
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
@@ -15,7 +12,6 @@ import com.jamid.eastyliantest.USERS
 import com.jamid.eastyliantest.interfaces.RefundClickListener
 import com.jamid.eastyliantest.model.Refund
 import com.jamid.eastyliantest.model.User
-import com.jamid.eastyliantest.utility.disappear
 import com.jamid.eastyliantest.utility.hide
 import com.jamid.eastyliantest.utility.toast
 
@@ -30,7 +26,6 @@ class RefundViewHolder(val view: View): RecyclerView.ViewHolder(view) {
 			val orderIdText = view.findViewById<TextView>(R.id.orderIdText)
 			val refundAmount = view.findViewById<TextView>(R.id.refundAmount)
 			val refundStatus = view.findViewById<TextView>(R.id.refundStatus)
-			val payRefundBtn = view.findViewById<Button>(R.id.payRefundBtn)
 			val updateStatusBtn = view.findViewById<Button>(R.id.updateStatusBtn)
 
 			orderIdText.text = refund.orderId
@@ -38,7 +33,6 @@ class RefundViewHolder(val view: View): RecyclerView.ViewHolder(view) {
 			refundAmount.text = amountText
 
 			val (color, status) = if (refund.status == processed) {
-				payRefundBtn.hide()
 				updateStatusBtn.hide()
 				ContextCompat.getColor(view.context, R.color.greenDarkTextColor) to view.context.getString(R.string.processed)
 			} else {
@@ -57,17 +51,8 @@ class RefundViewHolder(val view: View): RecyclerView.ViewHolder(view) {
 						updateStatusBtn.setOnClickListener {
 							refundClickListener.onUpdateBtnClick(refund, user)
 						}
-
-						payRefundBtn.setOnClickListener {
-							val clipboard = view.context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager?
-							val clip = ClipData.newPlainText("phone", user.upiPhoneNo)
-							clipboard?.setPrimaryClip(clip)
-							view.context.toast("Phone number copied")
-						}
-
 					}
 				}.addOnFailureListener {
-					payRefundBtn.disappear()
 					view.context.toast("Something went wrong while trying to get user data. ${it.localizedMessage}")
 				}
 

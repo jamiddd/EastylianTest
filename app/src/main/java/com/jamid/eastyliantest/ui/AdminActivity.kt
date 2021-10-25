@@ -2,8 +2,14 @@ package com.jamid.eastyliantest.ui
 
 import android.Manifest
 import android.app.Activity
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
+import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -13,9 +19,11 @@ import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.widget.PopupMenu
+import androidx.core.app.NotificationCompat
 import androidx.core.os.bundleOf
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
+import androidx.navigation.NavDeepLinkBuilder
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
@@ -26,6 +34,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.ktx.messaging
 import com.jamid.eastyliantest.*
 import com.jamid.eastyliantest.adapter.CakeMiniAdapter
 import com.jamid.eastyliantest.adapter.OrderViewHolder
@@ -39,6 +48,11 @@ import com.jamid.eastyliantest.utility.*
 import com.jamid.eastyliantest.views.zoomable.ImageViewFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
+import java.io.IOException
+import java.net.URL
+import java.util.*
 
 class AdminActivity : LocationAwareActivity(), OrderClickListener, CakeMiniListener, FaqListener, CakeClickListener, OrderImageClickListener, NotificationClickListener, RefundClickListener {
 
@@ -46,6 +60,7 @@ class AdminActivity : LocationAwareActivity(), OrderClickListener, CakeMiniListe
     private lateinit var navController: NavController
     private lateinit var repository: MainRepository
     private var previousVH: CakeMiniAdapter.CakeMiniViewHolder? = null
+    private lateinit var notificationManager: NotificationManager
 
     val viewModel: MainViewModel by viewModels {
         MainViewModelFactory(repository)
@@ -55,6 +70,74 @@ class AdminActivity : LocationAwareActivity(), OrderClickListener, CakeMiniListe
         if (it.resultCode == Activity.RESULT_OK) {
             val image = it.data?.data
             viewModel.setCurrentImage(image)
+        }
+    }
+
+    private fun getNotificationBuilder(title: String, content: String, image: String? = null): NotificationCompat.Builder {
+        val pendingIntent = NavDeepLinkBuilder(this)
+            .setGraph(R.navigation.main_navigation_new)
+            .setDestination(R.id.containerFragment)
+            .setArguments(bundleOf("page" to 3))
+            .createPendingIntent()
+
+        val notificationBuilder = NotificationCompat.Builder(this, PRIMARY_CHANNEL_ID)
+            .setContentTitle(title)
+            .setContentText(content)
+            .setContentIntent(pendingIntent)
+
+        if (image != null) {
+            notificationBuilder.applyImageUrl(image)
+        }
+
+        return notificationBuilder.setAutoCancel(true)
+            .setSmallIcon(R.mipmap.ic_stat_cake_1)
+    }
+
+    private fun createNotificationChannel() {
+        notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val notificationChannel = NotificationChannel(
+                PRIMARY_CHANNEL_ID,
+                "Mascot Notification",
+                NotificationManager.IMPORTANCE_HIGH
+            )
+            notificationChannel.enableLights(true)
+            notificationChannel.lightColor = Color.RED
+            notificationChannel.enableVibration(true)
+            notificationChannel.description = "Notification from Mascot"
+
+            notificationManager.createNotificationChannel(notificationChannel)
+        }
+    }
+
+    private val notificationReceiver = object: BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            val title = intent?.extras?.get(TITLE) as String? ?: ""
+            val content = intent?.extras?.get(BODY) as String? ?: ""
+            val image = intent?.extras?.get(IMAGE) as String?
+
+            val notifyBuilder = getNotificationBuilder(title, content, image)
+
+            notificationManager.notify(NOTIFICATION_ID, notifyBuilder.build())
+        }
+    }
+
+    private fun NotificationCompat.Builder.applyImageUrl(
+        imageUrl: String
+    ) = runBlocking {
+        val url = URL(imageUrl)
+
+        withContext(Dispatchers.IO) {
+            try {
+                val input = url.openStream()
+                BitmapFactory.decodeStream(input)
+            } catch (e: IOException) {
+                null
+            }
+        }?.let { bitmap ->
+            this@applyImageUrl.setStyle(
+                NotificationCompat.BigPictureStyle().bigPicture(bitmap)
+            ).setLargeIcon(bitmap)
         }
     }
 
@@ -68,6 +151,8 @@ class AdminActivity : LocationAwareActivity(), OrderClickListener, CakeMiniListe
 
         val database = EastylianDatabase.getInstance(applicationContext, lifecycleScope)
         repository = MainRepository.newInstance(database)
+
+        createNotificationChannel()
 
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.adminContainer) as NavHostFragment
         navController = navHostFragment.navController
@@ -149,19 +234,6 @@ class AdminActivity : LocationAwareActivity(), OrderClickListener, CakeMiniListe
         }
 
 
-        /*viewModel.contextModeState.observe(this) { contextObj ->
-            val organizeToolbar = findViewById<MaterialToolbar>(R.id.fragmentOrganizeToolbar)
-            val addCakeBtn = findViewById<FloatingActionButton>(R.id.createCakeBtn)
-            if (contextObj.state) {
-                addCakeBtn?.slideDown(convertDpToPx(100).toFloat())
-                organizeToolbar?.hide()
-            } else {
-                previousVH?.inactiveBackground()
-                addCakeBtn?.slideReset()
-                organizeToolbar?.show()
-            }
-        }*/
-
         viewModel.repo.restaurant.observe(this) {
             if (it != null) {
                 Log.d(TAG, "Invoking the observer.")
@@ -197,6 +269,15 @@ class AdminActivity : LocationAwareActivity(), OrderClickListener, CakeMiniListe
                 binding.adminToolbar.setTitleTextAppearance(this, R.style.TitleTextNormal)
             }
         }
+
+        Firebase.messaging.subscribeToTopic("admin")
+            .addOnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    viewModel.setCurrentError(task.exception!!)
+                } else {
+                    Log.d(TAG, "Subscribing to :\"admin\": topic in FCM")
+                }
+            }
 
 
     }
@@ -407,6 +488,8 @@ class AdminActivity : LocationAwareActivity(), OrderClickListener, CakeMiniListe
 
 	companion object {
         private const val TAG = "AdminActivity"
+        private const val PRIMARY_CHANNEL_ID = "PRIMARY_CHANNEL_ID"
+        private const val NOTIFICATION_ID = 15
     }
 
     override fun onCakeAvailabilityChange(cake: Cake) {
@@ -641,7 +724,7 @@ class AdminActivity : LocationAwareActivity(), OrderClickListener, CakeMiniListe
                     .document(refund.refundId)
                     .update(mapOf("status" to status))
                     .addOnSuccessListener {
-                        refund.status = status
+                        refund.status = status.lowercase(Locale.getDefault())
                         viewModel.insertRefund(refund)
                     }.addOnFailureListener {
                         toast("Something went wrong. " + it.localizedMessage.orEmpty())

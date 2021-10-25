@@ -136,7 +136,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="8dp"
-                android:text="You can cancel the order within one minute. After that, you cannot cancel the order." />
+                android:text="You can cancel the order within 10 minutes. After that, you cannot cancel the order." />
 
             <Button
                 android:id="@+id/checkOutBtn"

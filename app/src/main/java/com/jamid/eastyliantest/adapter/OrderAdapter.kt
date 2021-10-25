@@ -63,7 +63,7 @@ class OrderComparator: DiffUtil.ItemCallback<Order>() {
     }
 }
 
-class OrderViewHolder(val view: View, val scope: CoroutineScope): RecyclerView.ViewHolder(view) {
+class OrderViewHolder(val view: View, private val scope: CoroutineScope): RecyclerView.ViewHolder(view) {
 
     private val orderClickListener = view.context as OrderClickListener
 
@@ -168,17 +168,20 @@ class OrderViewHolder(val view: View, val scope: CoroutineScope): RecyclerView.V
                 // it's a request, admin can cancel the order here
                 val now = System.currentTimeMillis()
                 val createdAt = order.createdAt
+
+                val future = createdAt + 10 * 60 * 1000
+
                 setBottomActionVisibility(true)
                 setUpPrimaryActionButton("Start Order", isEnabled = false)
                 setUpSecondaryActionButton("Cancel")
 
                 val diff = now - createdAt
-                if (diff > 2 * 60 * 1000) {
+                if (diff > 10 * 60 * 1000) {
                     setUpPrimaryActionButton("Start Order")
                 }
 
                 scope.launch {
-                    delay(diff)
+                    delay(maxOf(future - now, 0))
                     setUpPrimaryActionButton("Start Order")
                 }
 
@@ -379,23 +382,26 @@ class OrderViewHolder(val view: View, val scope: CoroutineScope): RecyclerView.V
             }
             Due, Paid -> {
 
-                val deliveryText = "Order to be delivered on - " + SimpleDateFormat("dd, MMM, EEEE", Locale.getDefault()).format(order.deliveryAt)
+                val createdAt = order.createdAt
+
+                val future = createdAt + 10 * 60 * 1000
+
+                val deliveryText = "Order to be delivered on - " + SimpleDateFormat("dd, MMM, EEEE", Locale.getDefault()).format(order.deliveryAt) + ". The order will be cancelable only till " + SimpleDateFormat("hh:mm a", Locale.getDefault()).format(future)
                 setOrderDeliveryText(deliveryText, R.color.primaryColor, R.drawable.ic_new_releases_black_24dp__1_)
 
                 val now = System.currentTimeMillis()
-                val createdAt = order.createdAt
 
                 val diff = now - createdAt
 
                 // one minute
-                if (diff > 1 * 60 * 1000) {
+                if (diff > 10 * 60 * 1000) {
                     setBottomActionVisibility(false)
                 } else {
                     setBottomActionVisibility(true)
                     setUpPrimaryActionButton("Cancel", true)
 
                     scope.launch {
-                        delay(diff)
+                        delay(maxOf(future - now, 0))
                         setBottomActionVisibility(false)
                     }
                 }
