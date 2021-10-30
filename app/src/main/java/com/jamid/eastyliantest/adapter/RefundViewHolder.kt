@@ -12,7 +12,6 @@ import com.jamid.eastyliantest.USERS
 import com.jamid.eastyliantest.interfaces.RefundClickListener
 import com.jamid.eastyliantest.model.Refund
 import com.jamid.eastyliantest.model.User
-import com.jamid.eastyliantest.utility.hide
 import com.jamid.eastyliantest.utility.toast
 
 private const val processed = "processed"
@@ -33,7 +32,6 @@ class RefundViewHolder(val view: View): RecyclerView.ViewHolder(view) {
 			refundAmount.text = amountText
 
 			val (color, status) = if (refund.status == processed) {
-				updateStatusBtn.hide()
 				ContextCompat.getColor(view.context, R.color.greenDarkTextColor) to view.context.getString(R.string.processed)
 			} else {
 				ContextCompat.getColor(view.context, R.color.darkRedTextColor) to view.context.getString(R.string.require_confirmation)
